@@ -136,7 +136,12 @@ typedef struct {
   bool flags_cld2_verbose;
   ULScript ulscript;        // langprobs below are with respect to this script
   Language prior_chunk_lang;          // Mostly for debug output
+  // boost has a packed set of per-script langs and probabilites
+  // whack has a per-script lang to be suppressed from ever scoring (zeroed)
+  // When a language in a close set is given as an explicit hint, others in
+  //  that set will be whacked.
   PerScriptLangBoosts langprior_boost;  // From http content-lang or meta lang=
+  PerScriptLangBoosts langprior_whack;  // From http content-lang or meta lang=
   PerScriptLangBoosts distinct_boost;   // From distinctive letter groups
   int oldest_distinct_boost;          // Subscript in hitbuffer of oldest
                                       // distinct score to use
@@ -146,6 +151,7 @@ typedef struct {
   // Inits boosts
   void init() {
     memset(&langprior_boost, 0, sizeof(langprior_boost));
+    memset(&langprior_whack, 0, sizeof(langprior_whack));
     memset(&distinct_boost, 0, sizeof(distinct_boost));
   };
 } ScoringContext;

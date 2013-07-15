@@ -34,6 +34,11 @@ void AddLangProb(uint32 langprob, Tote* chunk_tote) {
   ProcessProbV2Tote(langprob, chunk_tote);
 }
 
+void ZeroPSLang(uint32 langprob, Tote* chunk_tote) {
+  uint8 top1 = (langprob >> 8) & 0xff;
+  chunk_tote->SetScore(top1, 0);
+}
+
 bool SameCloseSet(uint16 lang1, uint16 lang2) {
   int lang1_close_set = LanguageCloseSet(static_cast<Language>(lang1));
   if (lang1_close_set == 0) {return false;}
@@ -118,9 +123,11 @@ void AddDistinctBoost2(uint32 langprob, ScoringContext* scoringcontext) {
 void ScoreBoosts(const ScoringContext* scoringcontext, Tote* chunk_tote) {
   // Get boosts for current script
   const LangBoosts* langprior_boost = &scoringcontext->langprior_boost.latn;
+  const LangBoosts* langprior_whack = &scoringcontext->langprior_whack.latn;
   const LangBoosts* distinct_boost = &scoringcontext->distinct_boost.latn;
   if (scoringcontext->ulscript != ULScript_Latin) {
     langprior_boost = &scoringcontext->langprior_boost.othr;
+    langprior_whack = &scoringcontext->langprior_whack.othr;
     distinct_boost = &scoringcontext->distinct_boost.othr;
   }
 
@@ -131,6 +138,14 @@ void ScoreBoosts(const ScoringContext* scoringcontext, Tote* chunk_tote) {
   for (int k = 0; k < kMaxBoosts; ++k) {
     uint32 langprob = distinct_boost->langprob[k];
     if (langprob > 0) {AddLangProb(langprob, chunk_tote);}
+  }
+  // boost has a packed set of per-script langs and probabilites
+  // whack has a packed set of per-script lang to be suppressed (zeroed)
+  // When a language in a close set is given as an explicit hint, others in
+  //  that set will be whacked here.
+  for (int k = 0; k < kMaxBoosts; ++k) {
+    uint32 langprob = langprior_whack->langprob[k];
+    if (langprob > 0) {ZeroPSLang(langprob, chunk_tote);}
   }
 }
 

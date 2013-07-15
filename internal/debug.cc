@@ -319,14 +319,24 @@ void CLD2_Debug(const char* text,
     // Score boosts for langprior and distinct tokens
     // Get boosts for current script
     const LangBoosts* langprior_boost = &scoringcontext->langprior_boost.latn;
+    const LangBoosts* langprior_whack = &scoringcontext->langprior_whack.latn;
     const LangBoosts* distinct_boost = &scoringcontext->distinct_boost.latn;
     if (scoringcontext->ulscript != ULScript_Latin) {
       langprior_boost = &scoringcontext->langprior_boost.othr;
+      langprior_whack = &scoringcontext->langprior_whack.othr;
       distinct_boost = &scoringcontext->distinct_boost.othr;
     }
     fprintf(df, "LangPrior_boost: ");
     for (int k = 0; k < kMaxBoosts; ++k) {
       uint32 langprob = langprior_boost->langprob[k];
+      if (langprob > 0) {
+        fprintf(df, "%s&nbsp;&nbsp; ",
+                GetLangProbTxt(scoringcontext, langprob).c_str());
+      }
+    }
+    fprintf(df, "LangPrior_whack: ");
+    for (int k = 0; k < kMaxBoosts; ++k) {
+      uint32 langprob = langprior_whack->langprob[k];
       if (langprob > 0) {
         fprintf(df, "%s&nbsp;&nbsp; ",
                 GetLangProbTxt(scoringcontext, langprob).c_str());
