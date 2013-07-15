@@ -215,7 +215,7 @@ static const TestPair kTestPair[] = {
 
 // Cross-check the main quadgram table build date
 // Change the expected language each time it is rebuilt
-  {SWAHILI, kTeststr_version},
+  {WELSH, kTeststr_version},
 
   {UNKNOWN_LANGUAGE, NULL},     // Must be last
 };
