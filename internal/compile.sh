@@ -24,8 +24,8 @@ g++ -O2 -m64  compact_lang_det_test.cc \
   cld_generated_cjk_delta_bi_4.cc generated_distinct_bi_0.cc  \
   cld2_generated_quadchrome0715.cc cld2_generated_deltaoctachrome0614.cc \
   cld2_generated_distinctoctachrome0604.cc  cld_generated_score_quad_octa_1024_256.cc  \
-  -o compact_lang_det_test_chrome0614
-echo "  compact_lang_det_test_chrome0614 compiled"
+  -o compact_lang_det_test_chrome0715
+echo "  compact_lang_det_test_chrome0715 compiled"
 
 g++ -O2 -m64  cld2_unittest.cc \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc  compact_lang_det_hint_code.cc \

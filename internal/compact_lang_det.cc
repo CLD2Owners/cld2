@@ -28,7 +28,7 @@
 namespace CLD2 {
 
 // String is "code_version - data_scrape_date"
-static const char* kDetectLanguageVersion = "V2.0 - 20130614";
+static const char* kDetectLanguageVersion = "V2.0 - 20130715";
 
 // Large-table version for all ~160 languages
 // Small-table version for all ~60 languages
