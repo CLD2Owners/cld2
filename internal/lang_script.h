@@ -109,9 +109,6 @@ int LScript4(ULScript ulscript);
 //
 // The Language enum includes the fake language numbers for RTypeNone above.
 //
-// In an open-source environment, the Google-specific Language enum is not
-// available. Language decouples the two environments while maintaining
-// internal compatibility.
 
 
 // If the input is out of range or otherwise unrecognized, it is treated
@@ -167,6 +164,16 @@ Language DefaultLanguage(ULScript ulscript);
 
 uint8 PerScriptNumber(ULScript ulscript, Language lang);
 Language FromPerScriptNumber(ULScript ulscript, uint8 perscript_number);
+
+// While the speed-sensitive processing deals with per-script language numbers,
+// there is a need for low-performance dealing with original language numbers
+// and unknown scripts, mostly for processing language hints.
+// These routines let one derive a script class from a bare language.
+// For languages written in multiple scripts, both of tehse can return true.
+
+bool IsLatnLanguage(Language lang);
+bool IsOthrLanguage(Language lang);
+
 
 //----------------------------------------------------------------------------//
 // Other                                                                      //

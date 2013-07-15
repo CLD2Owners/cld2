@@ -254,10 +254,13 @@ const char* ExtLanguageDeclaredName(const Language lang) {
   return LanguageDeclaredName(lang);
 }
 
+
+extern const int kCloseSetSize = 10;
+
 // Returns which set of statistically-close languages lang is in. 0 means none.
 int LanguageCloseSet(Language lang) {
   // Scaffolding
-  // id ms         # INDONESIAN MALAY coef=0.4698        Problematic w/o extra words
+  // id ms         # INDONESIAN MALAY coef=0.4698    Problematic w/o extra words
   // bo dz         # TIBETAN DZONGKHA coef=0.4571
   // cs sk         # CZECH SLOVAK coef=0.4273
   // zu xh         # ZULU XHOSA coef=0.3716
@@ -337,6 +340,17 @@ Language FromPerScriptNumber(ULScript ulscript, uint8 perscript_number) {
   }
 }
 
+// Return true if language can be in the Latin script
+bool IsLatnLanguage(Language lang) {
+  if (lang >= kLanguageToPLangSize) {return false;}
+  return (lang == kPLangToLanguageLatn[kLanguageToPLang[lang]]);
+}
+
+// Return true if language can be in a non-Latin script
+bool IsOthrLanguage(Language lang) {
+  if (lang >= kLanguageToPLangSize) {return false;}
+  return (lang == kPLangToLanguageOthr[kLanguageToPLang[lang]]);
+}
 
 
 //----------------------------------------------------------------------------//
