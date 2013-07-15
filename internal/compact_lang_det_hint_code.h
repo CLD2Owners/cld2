@@ -31,9 +31,10 @@ namespace CLD2 {
 // Full language in bottom 10 bits, weight in top 6 bits
 typedef int16 OneCLDLangPrior;
 
+const int kMaxOneCLDLangPrior = 14;
 typedef struct {
   int32 n;
-  OneCLDLangPrior prior[14];
+  OneCLDLangPrior prior[kMaxOneCLDLangPrior];
 } CLDLangPriors;
 
 // Reading exposed here; setting hidden in .cc

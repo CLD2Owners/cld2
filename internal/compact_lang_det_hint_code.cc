@@ -949,7 +949,8 @@ void MergeCLDLangPriorsMax(OneCLDLangPrior olp, CLDLangPriors* lps) {
       return;
     }
   }
-  // Not found; add it
+  // Not found; add it if room
+  if (lps->n >= kMaxOneCLDLangPrior) {return;}
   lps->prior[lps->n++] = olp;
 }
 
@@ -964,7 +965,8 @@ void MergeCLDLangPriorsBoost(OneCLDLangPrior olp, CLDLangPriors* lps) {
       return;
     }
   }
-  // Not found; add it
+  // Not found; add it if room
+  if (lps->n >= kMaxOneCLDLangPrior) {return;}
   lps->prior[lps->n++] = olp;
 }
 
