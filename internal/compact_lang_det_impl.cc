@@ -45,6 +45,9 @@ using namespace std;
 // cld2_generated_distinctocta*.cc
 // cld_generated_score_quad_octa_1024_256.cc
 
+extern const int kLanguageToPLangSize;
+extern const int kCloseSetSize;
+
 extern const UTF8PropObj cld_generated_CjkUni_obj;
 extern const CLD2TableSummary kCjkCompat_obj;
 extern const CLD2TableSummary kCjkDeltaBi_obj;
@@ -1400,21 +1403,70 @@ void CalcSummaryLang(DocTote* doc_tote, int total_text_bytes,
   }
 }
 
-void AddLangPriorBoost(uint32 langprob, ScoringContext* scoringcontext) {
-  // this is called 0..n times with language hints
-  // but we don't know the script, so put in both
-  // TODO: only put in Latn if lang can be in Latn, only in Othr similarly
-  // lang == Language FromPerScriptNumber(ulscript, perscript_number);
+void AddLangPriorBoost(Language lang, uint32 langprob,
+                       ScoringContext* scoringcontext) {
+  // This is called 0..n times with language hints
+  // but we don't know the script -- so boost either or both Latn, Othr.
 
-  LangBoosts* langprior_boost = &scoringcontext->langprior_boost.latn;
-  int n = langprior_boost->n;
-  langprior_boost->langprob[n] = langprob;
-  langprior_boost->n = langprior_boost->wrap(n + 1);
+  if (IsLatnLanguage(lang)) {
+    LangBoosts* langprior_boost = &scoringcontext->langprior_boost.latn;
+    int n = langprior_boost->n;
+    langprior_boost->langprob[n] = langprob;
+    langprior_boost->n = langprior_boost->wrap(n + 1);
+  }
 
-  langprior_boost = &scoringcontext->langprior_boost.othr;
-  n = langprior_boost->n;
-  langprior_boost->langprob[n] = langprob;
-  langprior_boost->n = langprior_boost->wrap(n + 1);
+  if (IsOthrLanguage(lang)) {
+    LangBoosts* langprior_boost = &scoringcontext->langprior_boost.othr;
+    int n = langprior_boost->n;
+    langprior_boost->langprob[n] = langprob;
+    langprior_boost->n = langprior_boost->wrap(n + 1);
+  }
+
+}
+
+void AddOneWhack(Language whacker_lang, Language whackee_lang,
+                 ScoringContext* scoringcontext) {
+  uint32 langprob = MakeLangProb(whackee_lang, 1);
+  // This logic avoids hr-Latn whacking sr-Cyrl, but still whacks sr-Latn
+  if (IsLatnLanguage(whacker_lang) && IsLatnLanguage(whackee_lang)) {
+    LangBoosts* langprior_whack = &scoringcontext->langprior_whack.latn;
+    int n = langprior_whack->n;
+    langprior_whack->langprob[n] = langprob;
+    langprior_whack->n = langprior_whack->wrap(n + 1);
+  }
+  if (IsOthrLanguage(whacker_lang) && IsOthrLanguage(whackee_lang)) {
+    LangBoosts* langprior_whack = &scoringcontext->langprior_whack.othr;
+    int n = langprior_whack->n;
+    langprior_whack->langprob[n] = langprob;
+    langprior_whack->n = langprior_whack->wrap(n + 1);
+ }
+}
+
+void AddCloseLangWhack(Language lang, ScoringContext* scoringcontext) {
+  // We do not in general want zh-Hans and zh-Hant to be close pairs,
+  // but we do here.
+  if (lang == CLD2::CHINESE) {
+    AddOneWhack(lang, CLD2::CHINESE_T, scoringcontext);
+    AddOneWhack(lang, CLD2::JAPANESE, scoringcontext);
+    AddOneWhack(lang, CLD2::KOREAN, scoringcontext);
+    return;
+  }
+  if (lang == CLD2::CHINESE_T) {
+    AddOneWhack(lang, CLD2::CHINESE, scoringcontext);
+    AddOneWhack(lang, CLD2::JAPANESE, scoringcontext);
+    AddOneWhack(lang, CLD2::KOREAN, scoringcontext);
+    return;
+  }
+
+  int base_lang_set = LanguageCloseSet(lang);
+  if (base_lang_set == 0) {return;}
+  // TODO: add an explicit list of each set to avoid this 512-times loop
+  for (int i = 0; i < kLanguageToPLangSize; ++i) {
+    Language lang2 = static_cast<Language>(i);
+    if ((base_lang_set == LanguageCloseSet(lang2)) && (lang != lang2)) {
+      AddOneWhack(lang, lang2, scoringcontext);
+    }
+  }
 }
 
 
@@ -1477,15 +1529,51 @@ void ApplyHints(const char* buffer,
     }
   }
 
-  // Put into ScoringContext
+  // Put boosts into ScoringContext
   for (int i = 0; i < GetCLDLangPriorCount(&lang_priors); ++i) {
     Language lang = GetCLDPriorLang(lang_priors.prior[i]);
     int qprob = GetCLDPriorWeight(lang_priors.prior[i]);
     if (qprob > 0) {
       uint32 langprob = MakeLangProb(lang, qprob);
-      AddLangPriorBoost(langprob, scoringcontext);
+      AddLangPriorBoost(lang, langprob, scoringcontext);
     }
   }
+
+  // Put whacks into scoring context
+  // We do not in general want zh-Hans and zh-Hant to be close pairs,
+  // but we do here. Use close_set_count[kCloseSetSize] to count zh, zh-Hant
+  int close_set_count[kCloseSetSize + 1];
+  memset(close_set_count, 0, sizeof(close_set_count));
+
+  for (int i = 0; i < GetCLDLangPriorCount(&lang_priors); ++i) {
+    Language lang = GetCLDPriorLang(lang_priors.prior[i]);
+    ++close_set_count[LanguageCloseSet(lang)];
+    if (lang == CLD2::CHINESE) {++close_set_count[kCloseSetSize];}
+    if (lang == CLD2::CHINESE_T) {++close_set_count[kCloseSetSize];}
+  }
+
+  // If a boost language is in a close set, force suppressing the others in
+  // that set, if exactly one of the set is present
+  for (int i = 0; i < GetCLDLangPriorCount(&lang_priors); ++i) {
+    Language lang = GetCLDPriorLang(lang_priors.prior[i]);
+    int qprob = GetCLDPriorWeight(lang_priors.prior[i]);
+    if (qprob > 0) {
+      int close_set = LanguageCloseSet(lang);
+      if ((close_set > 0) && (close_set_count[close_set] == 1)) {
+        AddCloseLangWhack(lang, scoringcontext);
+      }
+      if (((lang == CLD2::CHINESE) || (lang == CLD2::CHINESE_T)) &&
+          (close_set_count[kCloseSetSize] == 1)) {
+        AddCloseLangWhack(lang, scoringcontext);
+      }
+    }
+  }
+
+
+
+
+
+
 }
 
 
