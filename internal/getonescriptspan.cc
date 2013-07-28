@@ -334,13 +334,15 @@ int hex_digit_to_int(char c) {
 static int32 strto32_base10(const char* nptr, const char* limit,
                             const char **endptr) {
   *endptr = nptr;
-  while (nptr < limit && *nptr == '0')
+  while (nptr < limit && *nptr == '0') {
     ++nptr;
+  }
   if (nptr == limit || !ascii_isdigit(*nptr))
     return -1;
   const char* end_digits_run = nptr;
-  while (end_digits_run < limit && ascii_isdigit(*end_digits_run))
+  while (end_digits_run < limit && ascii_isdigit(*end_digits_run)) {
     ++end_digits_run;
+  }
   *endptr = end_digits_run;
   const int num_digits = end_digits_run - nptr;
   // kint32max == 2147483647.
@@ -364,13 +366,16 @@ static int32 strto32_base10(const char* nptr, const char* limit,
 static int32 strto32_base16(const char* nptr, const char* limit,
                             const char **endptr) {
   *endptr = nptr;
-  while (nptr < limit && *nptr == '0')
+  while (nptr < limit && *nptr == '0') {
     ++nptr;
-  if (nptr == limit || !ascii_isxdigit(*nptr))
+  }
+  if (nptr == limit || !ascii_isxdigit(*nptr)) {
     return -1;
+  }
   const char* end_xdigits_run = nptr;
-  while (end_xdigits_run < limit && ascii_isxdigit(*end_xdigits_run))
+  while (end_xdigits_run < limit && ascii_isxdigit(*end_xdigits_run)) {
     ++end_xdigits_run;
+  }
   *endptr = end_xdigits_run;
   const int num_xdigits = end_xdigits_run - nptr;
   // kint32max == 0x7FFFFFFF.
@@ -428,7 +433,9 @@ int ReadEntity(const char* src, int srcn, int* src_consumed) {
       // entity consists of alphanumeric chars
     }
     entval = LookupEntity(entstart, entend - entstart);
-    if (entval < 0)  return -1;  // not a legal entity name
+    if (entval < 0) {
+      return -1;  // not a legal entity name
+    }
     // Now we do a strange-seeming IE6-compatibility check: if entval is
     // >= 256, it *must* be followed by a semicolon or it's not considered
     // an entity.  The problem is lots of the newfangled entity names, like
@@ -437,13 +444,15 @@ int ReadEntity(const char* src, int srcn, int* src_consumed) {
     // "&lang" were treated as an entity, which is what the spec says
     // *should* happen (even when the HTML is inside an "A HREF" tag!)
     // IE ignores the spec for these new, high-value entities, so we do too.
-    if ( entval >= 256 && !(entend < srcend && *entend == ';') )
+    if ( entval >= 256 && !(entend < srcend && *entend == ';') ) {
       return -1;                 // make non-;-terminated entity illegal
+    }
   }
 
   // Finally, figure out how much src was consumed
-  if ( entend < srcend && *entend == ';' )
+  if ( entend < srcend && *entend == ';' ) {
     entend++;                    // standard says ; terminator is special
+  }
   *src_consumed = entend - src;
   return entval;
 }
