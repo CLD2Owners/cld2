@@ -199,7 +199,7 @@ extern const short kAvgDeltaOctaScore[614 * 4] = {
   1029,    0,    0,    0,  // 139 HAITIAN_CREOLE ht
    447,    0,    0,    0,  // 140 INUPIAK ik
      0,    0,    0, 1024,  // 141 INUKTITUT iu
-     0,    0,  925,    0,  // 142 KASHMIRI ks
+     0,    0,    0,    0,  // 142 KASHMIRI ks (Arab was 925)
   1100,    0,    0,    0,  // 143 KINYARWANDA rw
   1406,    0,    0,    0,  // 144 MALAGASY mg
    927,    0,    0,    0,  // 145 NAURU na
