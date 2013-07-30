@@ -1447,14 +1447,10 @@ void AddCloseLangWhack(Language lang, ScoringContext* scoringcontext) {
   // but we do here.
   if (lang == CLD2::CHINESE) {
     AddOneWhack(lang, CLD2::CHINESE_T, scoringcontext);
-    AddOneWhack(lang, CLD2::JAPANESE, scoringcontext);
-    AddOneWhack(lang, CLD2::KOREAN, scoringcontext);
     return;
   }
   if (lang == CLD2::CHINESE_T) {
     AddOneWhack(lang, CLD2::CHINESE, scoringcontext);
-    AddOneWhack(lang, CLD2::JAPANESE, scoringcontext);
-    AddOneWhack(lang, CLD2::KOREAN, scoringcontext);
     return;
   }
 
