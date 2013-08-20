@@ -1166,7 +1166,7 @@ void ExtractLangEtc(DocTote* doc_tote, int total_text_bytes,
   language3[0] = UNKNOWN_LANGUAGE;
   language3[1] = UNKNOWN_LANGUAGE;
   language3[2] = UNKNOWN_LANGUAGE;
-  percent3[0] = 100;
+  percent3[0] = 0;
   percent3[1] = 0;
   percent3[2] = 0;
   normalized_score3[0] = 0.0;
@@ -1176,12 +1176,12 @@ void ExtractLangEtc(DocTote* doc_tote, int total_text_bytes,
   *text_bytes = total_text_bytes;
   *is_reliable = false;
 
-  int bytecount1 = total_text_bytes;
+  int bytecount1 = 0;
   int bytecount2 = 0;
   int bytecount3 = 0;
 
   int lang1 = doc_tote->Key(0);
-  if (lang1 != DocTote::kUnusedKey) {
+  if ((lang1 != DocTote::kUnusedKey) && (lang1 != UNKNOWN_LANGUAGE)) {
     // We have a top language
     language3[0] = static_cast<Language>(lang1);
     bytecount1 = doc_tote->Value(0);
@@ -1194,7 +1194,7 @@ void ExtractLangEtc(DocTote* doc_tote, int total_text_bytes,
   }
 
   int lang2 = doc_tote->Key(1);
-  if (lang2 != DocTote::kUnusedKey) {
+  if ((lang2 != DocTote::kUnusedKey) && (lang2 != UNKNOWN_LANGUAGE)) {
     language3[1] = static_cast<Language>(lang2);
     bytecount2 = doc_tote->Value(1);
     int reli2 = doc_tote->Reliability(1);
@@ -1206,7 +1206,7 @@ void ExtractLangEtc(DocTote* doc_tote, int total_text_bytes,
   }
 
   int lang3 = doc_tote->Key(2);
-  if (lang3 != DocTote::kUnusedKey) {
+  if ((lang3 != DocTote::kUnusedKey) && (lang3 != UNKNOWN_LANGUAGE)) {
     language3[2] = static_cast<Language>(lang3);
     bytecount3 = doc_tote->Value(2);
     int reli3 = doc_tote->Reliability(2);
@@ -1246,7 +1246,7 @@ void ExtractLangEtc(DocTote* doc_tote, int total_text_bytes,
 
   *text_bytes = total_text_bytes;
 
-  if (lang1 != 0) {
+  if ((lang1 != DocTote::kUnusedKey) && (lang1 != UNKNOWN_LANGUAGE)) {
     // We have a top language
     // Its reliability is overall result reliability
     int bytecount = doc_tote->Value(0);
@@ -1255,8 +1255,8 @@ void ExtractLangEtc(DocTote* doc_tote, int total_text_bytes,
     *is_reliable = (reliable_percent >= kMinReliableKeepPercent);
   } else {
     // No top language at all. This can happen with zero text or 100% Klingon
-    // if extended=false. Just return all UNKNOWN_LANGUAGE, reliable.
-    *is_reliable = true;
+    // if extended=false. Just return all UNKNOWN_LANGUAGE, unreliable.
+    *is_reliable = false;
   }
 
   // If ignore percent is too large, set unreliable.
@@ -1592,7 +1592,7 @@ Language DetectLanguageSummaryV2(
   language3[0] = UNKNOWN_LANGUAGE;
   language3[1] = UNKNOWN_LANGUAGE;
   language3[2] = UNKNOWN_LANGUAGE;
-  percent3[0] = 100;
+  percent3[0] = 0;
   percent3[1] = 0;
   percent3[2] = 0;
   normalized_score3[0] = 0.0;
