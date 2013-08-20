@@ -26,30 +26,7 @@
 
 namespace CLD2 {
 
-// Linker supplies the right tables
-// New tables from
-// cld2_generated_cjk_uni_prop_80.cc
-// cld2_generated_cjk_delta_bi_32.cc
-// cld2_generated_quad_1024.cc
-// cld2_generated_delta_octa_0.cc
-//
-// cld2_generated_score_cjk_uni_0.cc
-// cld2_generated_score_cjk_uni_bi_0.cc
-// cld2_generated_score_quad_1024.cc
-// cld2_generated_score_quad_octa_0.cc
-
-// Caller supplies these.
-// extern const UTF8PropObj cld_generated_CjkUni_obj;
-// extern const CLDTableSummary kCjkDeltaBi_obj;
-// extern const CLDTableSummary kQuad_obj;
-// extern const CLDTableSummary kDeltaOcta_obj;
-
-// Caller must supply these also
-// extern const short kAvgCjkUniScore[];
-// extern const short kAvgCjkUniBiScore[];
-extern const short kAvgQuadScore[];
-// extern const short kAvgQuadOctaScore[];
-
+// Caller supplies the right tables in scoringcontext
 
 // Runtime routines for hashing, looking up, and scoring
 // unigrams (CJK), bigrams (CJK), quadgrams, and octagrams.
