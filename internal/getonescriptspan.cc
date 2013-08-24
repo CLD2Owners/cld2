@@ -968,6 +968,7 @@ bool ScriptScanner::GetOneScriptSpan(LangSpan* span) {
       tlen = ScanToLetterOrSpecial(next_byte_ + take, byte_length_ - take);
       take += tlen;
       map2original_.Delete(tlen);
+      if (take >= byte_length_) {break;}    // Might have scanned to end
 
       // We are at a letter, nonletter, tag, or entity
       if (IsSpecial(next_byte_[take]) && !is_plain_text_) {
