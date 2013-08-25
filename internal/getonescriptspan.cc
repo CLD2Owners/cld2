@@ -1010,7 +1010,8 @@ bool ScriptScanner::GetOneScriptSpan(LangSpan* span) {
   }
 
   // Almost done. Back up to a character boundary if needed
-  while ((0 < take) && ((next_byte_[take] & 0xc0) == 0x80)) {
+  while ((0 < take) && (take < byte_length_) &&
+         ((next_byte_[take] & 0xc0) == 0x80)) {
     // Back up over continuation byte
     --take;
     --put;
