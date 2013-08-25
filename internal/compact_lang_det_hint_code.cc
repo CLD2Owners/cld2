@@ -1447,7 +1447,7 @@ void SetCLDTLDHint(const char* tld, CLDLangPriors* langpriors) {
   int len = strlen(tld);
   if (len > 3) {return;}        // Ignore if more than three letters
   char local_tld[4];
-  strncpy(local_tld, tld, len);
+  strncpy(local_tld, tld, 4);
   local_tld[3] = '\0';          // Safety move
   // Lowercase
   for (int i = 0; i < len; ++i) {local_tld[i] |= 0x20;}
