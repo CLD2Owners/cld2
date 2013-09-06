@@ -121,9 +121,8 @@ inline void UNALIGNED_STORE64(void *p, uint64 v) {
   memcpy(p, &v, sizeof v);
 }
 
-}       // End namespace CLD2
-
 #endif
 
+}       // End namespace CLD2
 
 #endif  // BASE_PORT_H_
