@@ -3301,7 +3301,7 @@ extern const uint16 kPLangToLanguageOthr[256] = {
   URDU,                  // 18
   BIHARI,                // 19
   TG_UNKNOWN_LANGUAGE,   // 20
-  GUJARATI,              // 21
+  UNKNOWN_LANGUAGE,      // 21  (updated 2013.09.07 dsites)
   THAI,                  // 22
   SERBIAN,               // 23
   ARABIC,                // 24
