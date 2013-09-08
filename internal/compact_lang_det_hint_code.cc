@@ -19,7 +19,7 @@
 #include "compact_lang_det_hint_code.h"
 
 #include <stdlib.h>     // for abs()
-#include <stdio.h>      // for snprintf()
+#include <stdio.h>      // for sprintf()
 #include <string.h>     //
 #include "lang_script.h"
 #include "port.h"
@@ -1506,12 +1506,12 @@ void SetCLDLanguageHint(Language lang, CLDLangPriors* langpriors) {
 }
 
 
-// Make printable stringof priors
+// Make printable string of priors
 string DumpCLDLangPriors(const CLDLangPriors* langpriors) {
   string retval;
   for (int i = 0; i < langpriors->n; ++i) {
-    char temp[32];
-    snprintf(temp, sizeof(temp), "%s.%d ",
+    char temp[64];
+    sprintf(temp, "%s.%d ",
              LanguageCode(GetCLDPriorLang(langpriors->prior[i])),
              GetCLDPriorWeight(langpriors->prior[i]));
     retval.append(temp);

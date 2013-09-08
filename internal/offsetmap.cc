@@ -80,7 +80,7 @@ void OffsetMap::Printmap(const char* filename) {
 
   Flush();    // Make sure any pending entry gets printed
   fprintf(fout, "Offsetmap: %ld bytes\n", diffs_.size());
-  for (int i = 0; i < diffs_.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(diffs_.size()); ++i) {
     fprintf(fout, "%c%02d ", "&=+-"[OpPart(diffs_[i])], LenPart(diffs_[i]));
     if ((i % 20) == 19) {fprintf(fout, "\n");}
   }
@@ -206,7 +206,7 @@ void OffsetMap::Emit(MapOp op, int len) {
 }
 
 void OffsetMap::DumpString() {
-  for (int i = 0; i < diffs_.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(diffs_.size()); ++i) {
     fprintf(stderr, "%c%02d ", "&=+-"[OpPart(diffs_[i])], LenPart(diffs_[i]));
   }
   fprintf(stderr, "\n");
@@ -216,7 +216,7 @@ void OffsetMap::DumpString() {
   int aoffset = 0;
   int aprimeoffset = 0;
   int length = 0;
-  for (int i = 0; i < diffs_.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(diffs_.size()); ++i) {
     char c = diffs_[i];
     MapOp op = static_cast<MapOp>(OpPart(c));
     int len = LenPart(c);
@@ -317,7 +317,7 @@ int OffsetMap::ParseNext(int sub, MapOp* op, int* length) {
    *op = PREFIX_OP;
    *length = 0;
    char c;
-   while ((sub < diffs_.size()) && (*op == PREFIX_OP)) {
+   while ((sub < static_cast<int>(diffs_.size())) && (*op == PREFIX_OP)) {
      c = diffs_[sub++];
      *op = static_cast<MapOp>(OpPart(c));
      int len = LenPart(c);
@@ -339,7 +339,7 @@ int OffsetMap::ParsePrevious(int sub, MapOp* op, int* length) {
 void OffsetMap::PrintPosition(const char* str) {
   MapOp op = PREFIX_OP;
   int length = 0;
-  if ((0 < next_diff_sub_) && (next_diff_sub_ <= diffs_.size())) {
+  if ((0 < next_diff_sub_) && (next_diff_sub_ <= static_cast<int>(diffs_.size()))) {
     op = static_cast<MapOp>(OpPart(diffs_[next_diff_sub_ - 1]));
     length = LenPart(diffs_[next_diff_sub_ - 1]);
   }
@@ -354,7 +354,7 @@ void OffsetMap::PrintPosition(const char* str) {
 // Return true if move was OK
 bool OffsetMap::MoveRight() {
   // If at last range or RIGHT, set to RIGHT, return error
-  if (next_diff_sub_ >= diffs_.size()) {
+  if (next_diff_sub_ >= static_cast<int>(diffs_.size())) {
     SetRight();
     return false;
   }

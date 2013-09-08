@@ -18,7 +18,6 @@
 
 
 #include "getonescriptspan.h"
-#include <sys/time.h>                               // for gettimeofday
 #include <string.h>
 
 #include "fixunicodevalue.h"
@@ -284,14 +283,6 @@ int runetochar(char *str, const char32 *rune) {
   str[2] = 0x80 | ((c >> 1*6) & 0x3F);
   str[3] = 0x80 | (c & 0x3F);
   return 4;
-}
-
-
-// Convert GetTimeOfDay output to 64-bit usec
-static inline uint64 Microseconds(const struct timeval& t) {
-  // The SumReducer uses uint64, so convert to (uint64) microseconds,
-  // not (double) seconds.
-  return t.tv_sec * 1000000ULL + t.tv_usec;
 }
 
 
@@ -844,7 +835,6 @@ bool ScriptScanner::GetOneScriptSpan(LangSpan* span) {
   map2original_.Clear();
   map2original_.Delete(span->offset);   // So that MapBack(0) gives offset
 
-  // gettimeofday(&script_start, NULL);
   // Get to the first real non-tag letter or entity that is a letter
   int skip = SkipToFrontOfSpan(next_byte_, byte_length_, &spanscript);
   next_byte_ += skip;
@@ -860,8 +850,6 @@ bool ScriptScanner::GetOneScriptSpan(LangSpan* span) {
     map2original_.Reset();
     return false;               // No more letters to be found
   }
-
-  // gettimeofday(&script_mid, NULL);
 
   // There is at least one letter, so we know the script for this span
   span->ulscript = (ULScript)spanscript;

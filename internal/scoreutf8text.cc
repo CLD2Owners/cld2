@@ -22,7 +22,6 @@
 #include <math.h>                   // for sqrt
 #include <stdio.h>
 #include <string.h>
-#include <sys/time.h>               // for gettimeofday
 #include <string>
 
 #include "debug.h"        // for uint8 etc

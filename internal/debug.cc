@@ -128,7 +128,7 @@ string GetScoreTxt(const ScoringContext* scoringcontext,
                    const CLD2TableSummary* base_obj, int indirect) {
   string retval;
   retval.clear();
-  if (indirect < base_obj->kCLDTableSizeOne) {
+  if (indirect < static_cast<int>(base_obj->kCLDTableSizeOne)) {
     // Up to three languages at indirect
     uint32 langprob = base_obj->kCLDTableInd[indirect];
     retval.append(GetLangProbTxt(scoringcontext, langprob));
@@ -209,7 +209,7 @@ static int GetTextColor(Language lang, bool lighten) {
 string GetPlainEscapedText(const string& txt) {
   string retval;
   retval.clear();
-  for (int i = 0; i < txt.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(txt.size()); ++i) {
     char c = txt[i];
     if (c == '\n') {
       retval.append(" ");
@@ -225,7 +225,7 @@ string GetPlainEscapedText(const string& txt) {
 string GetHtmlEscapedText(const string& txt) {
   string retval;
   retval.clear();
-  for (int i = 0; i < txt.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(txt.size()); ++i) {
     char c = txt[i];
     if (c == '<') {
       retval.append("&lt;");
@@ -463,7 +463,7 @@ void CLD2_Debug2(const char* text,
 void DumpResultChunkVector(FILE* f, const char* src,
                            ResultChunkVector* resultchunkvector) {
   fprintf(f, "DumpResultChunkVector[%ld]<br>\n", resultchunkvector->size());
-  for (int i = 0; i < resultchunkvector->size(); ++i) {
+  for (int i = 0; i < static_cast<int>(resultchunkvector->size()); ++i) {
     ResultChunk* rc = &(*resultchunkvector)[i];
     Language lang1 = static_cast<Language>(rc->lang1);
     string this_chunk = string(src, rc->offset, rc->bytes);

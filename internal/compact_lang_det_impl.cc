@@ -18,7 +18,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <sys/time.h>                               // for gettimeofday
 #include <string>
 
 #include "cldutil.h"

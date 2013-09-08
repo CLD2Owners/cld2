@@ -184,7 +184,7 @@ void GetTextSpanOffsets(const ScoringHitBuffer* hitbuffer,
 
 int DiffScore(const CLD2TableSummary* obj, int indirect,
               uint16 lang1, uint16 lang2) {
-  if (indirect < obj->kCLDTableSizeOne) {
+  if (indirect < static_cast<int>(obj->kCLDTableSizeOne)) {
     // Up to three languages at indirect
     uint32 langprob = obj->kCLDTableInd[indirect];
     return GetLangScore(langprob, lang1) - GetLangScore(langprob, lang2);
@@ -914,7 +914,7 @@ void LinearizeAll(ScoringContext* scoringcontext, bool score_cjk,
       ++base_i;
       // One langprob in kQuadInd[0..SingleSize),
       // two in kQuadInd[SingleSize..Size)
-      if (indirect < base_obj->kCLDTableSizeOne) {
+      if (indirect < static_cast<int>(base_obj->kCLDTableSizeOne)) {
         // Up to three languages at indirect
         uint32 langprob = base_obj->kCLDTableInd[indirect];
         if (langprob > 0) {

@@ -68,7 +68,7 @@ uint32 GetNextLangprob(ULScriptRType rtype,
   uint32 probs = QuadHashV3Lookup4(wrt_quadgram_obj, quadhash);
   int indirect_subscr = probs & ~wrt_quadgram_obj->kCLDTableKeyMask;
   uint32 langprob;
-  if (indirect_subscr < wrt_quadgram_obj->kCLDTableSizeOne) {
+  if (indirect_subscr < static_cast<int>(wrt_quadgram_obj->kCLDTableSizeOne)) {
     // Up to three languages at indirect
     langprob = wrt_quadgram_obj->kCLDTableInd[indirect_subscr];
   } else {
