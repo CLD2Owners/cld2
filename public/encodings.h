@@ -40,7 +40,7 @@ enum Encoding {
   CHINESE_EUC_CN       = 15,  // Misnamed. Should be EUC_TW. Was Basis Tech
                               // CNS11643EUC, before that   EUC-CN(!)
   KOREAN_EUC_KR        = 16,  //   KSC
-  UNICODE              = 17,  //   Unicode
+  UNICODE_UNUSED       = 17,  //   Unicode
   CHINESE_EUC_DEC      = 18,  // Misnamed. Should be EUC_TW. Was
                               // CNS11643EUC, before that   EUC.
   CHINESE_CNS          = 19,  // Misnamed. Should be EUC_TW. Was
