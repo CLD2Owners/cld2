@@ -704,9 +704,9 @@ int CheapSqueezeInplace(char* isrc,
         }
         if (FLAGS_cld_showme) {
           // Mark the deletion point with black square U+25A0
-          *dst++ = 0xe2;
-          *dst++ = 0x96;
-          *dst++ = 0xa0;
+          *dst++ = static_cast<signed char>(0xe2);
+          *dst++ = static_cast<signed char>(0x96);
+          *dst++ = static_cast<signed char>(0xa0);
           *dst++ = ' ';
         }
         skipping = true;
@@ -1006,7 +1006,7 @@ void MoveLang1ToLang2(Language lang1, Language lang2,
 
   int k = 0;
   uint16 prior_lang = UNKNOWN_LANGUAGE;
-  for (int i = 0; i < resultchunkvector->size(); ++i) {
+  for (int i = 0; i < static_cast<int>(resultchunkvector->size()); ++i) {
     ResultChunk* rc = &(*resultchunkvector)[i];
     if (rc->lang1 == lang1) {
       // Update entry[i] lang1 => lang2
