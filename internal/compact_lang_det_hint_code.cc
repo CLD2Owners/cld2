@@ -997,7 +997,7 @@ void TrimCLDLangPriors(int max_entries, CLDLangPriors* lps) {
 
 int CountCommas(const string& langtags) {
   int commas = 0;
-  for (int i = 0; i < langtags.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(langtags.size()); ++i) {
     if (langtags[i] == ',') {++commas;}
   }
   return commas;
@@ -1055,7 +1055,7 @@ string TrimCLDLangTagsHint(const string& langtags) {
 
   char temp[20];
   int pos = 0;
-  while (pos < langtags.size()) {
+  while (pos < static_cast<int>(langtags.size())) {
     int comma = langtags.find(',', pos);
     if (comma == string::npos) {comma = langtags.size();} // fake trailing comma
     int len = comma - pos;
@@ -1398,7 +1398,7 @@ void SetCLDLangTagsHint(const string& langtags, CLDLangPriors* langpriors) {
 
   char temp[20];
   int pos = 0;
-  while (pos < langtags.size()) {
+  while (pos < static_cast<int>(langtags.size())) {
     int comma = langtags.find(',', pos);
     if (comma == string::npos) {comma = langtags.size();} // fake trailing comma
     int len = comma - pos;
