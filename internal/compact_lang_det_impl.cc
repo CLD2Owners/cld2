@@ -704,9 +704,9 @@ int CheapSqueezeInplace(char* isrc,
         }
         if (FLAGS_cld_showme) {
           // Mark the deletion point with black square U+25A0
-          *dst++ = static_cast<char>(0xe2);
-          *dst++ = static_cast<char>(0x96);
-          *dst++ = static_cast<char>(0xa0);
+          *dst++ = static_cast<unsigned char>(0xe2);
+          *dst++ = static_cast<unsigned char>(0x96);
+          *dst++ = static_cast<unsigned char>(0xa0);
           *dst++ = ' ';
         }
         skipping = true;
