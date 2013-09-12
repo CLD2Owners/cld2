@@ -172,7 +172,7 @@ const char* kTeststr_sr_Latn = " autonomnih pokrajina saveznim zakonom može se 
 const char* kTeststr_sr_ME_Latn = "savjet pobjeda a radi bržeg rada pošto rom radi sporije nego ram izvorni rom se isključuje a dio ram a se rezerviše te se u njega ne ploča procesor ram memorija grafička kartica zvučna kartica modem mrežna kartica napojna jedinica uređaji za pohranjivanje";
 const char* kTeststr_ss_Latn = " bakhokhintsela yesikhashana bafake imininingwane ye akhawunti leliciniso kulelifomu nangabe akukafakwa imininingwane leliciniso imali lekhokhiwe angeke ifakwe kumkhokhintsela lofanele imininingwane ye akhawunti ime ngalendlela lelandzelako inombolo";
 const char* kTeststr_st_Latn = " bang ba nang le thahasello matshwao a sehlooho thuto e thehilweng hodima diphetho ke tsela ya ho ruta le ho ithuta e totobatsang hantle seo baithuti ba lokelang ho se fihlella ntlhatheo eo e sebetsang ka yona ke ya hore titjhere o hlakisa pele seo";
-const char* kTeststr_su_Latn = " alus gampang deuih uhun im gmail obrolan ulah disimpen na koropak kuring simpen obrolan dina koropak kuring obrolan obrolan anjeun teu boga arsip obrolan slovak slovenia vietnam catalan czech estonia hindi lithuania romania tagalog thai turkish édit iber";
+const char* kTeststr_su_Latn =  "Nu ngatur kahirupan warga, keur kapentingan pamarentahan diatur ku RT, RW jeung Kepala Dusun, sedengkeun urusan adat dipupuhuan ku Kuncen jeung kepala adat. Sanajan Kampung Kuta teu pati anggang jeung lembur sejenna nu aya di wewengkon Desa Pasir Angin, tapi boh wangunan imah atawa tradisi kahirupan masarakatna nenggang ti nu lian.";
 const char* kTeststr_sv_Latn = " a bort objekt från google desktop post äldst meny öretag dress etaljer alternativ för vad är inne yaste google skrivbord plugin program för nyheter google visa nyheter som är anpassade efter de artiklar som du läser om du till exempel läser";
 const char* kTeststr_sw_Latn = " a ujumbe mpya jumla unda tafuta na angalia vikundi vya kujadiliana na kushiriki mawazo iliyopangwa kwa tarehe watumiaji wapya futa orodha hizi lugha hoja vishikanisho vilivyo dhaminiwa ujumbe sanaa na tamasha toka udhibitisho wa neno kwa haraka fikia";
 const char* kTeststr_syr_Syrc = "ܐܕܪܝܣ ܓܛܘ ܫܘܪܝܐ ܡܢ ܦܪܢܣܐ ܡܢ ܐܣܦܢܝܐ ܚܐܪܘܬܐ ܒܐܕܪ ܒܢܝܣܢ ܫܛܝܚܘܬܐ ܟܠܢܝܐ ܡܝ̈ܐ ܒܥܠܡܐ";
@@ -231,9 +231,10 @@ const char* kTeststr_fr_en_Latn =
                                   "France is the largest country in Western Europe and the third-largest in Europe as a whole. "
                                   "A accès aux chiens et aux frontaux qui lui ont été il peut consulter et modifier ses collections et exporter "
                                   "Cet article concerne le pays européen aujourd’hui appelé République française. Pour d’autres usages du nom France, "
+                                  "Pour une aide rapide et effective, veuiller trouver votre aide dans le menu ci-dessus."
                                   "Motoring events began soon after the construction of the first successful gasoline-fueled automobiles. The quick brown fox jumped over the lazy dog";
 
-// This can be used to cross-check the build datae of the main quadgram table
+// This can be used to cross-check the build date of the main quadgram table
 const char* kTeststr_version = "qpdbmrmxyzptlkuuddlrlrbas las les qpdbmrmxyzptlkuuddlrlrbas el la qpdbmrmxyzptlkuuddlrlrbas";
 
 #else
@@ -386,7 +387,7 @@ const char* kTeststr_sr_Latn = " autonomnih pokrajina saveznim zakonom mo\xC5\xB
 const char* kTeststr_sr_ME_Latn = "savjet pobjeda a radi br\xC5\xBE\x65g rada po\xC5\xA1to rom radi sporije nego ram izvorni rom se isklju\xC4\x8Duje a dio ram a se rezervi\xC5\xA1\x65 te se u njega ne plo\xC4\x8D\x61 procesor ram memorija grafi\xC4\x8Dka kartica zvu\xC4\x8Dna kartica modem mre\xC5\xBEna kartica napojna jedinica ure\xC4\x91\x61ji za pohranjivanje";
 const char* kTeststr_ss_Latn = " bakhokhintsela yesikhashana bafake imininingwane ye akhawunti leliciniso kulelifomu nangabe akukafakwa imininingwane leliciniso imali lekhokhiwe angeke ifakwe kumkhokhintsela lofanele imininingwane ye akhawunti ime ngalendlela lelandzelako inombolo";
 const char* kTeststr_st_Latn = " bang ba nang le thahasello matshwao a sehlooho thuto e thehilweng hodima diphetho ke tsela ya ho ruta le ho ithuta e totobatsang hantle seo baithuti ba lokelang ho se fihlella ntlhatheo eo e sebetsang ka yona ke ya hore titjhere o hlakisa pele seo";
-const char* kTeststr_su_Latn = " alus gampang deuih uhun im gmail obrolan ulah disimpen na koropak kuring simpen obrolan dina koropak kuring obrolan obrolan anjeun teu boga arsip obrolan slovak slovenia vietnam catalan czech estonia hindi lithuania romania tagalog thai turkish \xC3\xA9\x64it iber";
+const char* kTeststr_su_Latn =  "Nu ngatur kahirupan warga, keur kapentingan pamarentahan diatur ku RT, RW jeung Kepala Dusun, sedengkeun urusan adat dipupuhuan ku Kuncen jeung kepala adat. Sanajan Kampung Kuta teu pati anggang jeung lembur sejenna nu aya di wewengkon Desa Pasir Angin, tapi boh wangunan imah atawa tradisi kahirupan masarakatna nenggang ti nu lian.";
 const char* kTeststr_sv_Latn = " a bort objekt fr\xC3\xA5n google desktop post \xC3\xA4ldst meny \xC3\xB6retag dress etaljer alternativ f\xC3\xB6r vad \xC3\xA4r inne yaste google skrivbord plugin program f\xC3\xB6r nyheter google visa nyheter som \xC3\xA4r anpassade efter de artiklar som du l\xC3\xA4ser om du till exempel l\xC3\xA4ser";
 const char* kTeststr_sw_Latn = " a ujumbe mpya jumla unda tafuta na angalia vikundi vya kujadiliana na kushiriki mawazo iliyopangwa kwa tarehe watumiaji wapya futa orodha hizi lugha hoja vishikanisho vilivyo dhaminiwa ujumbe sanaa na tamasha toka udhibitisho wa neno kwa haraka fikia";
 const char* kTeststr_syr_Syrc = "\xDC\x90\xDC\x95\xDC\xAA\xDC\x9D\xDC\xA3 \xDC\x93\xDC\x9B\xDC\x98 \xDC\xAB\xDC\x98\xDC\xAA\xDC\x9D\xDC\x90 \xDC\xA1\xDC\xA2 \xDC\xA6\xDC\xAA\xDC\xA2\xDC\xA3\xDC\x90 \xDC\xA1\xDC\xA2 \xDC\x90\xDC\xA3\xDC\xA6\xDC\xA2\xDC\x9D\xDC\x90 \xDC\x9A\xDC\x90\xDC\xAA\xDC\x98\xDC\xAC\xDC\x90 \xDC\x92\xDC\x90\xDC\x95\xDC\xAA \xDC\x92\xDC\xA2\xDC\x9D\xDC\xA3\xDC\xA2 \xDC\xAB\xDC\x9B\xDC\x9D\xDC\x9A\xDC\x98\xDC\xAC\xDC\x90 \xDC\x9F\xDC\xA0\xDC\xA2\xDC\x9D\xDC\x90 \xDC\xA1\xDC\x9D\xCC\x88\xDC\x90 \xDC\x92\xDC\xA5\xDC\xA0\xDC\xA1\xDC\x90";
@@ -445,9 +446,10 @@ const char* kTeststr_fr_en_Latn =
                                   "France is the largest country in Western Europe and the third-largest in Europe as a whole. "
                                   "A acc\xC3\xA8s aux chiens et aux frontaux qui lui ont \xC3\xA9t\xC3\xA9 il peut consulter et modifier ses collections et exporter "
                                   "Cet article concerne le pays europ\xC3\xA9\x65n aujourd\xE2\x80\x99hui appel\xC3\xA9 R\xC3\xA9publique fran\xC3\xA7\x61ise. Pour d\xE2\x80\x99\x61utres usages du nom France, "
+                                  "Pour une aide rapide et effective, veuiller trouver votre aide dans le menu ci-dessus."
                                   "Motoring events began soon after the construction of the first successful gasoline-fueled automobiles. The quick brown fox jumped over the lazy dog";
 
-// This can be used to cross-check the build datae of the main quadgram table
+// This can be used to cross-check the build date of the main quadgram table
 const char* kTeststr_version = "qpdbmrmxyzptlkuuddlrlrbas las les qpdbmrmxyzptlkuuddlrlrbas el la qpdbmrmxyzptlkuuddlrlrbas";
 
 #endif
