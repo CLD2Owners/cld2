@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <vector>
 
 #include "cldutil.h"
 #include "debug.h"
@@ -1537,8 +1538,7 @@ void ApplyHints(const char* buffer,
   // Put whacks into scoring context
   // We do not in general want zh-Hans and zh-Hant to be close pairs,
   // but we do here. Use close_set_count[kCloseSetSize] to count zh, zh-Hant
-  int close_set_count[kCloseSetSize + 1];
-  memset(close_set_count, 0, sizeof(close_set_count));
+  std::vector<int> close_set_count(kCloseSetSize + 1, 0);
 
   for (int i = 0; i < GetCLDLangPriorCount(&lang_priors); ++i) {
     Language lang = GetCLDPriorLang(lang_priors.prior[i]);
