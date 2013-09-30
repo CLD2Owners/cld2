@@ -194,7 +194,7 @@ extern const char* const kLanguageToName[kLanguageToNameSize] = {
   "CEBUANO",               // 165 ceb
   "EWE",                   // 166 ee
   "GA",                    // 167 gaa
-  "HMONG",                 // 168 blu
+  "HMONG",                 // 168 hmn
   "KRIO",                  // 169 kri
   "LOZI",                  // 170 loz
   "LUBA_LULUA",            // 171 lua
@@ -813,7 +813,7 @@ extern const char* const kLanguageToCode[kLanguageToCodeSize] = {
   "ceb",   // 165 CEBUANO
   "ee",    // 166 EWE
   "gaa",   // 167 GA
-  "blu",   // 168 HMONG
+  "hmn",   // 168 HMONG
   "kri",   // 169 KRIO
   "loz",   // 170 LOZI
   "lua",   // 171 LUBA_LULUA
@@ -1432,7 +1432,7 @@ extern const char* const kLanguageToCName[kLanguageToCNameSize] = {
   "CEBUANO",               // 165 ceb
   "EWE",                   // 166 ee
   "GA",                    // 167 gaa
-  "HMONG",                 // 168 blu
+  "HMONG",                 // 168 hmn
   "KRIO",                  // 169 kri
   "LOZI",                  // 170 loz
   "LUBA_LULUA",            // 171 lua
@@ -2052,7 +2052,7 @@ extern const FourScripts kLanguageToScripts[kLanguageToScriptsSize] = {
   {ULScript_Latin, None, None, None, },  // 165 ceb
   {ULScript_Latin, None, None, None, },  // 166 ee
   {ULScript_Latin, None, None, None, },  // 167 gaa
-  {ULScript_Latin, None, None, None, },  // 168 blu
+  {ULScript_Latin, None, None, None, },  // 168 hmn
   {ULScript_Latin, None, None, None, },  // 169 kri
   {ULScript_Latin, None, None, None, },  // 170 loz
   {ULScript_Latin, None, None, None, },  // 171 lua
@@ -2672,7 +2672,7 @@ extern const uint8 kLanguageToPLang[kLanguageToPLangSize] = {
   107,  // 165 ceb
   108,  // 166 ee
   109,  // 167 gaa
-  110,  // 168 blu
+  110,  // 168 hmn
   111,  // 169 kri
   112,  // 170 loz
   113,  // 171 lua
@@ -4128,7 +4128,7 @@ extern const CharIntPair kNameToLanguage[kNameToLanguageSize] = {
   {"HEBREW",                 6},  // he
   {"HEBREW",                 6},  // iw
   {"HINDI",                 35},  // hi
-  {"HMONG",                168},  // blu
+  {"HMONG",                168},  // hmn
   {"HUNGARIAN",             23},  // hu
   {"ICELANDIC",             19},  // is
   {"IGBO",                 162},  // ig
@@ -4384,7 +4384,7 @@ extern const CharIntPair kCodeToLanguage[kNameToLanguageSize] = {
   {"bg",    27},  // bg
   {"bh",    51},  // bh
   {"bi",   134},  // bi
-  {"blu",  168},  // blu
+  {"hmn",  168},  // hmn
   {"bn",    37},  // bn
   {"bo",   105},  // bo
   {"br",    89},  // br
