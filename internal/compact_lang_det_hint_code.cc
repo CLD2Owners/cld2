@@ -1351,7 +1351,7 @@ bool FindAfter(const char* utf8_body,
 // pos is just after an opening quote/apostrophe and max_pos is the ending one
 // String must all be on a single line.
 // Return slightly-normalized language list, empty or ending in comma
-// Does lowercasing and removes excess puncturaiton/space
+// Does lowercasing and removes excess punctuation/space
 string CopyOneQuotedString(const char* utf8_body,
                          int32 pos, int32 max_pos) {
   string s;
