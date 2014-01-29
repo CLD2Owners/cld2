@@ -489,7 +489,7 @@ int ScanToLetterOrSpecial(const char* src, int len) {
 
 // src points to non-letter, such as tag-opening '<'
 // Return length from here to next possible letter
-// On eos or another < before >, return 1
+// On another < before >, return 1
 // advances <tag>
 //          |    |
 // advances <tag> ... </tag>  for <script> <style>
@@ -497,9 +497,9 @@ int ScanToLetterOrSpecial(const char* src, int len) {
 // advances <!-- ... <tag> ... -->
 //          |                     |
 // advances <tag
-//          ||  (1)
+//          |    | end of string
 // advances <tag <tag2>
-//          ||  (1)
+//          ||
 int ScanToPossibleLetter(const char* isrc, int len, int max_exit_state) {
   const uint8* src = reinterpret_cast<const uint8*>(isrc);
   const uint8* srclimit = src + len;
@@ -1023,7 +1023,7 @@ bool ScriptScanner::GetOneScriptSpan(LangSpan* span) {
 }
 
 // Force Latin, Cyrillic, Armenian, Greek scripts to be lowercase
-// List changes with each version of Unicode, so always lowercase
+// List changes with each version of Unicode, so just always lowercase
 // Unicode 6.2.0:
 //   ARMENIAN COPTIC CYRILLIC DESERET GEORGIAN GLAGOLITIC GREEK LATIN
 void ScriptScanner::LowerScriptSpan(LangSpan* span) {
@@ -1031,29 +1031,21 @@ void ScriptScanner::LowerScriptSpan(LangSpan* span) {
   // lowercasing an entity such as &Aacute;
   // We only need to do this for Latn and Cyrl scripts
   map2uplow_.Clear();
-  if (true ||
-      (span->ulscript == ULScript_Latin) ||
-      (span->ulscript == ULScript_Cyrillic) ||
-      (span->ulscript == ULScript_Armenian) ||
-      (span->ulscript == ULScript_Greek)) {
-    // Full Unicode lowercase of the entire buffer, including
-    // four pad bytes off the end.
-    // Ahhh. But the last byte 0x00 is not interchange-valid, so we do 3 pad
-    // bytes and put the 0x00 in explicitly.
-    // Build an offset map from script_buffer_lower_ back to script_buffer_
-    int consumed, filled, changed;
-    StringPiece istr(span->text, span->text_bytes + 3);
-    StringPiece ostr(script_buffer_lower_, kMaxScriptLowerBuffer);
+  // Full Unicode lowercase of the entire buffer, including
+  // four pad bytes off the end.
+  // Ahhh. But the last byte 0x00 is not interchange-valid, so we do 3 pad
+  // bytes and put the 0x00 in explicitly.
+  // Build an offset map from script_buffer_lower_ back to script_buffer_
+  int consumed, filled, changed;
+  StringPiece istr(span->text, span->text_bytes + 3);
+  StringPiece ostr(script_buffer_lower_, kMaxScriptLowerBuffer);
 
-    UTF8GenericReplace(&utf8repl_lettermarklower_obj,
-                              istr, ostr, is_plain_text_,
-                              &consumed, &filled, &changed, &map2uplow_);
-    script_buffer_lower_[filled] = '\0';
-    span->text = script_buffer_lower_;
-    span->text_bytes = filled - 3;
-  } else {
-    map2uplow_.Copy(span->text_bytes + 3);
-  }
+  UTF8GenericReplace(&utf8repl_lettermarklower_obj,
+                            istr, ostr, is_plain_text_,
+                            &consumed, &filled, &changed, &map2uplow_);
+  script_buffer_lower_[filled] = '\0';
+  span->text = script_buffer_lower_;
+  span->text_bytes = filled - 3;
   map2uplow_.Reset();
 }
 
