@@ -4369,7 +4369,7 @@ extern const CharIntPair kNameToLanguage[kNameToLanguageSize] = {
 
 // Alphabetical order for binary search
 extern const int kCodeToLanguageSize = 304;
-extern const CharIntPair kCodeToLanguage[kNameToLanguageSize] = {
+extern const CharIntPair kCodeToLanguage[kCodeToLanguageSize] = {
   {"aa",   131},  // aa
   {"ab",   130},  // ab
   {"af",   101},  // af
@@ -4384,7 +4384,7 @@ extern const CharIntPair kCodeToLanguage[kNameToLanguageSize] = {
   {"bg",    27},  // bg
   {"bh",    51},  // bh
   {"bi",   134},  // bi
-  {"hmn",  168},  // hmn
+  //{"hmn",  168},  // hmn   used to be blu
   {"bn",    37},  // bn
   {"bo",   105},  // bo
   {"br",    89},  // br
@@ -4425,6 +4425,7 @@ extern const CharIntPair kCodeToLanguage[kNameToLanguageSize] = {
   {"haw",  164},  // haw
   {"he",     6},  // he
   {"hi",    35},  // hi
+  {"hmn",  168},  // hmn  used to be blu
   {"hr",    28},  // hr
   {"ht",   139},  // ht
   {"hu",    23},  // hu
