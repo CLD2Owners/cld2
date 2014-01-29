@@ -169,7 +169,7 @@ Language FromPerScriptNumber(ULScript ulscript, uint8 perscript_number);
 // there is a need for low-performance dealing with original language numbers
 // and unknown scripts, mostly for processing language hints.
 // These routines let one derive a script class from a bare language.
-// For languages written in multiple scripts, both of tehse can return true.
+// For languages written in multiple scripts, both of these can return true.
 
 bool IsLatnLanguage(Language lang);
 bool IsOthrLanguage(Language lang);
