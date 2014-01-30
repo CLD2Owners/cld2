@@ -14,6 +14,7 @@
 
 //
 // Author: dsites@google.com (Dick Sites)
+// Updated 2014.01 for dual table lookup
 //
 
 #include "scoreonescriptspan.h"
@@ -548,6 +549,13 @@ void JustOneItemToVector(ScriptScanner* scanner, const char* text,
 // Debugging. Not thread safe. Defined in getonescriptspan
 char* DisplayPiece(const char* next_byte_, int byte_length_);
 
+// If high bit is on, take out high bit and add 2B to make table2 entries easy
+inline int PrintableIndirect(int x) {
+  if ((x & 0x80000000u) != 0) {
+    return (x & ~0x80000000u) + 2000000000;
+  }
+  return x;
+}
 void DumpHitBuffer(FILE* df, const char* text,
                    const ScoringHitBuffer* hitbuffer) {
   fprintf(df,
@@ -558,11 +566,12 @@ void DumpHitBuffer(FILE* df, const char* text,
   for (int i = 0; i < hitbuffer->maxscoringhits; ++i) {
     if (i < hitbuffer->next_base) {
       fprintf(df, "Q[%d]%d,%d,%s ",
-              i, hitbuffer->base[i].offset, hitbuffer->base[i].indirect,
+              i, hitbuffer->base[i].offset,
+              PrintableIndirect(hitbuffer->base[i].indirect),
               DisplayPiece(&text[hitbuffer->base[i].offset], 6));
     }
     if (i < hitbuffer->next_delta) {
-      fprintf(df, "L[%d]%d,%d,%s ",
+      fprintf(df, "DL[%d]%d,%d,%s ",
               i, hitbuffer->delta[i].offset, hitbuffer->delta[i].indirect,
               DisplayPiece(&text[hitbuffer->delta[i].offset], 12));
     }
@@ -579,12 +588,13 @@ void DumpHitBuffer(FILE* df, const char* text,
   if (hitbuffer->next_base > 50) {
     int i = hitbuffer->next_base;
     fprintf(df, "Q[%d]%d,%d,%s ",
-            i, hitbuffer->base[i].offset, hitbuffer->base[i].indirect,
+            i, hitbuffer->base[i].offset,
+            PrintableIndirect(hitbuffer->base[i].indirect),
             DisplayPiece(&text[hitbuffer->base[i].offset], 6));
   }
   if (hitbuffer->next_delta > 50) {
     int i = hitbuffer->next_delta;
-    fprintf(df, "L[%d]%d,%d,%s ",
+    fprintf(df, "DL[%d]%d,%d,%s ",
             i, hitbuffer->delta[i].offset, hitbuffer->delta[i].indirect,
             DisplayPiece(&text[hitbuffer->delta[i].offset], 12));
   }
@@ -844,16 +854,19 @@ uint32 DefaultLangProb(ULScript ulscript) {
 void LinearizeAll(ScoringContext* scoringcontext, bool score_cjk,
                   ScoringHitBuffer* hitbuffer) {
   const CLD2TableSummary* base_obj;       // unigram or quadgram
+  const CLD2TableSummary* base_obj2;      // quadgram dual table
   const CLD2TableSummary* delta_obj;      // bigram or octagram
   const CLD2TableSummary* distinct_obj;   // bigram or octagram
   uint16 base_hit;
   if (score_cjk) {
     base_obj = scoringcontext->scoringtables->unigram_compat_obj;
+    base_obj2 = scoringcontext->scoringtables->unigram_compat_obj;
     delta_obj = scoringcontext->scoringtables->deltabi_obj;
     distinct_obj = scoringcontext->scoringtables->distinctbi_obj;
     base_hit = UNIHIT;
   } else {
     base_obj = scoringcontext->scoringtables->quadgram_obj;
+    base_obj2 = scoringcontext->scoringtables->quadgram_obj2;
     delta_obj = scoringcontext->scoringtables->deltaocta_obj;
     distinct_obj = scoringcontext->scoringtables->distinctocta_obj;
     base_hit = QUADHIT;
@@ -911,12 +924,18 @@ void LinearizeAll(ScoringContext* scoringcontext, bool score_cjk,
     else {
       // Add one or two base entries
       int indirect = hitbuffer->base[base_i].indirect;
+      // First, get right scoring table
+      const CLD2TableSummary* local_base_obj = base_obj;
+      if ((indirect & 0x80000000u) != 0) {
+        local_base_obj = base_obj2;
+        indirect &= ~0x80000000u;
+      }
       ++base_i;
       // One langprob in kQuadInd[0..SingleSize),
       // two in kQuadInd[SingleSize..Size)
-      if (indirect < static_cast<int>(base_obj->kCLDTableSizeOne)) {
+      if (indirect < static_cast<int>(local_base_obj->kCLDTableSizeOne)) {
         // Up to three languages at indirect
-        uint32 langprob = base_obj->kCLDTableInd[indirect];
+        uint32 langprob = local_base_obj->kCLDTableInd[indirect];
         if (langprob > 0) {
           hitbuffer->linear[linear_i].offset = base_off;
           hitbuffer->linear[linear_i].type = base_hit;
@@ -925,9 +944,9 @@ void LinearizeAll(ScoringContext* scoringcontext, bool score_cjk,
         }
       } else {
         // Up to six languages at start + 2 * (indirect - start)
-        indirect += (indirect - base_obj->kCLDTableSizeOne);
-        uint32 langprob = base_obj->kCLDTableInd[indirect];
-        uint32 langprob2 = base_obj->kCLDTableInd[indirect + 1];
+        indirect += (indirect - local_base_obj->kCLDTableSizeOne);
+        uint32 langprob = local_base_obj->kCLDTableInd[indirect];
+        uint32 langprob2 = local_base_obj->kCLDTableInd[indirect + 1];
         if (langprob > 0) {
           hitbuffer->linear[linear_i].offset = base_off;
           hitbuffer->linear[linear_i].type = base_hit;
@@ -966,6 +985,7 @@ void ChunkAll(int letter_offset, bool score_cjk, ScoringHitBuffer* hitbuffer) {
   }
 
   int linear_i = 0;
+  int linear_off_end = hitbuffer->next_linear;
   int text_i = letter_offset;               // Next unseen text offset
   int next_chunk_start = 0;
   int bases_left = hitbuffer->next_base;
@@ -985,7 +1005,7 @@ void ChunkAll(int letter_offset, bool score_cjk, ScoringHitBuffer* hitbuffer) {
     ++next_chunk_start;
 
     int base_count = 0;
-    while (base_count < base_len) {
+    while ((base_count < base_len) && (linear_i < linear_off_end)) {
       if (hitbuffer->linear[linear_i].type == base_hit) {++base_count;}
       ++linear_i;
     }
