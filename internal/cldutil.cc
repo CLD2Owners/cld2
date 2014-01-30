@@ -14,6 +14,7 @@
 
 //
 // Author: dsites@google.com (Dick Sites)
+// Updated 2014.01 for dual table lookup
 //
 
 #include "cldutil.h"
@@ -323,6 +324,8 @@ int GetQuadHits(const char* text,
   // Local copies
   const CLD2TableSummary* quadgram_obj =
     scoringcontext->scoringtables->quadgram_obj;
+  const CLD2TableSummary* quadgram_obj2 =
+    scoringcontext->scoringtables->quadgram_obj2;
   int next_base = hitbuffer->next_base;
   int next_base_limit = hitbuffer->maxscoringhits;
 
@@ -348,16 +351,26 @@ int GetQuadHits(const char* text,
     // Filter out recent repeats
     if ((quadhash != prior_quadhash[0]) && (quadhash != prior_quadhash[1])) {
       // Look up this quadgram and save <offset, indirect>
+      uint32 indirect_flag = 0;   // For dual tables
+      const CLD2TableSummary* hit_obj = quadgram_obj;
       uint32 probs = QuadHashV3Lookup4(quadgram_obj, quadhash);
+      if ((probs == 0) && (quadgram_obj2->kCLDTableSize != 0)) {
+        // Try lookup in dual table if not found in first one
+        // Note: we need to know later which of two indirect tables to use.
+        indirect_flag = 0x80000000u;
+        hit_obj = quadgram_obj2;
+        probs = QuadHashV3Lookup4(quadgram_obj2, quadhash);
+      }
       if (probs != 0) {
         // Round-robin two entries of actual hits
         prior_quadhash[next_prior_quadhash] = quadhash;
         next_prior_quadhash = (next_prior_quadhash + 1) & 1;
 
         // Save indirect subscript for later scoring; 1 or 2 langprobs
-        int indirect_subscr = probs & ~quadgram_obj->kCLDTableKeyMask;
+        int indirect_subscr = probs & ~hit_obj->kCLDTableKeyMask;
         hitbuffer->base[next_base].offset = src - text;     // Offset in text
-        hitbuffer->base[next_base].indirect = indirect_subscr;
+        // Flip the high bit for table2
+        hitbuffer->base[next_base].indirect = indirect_subscr | indirect_flag;
         ++next_base;
       }
     }
@@ -395,8 +408,8 @@ int GetQuadHits(const char* text,
 //  const tables
 //  const char* isrc, int srclen (in sscriptbuffer)
 // intermediates:
-//  vector of octa <offset, probs>   (which need quadgram_obj indirect tbale ot decode)
-//  vector of distinct <offset, probs>   (which need quadgram_obj indirect tbale ot decode)
+//  vector of octa <offset, probs>   (which need indirect table to decode)
+//  vector of distinct <offset, probs>   (which need indirect table to decode)
 
 // Score up to 64KB of a single script span, doing both delta-octa and
 // distinct words in one pass
