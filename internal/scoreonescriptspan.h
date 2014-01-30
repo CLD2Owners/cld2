@@ -103,7 +103,8 @@ typedef struct {
   const CLD2TableSummary* deltabi_obj;
   const CLD2TableSummary* distinctbi_obj;
 
-  const CLD2TableSummary* quadgram_obj;
+  const CLD2TableSummary* quadgram_obj;         // Primary quadgram lookup table
+  const CLD2TableSummary* quadgram_obj2;        // Secondary  "
   const CLD2TableSummary* deltaocta_obj;
   const CLD2TableSummary* distinctocta_obj;
 
