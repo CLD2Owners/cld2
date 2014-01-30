@@ -28,7 +28,8 @@
 namespace CLD2 {
 
 // String is "code_version - data_scrape_date"
-static const char* kDetectLanguageVersion = "V2.0 - 20130715";
+//static const char* kDetectLanguageVersion = "V2.0 - 20130715";
+
 
 // Large-table version for all ~160 languages
 // Small-table version for all ~60 languages
@@ -315,13 +316,6 @@ Language ExtDetectLanguageSummary(
                           is_reliable);
   // Do not default to English
   return lang;
-}
-
-
-// Return version text string
-// String is "code_version - data_build_date"
-const char* DetectLanguageVersion() {
-  return kDetectLanguageVersion;
 }
 
 }       // End namespace CLD2
