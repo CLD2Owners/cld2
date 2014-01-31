@@ -140,6 +140,15 @@ static const TestPair kTestPair[] = {
   {WELSH, kTeststr_cy_Latn},
   {YIDDISH, kTeststr_yi_Hebr},
 
+  // Added 2013.08.31 so-Latn ig-Latn ha-Latn yo-Latn zu-Latn
+  {SOMALI,  kTeststr_so_Latn},
+  {IGBO,  kTeststr_ig_Latn},
+  {HAUSA,  kTeststr_ha_Latn},
+  {YORUBA,  kTeststr_yo_Latn},
+  {ZULU,  kTeststr_zu_Latn},
+  // Added 2014.01.22 bs-Latn
+  {BOSNIAN,  kTeststr_bs_Latn},
+
 // 2 statistically-close languages
   {INDONESIAN, kTeststr_id_close},
   {MALAY, kTeststr_ms_close},
@@ -149,7 +158,9 @@ static const TestPair kTestPair[] = {
 
 // Cross-check the main quadgram table build date
 // Change the expected language each time it is rebuilt
-  {WELSH, kTeststr_version},
+  //{WELSH, kTeststr_version},   // 2013.07.15
+  {AZERBAIJANI, kTeststr_version},   // 2014.01.31
+
 
   {UNKNOWN_LANGUAGE, NULL},     // Must be last
 };
