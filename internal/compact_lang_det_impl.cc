@@ -14,6 +14,7 @@
 
 //
 // Author: dsites@google.com (Dick Sites)
+// Updated 2014.01 for dual table lookup
 //
 
 #include <stdio.h>
@@ -45,6 +46,10 @@ using namespace std;
 // cld2_generated_distinctocta*.cc
 // cld_generated_score_quad_octa_1024_256.cc
 
+// 2014.01 Now implementing quadgram dual lookup tables, to allow main table
+//   sizes that are 1/3/5 times a power of two, instead of just powers of two.
+//   Gives more flexibility of total footprint for CLD2.
+
 extern const int kLanguageToPLangSize;
 extern const int kCloseSetSize;
 
@@ -53,10 +58,12 @@ extern const CLD2TableSummary kCjkCompat_obj;
 extern const CLD2TableSummary kCjkDeltaBi_obj;
 extern const CLD2TableSummary kDistinctBiTable_obj;
 extern const CLD2TableSummary kQuad_obj;
+extern const CLD2TableSummary kQuad_obj2;     // Dual lookup tables
 extern const CLD2TableSummary kDeltaOcta_obj;
 extern const CLD2TableSummary kDistinctOcta_obj;
 extern const short kAvgDeltaOctaScore[];
 
+// This initializes kScoringtables.quadgram_obj etc.
 static const ScoringTables kScoringtables = {
   &cld_generated_CjkUni_obj,
   &kCjkCompat_obj,
@@ -64,6 +71,7 @@ static const ScoringTables kScoringtables = {
   &kDistinctBiTable_obj,
 
   &kQuad_obj,
+  &kQuad_obj2,                                // Dual lookup tables
   &kDeltaOcta_obj,
   &kDistinctOcta_obj,
 
@@ -1614,10 +1622,8 @@ Language DetectLanguageSummaryV2(
      }
   }
 
-  // Print incoming text in its entirety
-  // fprintf(stderr, "DetectLanguageSummaryV2:\n");
-  // PrintHtmlEscapedText(stderr, buffer, buffer_length);
-  // fprintf(stderr, "<br>\n");
+  // Exit now if no text
+  if (buffer_length == 0) {return UNKNOWN_LANGUAGE;}
 
   // Document totals
   DocTote doc_tote;   // Reliability = 0..100
@@ -1959,5 +1965,18 @@ Language DetectLanguageSummaryV2(
                         text_bytes,
                         is_reliable);
 }
+
+
+// For debugging and wrappers. Not thread safe.
+static char temp_detectlanguageversion[32];
+
+// Return version text string
+// String is "code_version - data_build_date"
+const char* DetectLanguageVersion() {
+  sprintf(temp_detectlanguageversion,
+          "V2.0 - %u", kQuad_obj.kCLDTableBuildDate);
+  return temp_detectlanguageversion;
+}
+
 
 }       // End namespace CLD2
