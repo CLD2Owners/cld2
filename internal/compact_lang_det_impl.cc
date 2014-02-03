@@ -1624,6 +1624,7 @@ Language DetectLanguageSummaryV2(
 
   // Exit now if no text
   if (buffer_length == 0) {return UNKNOWN_LANGUAGE;}
+  if (kScoringtables.quadgram_obj == NULL) {return UNKNOWN_LANGUAGE;}
 
   // Document totals
   DocTote doc_tote;   // Reliability = 0..100
@@ -1973,8 +1974,9 @@ static char temp_detectlanguageversion[32];
 // Return version text string
 // String is "code_version - data_build_date"
 const char* DetectLanguageVersion() {
+  if (kScoringtables.quadgram_obj == NULL) {return "";}
   sprintf(temp_detectlanguageversion,
-          "V2.0 - %u", kQuad_obj.kCLDTableBuildDate);
+          "V2.0 - %u", kScoringtables.quadgram_obj->kCLDTableBuildDate);
   return temp_detectlanguageversion;
 }
 
