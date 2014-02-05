@@ -23,7 +23,7 @@ g++ -shared -fPIC -O2 -m64 \
   cld_generated_cjk_uni_prop_80.cc cld2_generated_cjk_compatible.cc  \
   cld_generated_cjk_delta_bi_4.cc generated_distinct_bi_0.cc  \
   cld2_generated_quadchrome0122_2.cc cld2_generated_deltaoctachrome0122.cc \
-  cld2_generated_distinctoctachrome0122.cc  cld_generated_score_quad_octa_0122_16.cc  \
+  cld2_generated_distinctoctachrome0122.cc  cld_generated_score_quad_octa_0122_2.cc  \
   -o libcld2.so
 
 g++ -shared -fPIC -O2 -m64 \
@@ -34,7 +34,7 @@ g++ -shared -fPIC -O2 -m64 \
   tote.cc utf8statetable.cc  \
   cld_generated_cjk_uni_prop_80.cc cld2_generated_cjk_compatible.cc  \
   cld_generated_cjk_delta_bi_32.cc generated_distinct_bi_0.cc  \
-  cld2_generated_quad0720.cc cld2_generated_deltaocta0527.cc \
-  cld2_generated_distinctocta0527.cc cld_generated_score_quad_octa_1024_256.cc  \
+  cld2_generated_quad0122.cc cld2_generated_deltaocta0122.cc \
+  cld2_generated_distinctocta0122.cc  cld_generated_score_quad_octa_0122.cc  \
   -o libcld2_full.so
 
