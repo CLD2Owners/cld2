@@ -1,0 +1,86 @@
+  Evaluate CLD2 small 20130715 256k
+ Language				Precision				Recall				F-measure
+ Name	Code	Script		Top five	N.det	%		Top five	N.act	%		fraction	Code
+AFRIKAANS	af	Latn		af_100.00 	10980	100.00		af_99.79 af*_0.20 un*_0.01 	11003	99.79		0.9990	af
+ALBANIAN	sq	Latn		sq_100.00 	10315	100.00		sq_100.00 	10315	100.00		1.0000	sq
+ARABIC	ar	Arab		ar_99.99 ur_0.01 	7126	99.99		ar_99.99 un*_0.01 	7126	99.99		0.9999	ar
+AZERBAIJANI	az	Latn		az_100.00 	7298	100.00		az_99.92 az*_0.07 tr_0.01 	7304	99.92		0.9996	az
+BASQUE	eu	Latn		eu_100.00 	2560	100.00		eu_100.00 	2560	100.00		1.0000	eu
+BELARUSIAN	be	Cyrl		be_100.00 	783	100.00		be_100.00 	783	100.00		1.0000	be
+BENGALI	bn	Beng		bn_100.00 	11951	100.00		bn_99.96 un*_0.04 	11956	99.96		0.9998	bn
+BIHARI	bh	Deva		bh_97.44 hi_1.71 mr_0.85 	117	97.44		bh_72.61 hi_27.39 	157	72.61		0.8321	bh
+BOSNIAN	bs	Latn			0	 0.00		hr_49.84 sr_49.47 un*_0.66 sl_0.03 	8901	 0.00		0.0000	bs
+BULGARIAN	bg	Cyrl		bg_99.99 mk_0.01 	11161	99.99		bg_99.47 bg*_0.49 un*_0.02 sr_0.02 mk_0.01 	11220	99.47		0.9973	bg
+CATALAN	ca	Latn		ca_100.00 	10820	100.00		ca_98.98 ca*_0.98 es_0.04 	10931	98.98		0.9949	ca
+CEBUANO	ceb	Latn		ceb_98.40 so_1.60 	125	98.40		ceb_100.00 	123	100.00		0.9919	ceb
+CROATIAN	hr	Latn		hr_56.28 bs_30.77 sr_12.94 sl_0.01 	14415	56.28		hr_77.01 sr_22.59 hr*_0.27 un*_0.10 sl_0.03 	10535	77.01		0.6503	hr
+CZECH	cs	Latn		cs_99.92 sk_0.08 	11106	99.92		cs_99.61 sk_0.39 	11141	99.61		0.9976	cs
+Chinese	zh	Hani		zh_97.55 zh-Hant_2.45 	12669	97.55		zh_99.79 zh-Hant_0.10 zh*_0.09 un*_0.02 	12384	99.79		0.9865	zh
+ChineseT	zh-Hant	Hani		zh-Hant_99.90 zh_0.10 	12839	99.90		zh-Hant_97.24 zh_2.36 zh-Hant*_0.20 un*_0.17 ja_0.02 	13190	97.24		0.9855	zh-Hant
+DANISH	da	Latn		da_99.88 no_0.11 sv_0.02 	10438	99.88		da_98.51 no_1.46 da*_0.03 	10583	98.51		0.9919	da
+DUTCH	nl	Latn		nl_100.00 	11081	100.00		nl_99.88 nl*_0.11 fr_0.01 	11094	99.88		0.9994	nl
+ENGLISH	en	Latn		en_99.98 so_0.01 ht_0.01 	10379	99.98		en_99.95 en*_0.05 	10382	99.95		0.9997	en
+ESTONIAN	et	Latn		et_100.00 	10944	100.00		et_99.99 et*_0.01 	10945	99.99		1.0000	et
+FINNISH	fi	Latn		fi_100.00 	10471	100.00		fi_100.00 	10471	100.00		1.0000	fi
+FRENCH	fr	Latn		fr_99.97 ht_0.02 nl_0.01 	10027	99.97		fr_99.95 fr*_0.05 	10029	99.95		0.9996	fr
+GALICIAN	gl	Latn		gl_99.95 pt_0.03 es_0.02 	10071	99.95		gl_89.35 es_9.04 pt_1.42 gl*_0.17 un*_0.02 	11266	89.35		0.9435	gl
+GANDA	lg	Latn		lg_50.89 zu_49.11 	562	50.89		lg_100.00 	286	100.00		0.6745	lg
+GERMAN	de	Latn		de_100.00 	11063	100.00		de_99.98 de*_0.02 	11065	99.98		0.9999	de
+GREEK	el	Grek		el_100.00 	11572	100.00		el_100.00 	11572	100.00		1.0000	el
+HAITIAN_CREOLE	ht	Latn		ht_100.00 	348	100.00		ht_98.31 ht*_0.56 fr_0.56 un*_0.28 en_0.28 	354	98.31		0.9915	ht
+HAUSA	ha	Latn			0	 0.00		un*_92.94 rw_7.06 	1800	 0.00		0.0000	ha
+HEBREW	iw	Hebr		iw_100.00 	10642	100.00		iw_99.97 un*_0.03 	10645	99.97		0.9999	iw
+HINDI	hi	Deva		hi_98.34 ne_1.04 bh_0.35 mr_0.27 	12325	98.34		hi_99.88 mr_0.07 un*_0.03 bh_0.02 ne_0.01 	12136	99.88		0.9910	hi
+HMONG	hmn	Latn		hmn_100.00 	166	100.00		hmn_100.00 	166	100.00		1.0000	hmn
+HUNGARIAN	hu	Latn		hu_100.00 	11223	100.00		hu_99.99 hu*_0.01 	11224	99.99		1.0000	hu
+ICELANDIC	is	Latn		is_100.00 	8245	100.00		is_99.96 is*_0.04 	8248	99.96		0.9998	is
+IGBO	ig	Latn			0	 0.00		un*_97.08 rw_2.92 	137	 0.00		0.0000	ig
+INDONESIAN	id	Latn		id_92.67 ms_7.33 jw_0.01 	11071	92.67		id_96.76 ms_3.22 id*_0.02 un*_0.01 	10603	96.76		0.9467	id
+IRISH	ga	Latn		ga_100.00 	1814	100.00		ga_100.00 	1814	100.00		1.0000	ga
+ITALIAN	it	Latn		it_100.00 	10369	100.00		it_99.93 it*_0.07 	10376	99.93		0.9997	it
+JAVANESE	jw	Latn		jw_100.00 	714	100.00		jw_97.94 jw*_1.78 id_0.14 ms_0.14 	729	97.94		0.9896	jw
+Japanese	ja	Hani		ja_99.97 zh-Hant_0.03 	11367	99.97		ja_99.99 ja*_0.01 	11365	99.99		0.9998	ja
+KINYARWANDA	rw	Latn		rw_43.30 zu_22.31 so_17.71 ha_13.00 yo_3.28 	977	43.30		rw_100.00 	423	100.00		0.6043	rw
+Korean	ko	Hani		ko_100.00 	12157	100.00		ko_100.00 	12157	100.00		1.0000	ko
+LATVIAN	lv	Latn		lv_100.00 	11023	100.00		lv_99.99 lv*_0.01 	11024	99.99		1.0000	lv
+LITHUANIAN	lt	Latn		lt_100.00 	10755	100.00		lt_100.00 	10755	100.00		1.0000	lt
+MACEDONIAN	mk	Cyrl		mk_99.91 sr_0.08 bg_0.01 	11015	99.91		mk_98.26 mk*_1.56 sr_0.12 un*_0.05 bg_0.01 	11200	98.26		0.9908	mk
+MALAY	ms	Latn		ms_96.64 id_3.35 jw_0.01 	10168	96.64		ms_92.37 id_7.62 ms*_0.01 	10638	92.37		0.9445	ms
+MALTESE	mt	Latn		mt_100.00 	1292	100.00		mt_99.92 mt*_0.08 	1293	99.92		0.9996	mt
+MARATHI	mr	Deva		mr_99.91 hi_0.07 ne_0.02 	12239	99.91		mr_99.67 hi_0.27 un*_0.04 ne_0.02 bh_0.01 	12269	99.67		0.9979	mr
+NEPALI	ne	Deva		ne_99.91 mr_0.06 hi_0.03 	3299	99.91		ne_96.12 hi_3.73 mr_0.09 un*_0.06 	3429	96.12		0.9798	ne
+NORWEGIAN	no	Latn		no_97.75 da_1.36 sv_0.89 	11439	97.75		no_99.89 da_0.10 no*_0.01 	11194	99.89		0.9881	no
+PERSIAN	fa	Arab		fa_99.93 ur_0.07 	9931	99.93		fa_99.99 un*_0.01 	9925	99.99		0.9996	fa
+POLISH	pl	Latn		pl_100.00 	9227	100.00		pl_99.99 pl*_0.01 	9228	99.99		0.9999	pl
+PORTUGUESE	pt	Latn		pt_98.51 gl_1.47 es_0.03 	10917	98.51		pt_99.92 pt*_0.05 gl_0.03 es_0.01 	10763	99.92		0.9921	pt
+ROMANIAN	ro	Cyrl		ro_100.00 	129	100.00		ro_100.00 	129	100.00		1.0000	ro
+ROMANIAN	ro	Latn		ro_100.00 	10468	100.00		ro_99.90 ro*_0.10 	10478	99.90		0.9995	ro
+RUSSIAN	ru	Cyrl		ru_99.98 uk_0.02 	10606	99.98		ru_99.96 ru*_0.04 	10608	99.96		0.9997	ru
+SCOTS_GAELIC	gd	Latn		gd_100.00 	175	100.00		gd_100.00 	175	100.00		1.0000	gd
+SERBIAN	sr	Cyrl		sr_99.74 mk_0.22 bg_0.03 	5856	99.74		sr_99.59 sr*_0.24 mk_0.15 un*_0.02 	5865	99.59		0.9967	sr
+SERBIAN	sr	Latn		sr_57.13 bs_27.83 hr_15.04 	15823	57.13		sr_82.15 hr_16.95 sr*_0.58 un*_0.22 sl_0.09 	11004	82.15		0.6739	sr
+SLOVAK	sk	Latn		sk_99.60 cs_0.39 sr_0.01 	11159	99.60		sk_99.92 cs_0.08 	11123	99.92		0.9976	sk
+SLOVENIAN	sl	Latn		sl_99.85 sr_0.09 hr_0.03 bs_0.03 	10888	99.85		sl_99.80 sl*_0.19 hr_0.01 	10894	99.80		0.9983	sl
+SOMALI	so	Latn			0	 0.00		un*_93.04 rw_6.24 tl_0.61 ceb_0.07 en_0.04 	2774	 0.00		0.0000	so
+SPANISH	es	Latn		es_90.95 gl_9.00 ca_0.04 pt_0.01 	11316	90.95		es_99.89 es*_0.06 pt_0.03 gl_0.02 	10303	99.89		0.9521	es
+SWAHILI	sw	Latn		sw_99.37 zu_0.63 	5681	99.37		sw_99.98 sw*_0.02 	5646	99.98		0.9967	sw
+SWEDISH	sv	Latn		sv_100.00 	10380	100.00		sv_95.88 sv*_2.98 no_0.94 un*_0.18 da_0.02 	10826	95.88		0.9790	sv
+TAGALOG	tl	Latn		tl_99.58 so_0.42 	4029	99.58		tl_100.00 	4012	100.00		0.9979	tl
+THAI	th	Thai		th_100.00 	13295	100.00		th_100.00 	13295	100.00		1.0000	th
+TURKISH	tr	Latn		tr_99.99 az_0.01 	11213	99.99		tr_99.99 tr*_0.01 	11213	99.99		0.9999	tr
+UKRAINIAN	uk	Cyrl		uk_100.00 	10673	100.00		uk_99.80 uk*_0.15 un*_0.03 ru_0.02 	10694	99.80		0.9990	uk
+URDU	ur	Arab		ur_100.00 	10900	100.00		ur_99.84 un*_0.07 fa_0.06 ur*_0.02 ar_0.01 	10918	99.84		0.9992	ur
+VIETNAMESE	vi	Latn		vi_100.00 	10524	100.00		vi_100.00 	10524	100.00		1.0000	vi
+WELSH	cy	Latn		cy_100.00 	1998	100.00		cy_100.00 	1998	100.00		1.0000	cy
+YIDDISH	yi	Hebr		yi_100.00 	728	100.00		yi_100.00 	728	100.00		1.0000	yi
+YORUBA	yo	Latn			0	 0.00		un*_85.05 rw_14.95 	214	 0.00		0.0000	yo
+ZULU	zu	Latn			0	 0.00		un*_70.69 lg_15.27 rw_12.06 sw_1.99 	1808	 0.00		0.0000	zu
+_Totals_Known 68					569437	96.66			560812	98.35		0.9750
+
+_Unknown	un-Arab	Arab		ur_83.33 ar_8.33 fa_8.33 	12	 0.00			0	 0.00		0.0000	un
+_Unknown	un-Beng	Beng		bn_100.00 	5	 0.00			0	 0.00		0.0000	un
+_Unknown	un-Cyrl	Cyrl		mk_65.58 bg_20.65 uk_6.88 sr_5.43 ru_1.45 	276	 0.00			0	 0.00		0.0000	un
+_Unknown	un-Deva	Deva		mr_45.45 hi_36.36 ne_18.18 	11	 0.00			0	 0.00		0.0000	un
+_Unknown	un-Hani	Hani		zh-Hant_78.12 zh_20.31 ja_1.56 	64	 0.00			0	 0.00		0.0000	un
+_Unknown	un-Hebr	Hebr		iw_100.00 	3	 0.00			0	 0.00		0.0000	un
+_Unknown	un-Latn	Latn		so_38.88 ha_25.20 zu_19.25 sv_5.15 yo_2.74 	6638	 0.00			0	 0.00		0.0000	un
