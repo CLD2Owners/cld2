@@ -100,8 +100,9 @@ static const TestPair kTestPair[] = {
   {BENGALI,  kTeststr_bn_Beng},
   {BIHARI,  kTeststr_bh_Deva},
   {BISLAMA,  kTeststr_bi_Latn},
-  // Not trained {BOSNIAN,  kTeststr_bs_Cyrl},   // Not recognized as distinct from Croatian/Serbian
-  // Not trained {BOSNIAN,  kTeststr_bs_Latn},   // Not recognized as distinct from Croatian/Serbian
+  // Added 2014.01.22 bs-Latn
+  {BOSNIAN,  kTeststr_bs_Latn},
+
   {BRETON,  kTeststr_br_Latn},
   {BULGARIAN,  kTeststr_bg_Cyrl},
   // Not trained {BURMESE,  kTeststr_my_Latn},   // Myanmar
@@ -273,7 +274,8 @@ static const TestPair kTestPair[] = {
 
 // Cross-check the main quadgram table build date
 // Change the expected language each time it is rebuilt
-  {SLOVENIAN, kTeststr_version},
+  //{SLOVENIAN, kTeststr_version},  // 2013.07.20
+  {ICELANDIC, kTeststr_version},  // 2014.02.04
 
   {UNKNOWN_LANGUAGE, NULL},     // Must be last
 };
