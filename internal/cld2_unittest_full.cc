@@ -182,6 +182,9 @@ static const TestPair kTestPair[] = {
   {MONGOLIAN,  kTeststr_mn_Cyrl},
   // Not trained {MONTENEGRIN,  kTeststr_sr_ME_Latn},   // Not recognized as distinct from Croatian/Serbian
   {NAURU,  kTeststr_na_Latn},
+  // Added 2014.01.22 nr-Latn
+  {NDEBELE,  kTeststr_nr_Latn},
+
   {NEPALI,  kTeststr_ne_Deva},
   // Not trained {NEWARI,  kTeststr_new_Latn},
   {NORWEGIAN,  kTeststr_no_Latn},
