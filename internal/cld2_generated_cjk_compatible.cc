@@ -19,10 +19,9 @@
 
 namespace CLD2 {
 
-static const int kCompatTableBuildDate = 20130128;    // yyyymmdd
-static const int kCompatTableSizeOne = 0;       // One-langprob Bucket count
-static const int kCompatTableSize = 239;        // Total Bucket count
-static const int kCompatTableKeyMask = 0xffffff00;    // Mask hash key
+static const uint32 kCompatTableBuildDate = 20130128;    // yyyymmdd
+static const uint32 kCompatTableSize = 1;          // Total Bucket count
+static const uint32 kCompatTableKeyMask = 0xffffff00;    // Mask hash key
 static const char* const kCompatTableRecognizedLangScripts =
   "zh-Hans zh-Hant ja-Hani ko-Hani vi-Hani za-Hani ";
 
@@ -37,7 +36,9 @@ static const IndirectProbBucket4 kCompatTable[kCompatTableSize] = {
 //   kTargetCTJKVZProbs in cldutil.cc
 // This is all part of using one-byte mappings for CJK but wanting to
 // convert them to normal langprob values to share the scoring code.
-static const uint32 kCompatTableInd[239 * 2] = {
+static const uint32 kCompatTableSizeOne = 0;           // One-langprob count
+static const uint32 kCompatTableIndSize = 239 * 2;     // Largest subscript
+static const uint32 kCompatTableInd[kCompatTableIndSize] = {
   // [0000]
   0x00000000, 0x00000000, // [0] zh.0 zhT.0 ja.0 ko.0 vi.0 za.0
   0x00006142, 0x00000000, // [1] zh.0 zhT.0 ja.0 ko.0 vi.0 za.12
