@@ -40,8 +40,8 @@ static const int kCjkDeltaBiBuildDate = 20090129;    // yyyymmdd
 // Words/Quads/CjkBis: 3 languages in range Japanese..ChineseT:
 //     Japanese Chinese ChineseT
 
-static const int kCjkDeltaBiSize = 8192;    // Bucket count
-static const int kCjkDeltaBiKeyMask = 0xfffff000;    // Mask hash key
+static const uint32 kCjkDeltaBiSize = 8192;    // Bucket count
+static const uint32 kCjkDeltaBiKeyMask = 0xfffff000;    // Mask hash key
 static const char* const kCjkDeltaBiRecognizedLangScripts = "";
 
 // 35201 possible entries:
@@ -8251,7 +8251,9 @@ static const IndirectProbBucket4 kCjkDeltaBi[kCjkDeltaBiSize] = {
 
   };
 
-static const uint32 kCjkDeltaBiInd[33] = {
+static const uint32 kCjkDeltaBiSizeOne = 33;       // One-langprob count
+static const uint32 kCjkDeltaBiIndSize = 33;       // Largest subscript
+static const uint32 kCjkDeltaBiInd[kCjkDeltaBiIndSize] = {
   // [0000]
   0x00000000, 0x00001d2d, 0x00001d1c, 0x00000000,
   0x0000052d, 0x00000524, 0x00000542, 0x00001d37,
@@ -8271,7 +8273,7 @@ static const uint32 kCjkDeltaBiInd[33] = {
 extern const CLD2TableSummary kCjkDeltaBi_obj = {
   kCjkDeltaBi,
   kCjkDeltaBiInd,
-  kCjkDeltaBiSize,
+  kCjkDeltaBiSizeOne,
   kCjkDeltaBiSize,
   kCjkDeltaBiKeyMask,
   kCjkDeltaBiBuildDate,
