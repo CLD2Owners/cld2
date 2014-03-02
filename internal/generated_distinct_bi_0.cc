@@ -19,10 +19,9 @@
 
 namespace CLD2 {
 
-static const int kDistinctBiTableBuildDate = 20130101;    // yyyymmdd
-static const int kDistinctBiTableSizeOne = 1;    // One-langprob Bucket count
-static const int kDistinctBiTableSize = 1;       // Total Bucket count
-static const int kDistinctBiTableKeyMask = 0xffffffff;    // Mask hash key
+static const uint32 kDistinctBiTableBuildDate = 20130101;    // yyyymmdd
+static const uint32 kDistinctBiTableSize = 1;       // Total Bucket count
+static const uint32 kDistinctBiTableKeyMask = 0xffffffff;    // Mask hash key
 static const char* const kDistinctBiTableRecognizedLangScripts = "";
 
 // Empty table
@@ -32,7 +31,9 @@ static const IndirectProbBucket4 kDistinctBiTable[kDistinctBiTableSize] = {
   { {0x00000000,0x00000000,0x00000000,0x00000000}},	// [000]
 };
 
-static const uint32 kDistinctBiTableInd[1] = {
+static const uint32 kDistinctBiTableSizeOne = 1;    // One-langprob count
+static const uint32 kDistinctBiTableIndSize = 1;       // Largest subscript
+static const uint32 kDistinctBiTableInd[kDistinctBiTableIndSize] = {
   // [0000]
   0x00000000, };
 
