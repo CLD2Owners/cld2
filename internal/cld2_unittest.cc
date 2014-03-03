@@ -252,10 +252,34 @@ void FinishHtmlOut(int flags) {
 #endif
 }
 
+#ifdef CLD2_DYNAMIC_MODE
+int RunTests (int flags, bool get_vector, const char* data_file) {
+#else
 int RunTests (int flags, bool get_vector) {
+#endif
   fprintf(stdout, "CLD2 version: %s\n", CLD2::DetectLanguageVersion());
   InitHtmlOut(flags);
   bool any_fail = false;
+  
+#ifdef CLD2_DYNAMIC_MODE
+  fprintf(stdout, "[DYNAMIC] Test running in dynamic data mode!\n");
+  bool dataLoaded = CLD2::isDataLoaded();
+  if (dataLoaded) {
+    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned true prior to loading data!\n");
+    any_fail = true;
+  }
+  fprintf(stdout, "[DYNAMIC] Attempting translation prior to loading data\n");
+  any_fail |= !OneTest(flags, get_vector, UNKNOWN_LANGUAGE, kTeststr_en, strlen(kTeststr_en));
+  fprintf(stdout, "[DYNAMIC] Loading data from: %s\n", data_file);
+  CLD2::loadData(data_file);
+  dataLoaded = CLD2::isDataLoaded();
+  if (!dataLoaded) {
+    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned false after loading data!\n");
+    any_fail = true;
+  }
+  fprintf(stdout, "[DYNAMIC] Data loaded, normal tests commencing\n");
+#endif  
+
   int i = 0;
   while (kTestPair[i].text != NULL) {
     Language lang_expected = kTestPair[i].lang;
@@ -265,6 +289,19 @@ int RunTests (int flags, bool get_vector) {
     any_fail |= (!ok);
     ++i;
   }
+
+#ifdef CLD2_DYNAMIC_MODE
+  fprintf(stdout, "[DYNAMIC] Normal tests complete, attempting to unload data\n");
+  CLD2::unloadData();
+  dataLoaded = CLD2::isDataLoaded();
+  if (dataLoaded) {
+    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned true after unloading data!\n");
+    any_fail = true;
+  }
+  fprintf(stdout, "[DYNAMIC] Attempting translation after unloading data\n");
+  any_fail |= !OneTest(flags, get_vector, UNKNOWN_LANGUAGE, kTeststr_en, strlen(kTeststr_en));
+#endif  
+
   if (any_fail) {
     fprintf(stderr, "FAIL\n");
     fprintf(stdout, "FAIL\n");
@@ -283,6 +320,7 @@ int main(int argc, char** argv) {
   // Get command-line flags
   int flags = 0;
   bool get_vector = false;
+  const char* data_file = NULL;
   for (int i = 1; i < argc; ++i) {
     if (strcmp(argv[i], "--html") == 0) {flags |= CLD2::kCLDFlagHtml;}
     if (strcmp(argv[i], "--cr") == 0) {flags |= CLD2::kCLDFlagCr;}
@@ -290,8 +328,17 @@ int main(int argc, char** argv) {
     if (strcmp(argv[i], "--quiet") == 0) {flags |= CLD2::kCLDFlagQuiet;}
     if (strcmp(argv[i], "--echo") == 0) {flags |= CLD2::kCLDFlagEcho;}
     if (strcmp(argv[i], "--vector") == 0) {get_vector = true;}
+    if (strcmp(argv[i], "--data-file") == 0) { data_file = argv[++i];}
   }
 
+#ifdef CLD2_DYNAMIC_MODE
+  if (data_file == NULL) {
+    fprintf(stderr, "When running in dynamic mode, you must specify --data-file [FILE]\n");
+    return -1;
+  }
+  return CLD2::RunTests(flags, get_vector, data_file);
+#else
   return CLD2::RunTests(flags, get_vector);
+#endif
 }
 

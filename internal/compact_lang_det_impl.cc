@@ -28,6 +28,10 @@
 #include "lang_script.h"
 #include "utf8statetable.h"
 
+#ifdef CLD2_DYNAMIC_MODE
+#include "cld2_dynamic_data.h"
+#include "cld2_dynamic_data_loader.h"
+#endif
 #include "cld2tablesummary.h"
 #include "compact_lang_det_impl.h"
 #include "compact_lang_det_hint_code.h"
@@ -63,20 +67,58 @@ extern const CLD2TableSummary kDeltaOcta_obj;
 extern const CLD2TableSummary kDistinctOcta_obj;
 extern const short kAvgDeltaOctaScore[];
 
-// This initializes kScoringtables.quadgram_obj etc.
-static const ScoringTables kScoringtables = {
-  &cld_generated_CjkUni_obj,
-  &kCjkCompat_obj,
-  &kCjkDeltaBi_obj,
-  &kDistinctBiTable_obj,
+#ifdef CLD2_DYNAMIC_MODE
+  // CLD2_DYNAMIC_MODE is defined:
+  // Data will be read from an mmap opened at runtime.
+  static ScoringTables kScoringtables = {
+    NULL, //&cld_generated_CjkUni_obj,
+    NULL, //&kCjkCompat_obj,
+    NULL, //&kCjkDeltaBi_obj,
+    NULL, //&kDistinctBiTable_obj,
+    NULL, //&kQuad_obj,
+    NULL, //&kQuad_obj2,
+    NULL, //&kDeltaOcta_obj,
+    NULL, //&kDistinctOcta_obj,
+    NULL, //kAvgDeltaOctaScore,
+  };
+  static bool dynamicDataLoaded = false;
+  static ScoringTables* dynamicTables = NULL;
+  static void* mmapAddress = NULL;
+  static int mmapLength = 0;
 
-  &kQuad_obj,
-  &kQuad_obj2,                                // Dual lookup tables
-  &kDeltaOcta_obj,
-  &kDistinctOcta_obj,
+  bool isDataLoaded() { return dynamicDataLoaded; }
 
-  kAvgDeltaOctaScore,
-};
+  void loadData(const char* fileName) {
+    if (isDataLoaded()) {
+      unloadData();
+    }
+    dynamicTables = CLD2DynamicDataLoader::loadDataFile(fileName, &mmapAddress, &mmapLength);
+    kScoringtables = *dynamicTables;
+    dynamicDataLoaded = true;
+  };
+
+  void unloadData() {
+    if (!dynamicDataLoaded) return;
+    dynamicDataLoaded = false;
+    // unloading will null all the pointers out.
+    CLD2DynamicDataLoader::unloadData(&dynamicTables, &mmapAddress, &mmapLength);
+  }
+#else
+  // This initializes kScoringtables.quadgram_obj etc.
+  static const ScoringTables kScoringtables = {
+    &cld_generated_CjkUni_obj,
+    &kCjkCompat_obj,
+    &kCjkDeltaBi_obj,
+    &kDistinctBiTable_obj,
+
+    &kQuad_obj,
+    &kQuad_obj2,                              // Dual lookup tables
+    &kDeltaOcta_obj,
+    &kDistinctOcta_obj,
+
+    kAvgDeltaOctaScore,
+  };
+#endif // #ifdef CLD2_DYNAMIC_MODE
 
 
 static const bool FLAGS_cld_no_minimum_bytes = false;
@@ -1621,6 +1663,19 @@ Language DetectLanguageSummaryV2(
                 buffer_length, GetPlainEscapedText(temp).c_str());
      }
   }
+
+#ifdef CLD2_DYNAMIC_MODE
+  // In dynamic mode, we immediately return UNKNOWN_LANGUAGE if the data file
+  // hasn't been loaded yet. This is the only sane thing we can do, as there
+  // are no scoring tables to consult.
+  bool dataLoaded = isDataLoaded();
+  if ((flags & kCLDFlagVerbose) != 0) {
+    fprintf(stderr, "Data loaded: %s\n", (dataLoaded ? "true" : "false"));
+  }
+  if (!dataLoaded) {
+    return UNKNOWN_LANGUAGE;
+  }
+#endif
 
   // Exit now if no text
   if (buffer_length == 0) {return UNKNOWN_LANGUAGE;}

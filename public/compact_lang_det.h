@@ -295,6 +295,26 @@ Flag meanings:
 void DumpResultChunkVector(FILE* f, const char* src,
                            ResultChunkVector* resultchunkvector);
 
+#ifdef CLD2_DYNAMIC_MODE
+
+// If compiled with dynamic mode, load data from the specified file location.
+// If other data has already been loaded, it is discarded and the data is read
+// in from the specified file location again (even if the file has not changed).
+// WARNING: Before calling this method, language detection will always fail
+// and will always return the unknown language.
+void loadData(const char* fileName);
+
+// If compiled with dynamic mode, unload the previously-loaded data.
+// WARNING: After calling this method, language detection will no longer work
+// and will always return the unknown language.
+void unloadData();
+
+// Returns true if and only if data has been loaded via a call to loadData(...)
+// and has not been subsequently unladed via a call to unloadDate().
+bool isDataLoaded();
+
+#endif // #ifdef CLD2_DYNAMIC_MODE
+
 };      // End namespace CLD2
 
 #endif  // I18N_ENCODINGS_CLD2_PUBLIC_COMPACT_LANG_DET_H_
