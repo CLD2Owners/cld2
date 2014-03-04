@@ -128,7 +128,7 @@ Usage:\n\
       static_cast<const CLD2::ScoringTables*>(&realData),
       fileName);
   } else if (mode == 3) { // head
-    CLD2DynamicData::FileHeader* header = CLD2DynamicDataLoader::loadHeader(fileName);
+    CLD2DynamicData::FileHeader* header = CLD2DynamicDataLoader::loadHeaderFromFile(fileName);
     if (header == NULL) {
       std::cerr << "Cannot read header from file: " << fileName << std::endl;
       return -1;
@@ -150,7 +150,7 @@ Usage:\n\
     bool result = CLD2DynamicData::verify(
       static_cast<const CLD2::ScoringTables*>(&realData),
       static_cast<const CLD2::ScoringTables*>(loadedData));
-    CLD2DynamicDataLoader::unloadData(&loadedData, &mmapAddress, &mmapLength);
+    CLD2DynamicDataLoader::unloadDataFile(&loadedData, &mmapAddress, &mmapLength);
     if (loadedData != NULL || mmapAddress != NULL || mmapLength != 0) {
       std::cerr << "Warning: failed to clean up memory for ScoringTables." << std::endl;
     }

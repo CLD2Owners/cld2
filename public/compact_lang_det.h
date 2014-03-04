@@ -300,17 +300,35 @@ void DumpResultChunkVector(FILE* f, const char* src,
 // If compiled with dynamic mode, load data from the specified file location.
 // If other data has already been loaded, it is discarded and the data is read
 // in from the specified file location again (even if the file has not changed).
-// WARNING: Before calling this method, language detection will always fail
-// and will always return the unknown language.
-void loadData(const char* fileName);
+// If data needs to be loaded in a context where direct access to the file
+// system is either undesireable or impossible, use loadDataFromRawAddress
+// instead to read the data from an arbitrary region in memory (such as a
+// mmap-ed file).
+// WARNING: Before calling one of the provided "loadData" methods, language
+// detection will always fail and will always return the unknown language.
+void loadDataFromFile(const char* fileName);
 
-// If compiled with dynamic mode, unload the previously-loaded data.
+// If compiled with dynamic mode, load data from the specified location in
+// memory.
+// This method is provided as an alternative to loadDataFromFile() for use cases
+// where the loading process may not have direct access to the file system,
+// e.g., where the direct process knows the pointer to an mmap region in system
+// memory where the data file's contents have been loaded.
+// If other data has already been loaded, it is discarded and the data is read
+// in from the specified location again (even if it has not changed).
+// WARNING: Before calling one of the provided "loadData" methods, language
+// detection will always fail and will always return the unknown language.
+void loadDataFromRawAddress(const void* rawAddress, const int length);
+
+// If compiled with dynamic mode, unload the data that was previously loaded
+// via loadDataFromFile() or loadDataFromRawAddress().
 // WARNING: After calling this method, language detection will no longer work
 // and will always return the unknown language.
 void unloadData();
 
-// Returns true if and only if data has been loaded via a call to loadData(...)
-// and has not been subsequently unladed via a call to unloadDate().
+// Returns true if and only if data has been loaded via a call to
+// loadDataFromFile(...) or loadDataFromRawAddress(...) and has not been
+// subsequently unladed via a call to unloadData().
 bool isDataLoaded();
 
 #endif // #ifdef CLD2_DYNAMIC_MODE

@@ -22,6 +22,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <fcntl.h>
+#include <fstream>
+#include <sys/mman.h>
 
 #include "../public/compact_lang_det.h"
 #include "../public/encodings.h"
@@ -265,19 +268,19 @@ int RunTests (int flags, bool get_vector) {
   fprintf(stdout, "[DYNAMIC] Test running in dynamic data mode!\n");
   bool dataLoaded = CLD2::isDataLoaded();
   if (dataLoaded) {
-    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned true prior to loading data!\n");
+    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned true prior to loading data from file!\n");
     any_fail = true;
   }
   fprintf(stdout, "[DYNAMIC] Attempting translation prior to loading data\n");
   any_fail |= !OneTest(flags, get_vector, UNKNOWN_LANGUAGE, kTeststr_en, strlen(kTeststr_en));
   fprintf(stdout, "[DYNAMIC] Loading data from: %s\n", data_file);
-  CLD2::loadData(data_file);
+  CLD2::loadDataFromFile(data_file);
   dataLoaded = CLD2::isDataLoaded();
   if (!dataLoaded) {
-    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned false after loading data!\n");
+    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned false after loading data from file!\n");
     any_fail = true;
   }
-  fprintf(stdout, "[DYNAMIC] Data loaded, normal tests commencing\n");
+  fprintf(stdout, "[DYNAMIC] Data loaded, file-based tests commencing\n");
 #endif  
 
   int i = 0;
@@ -291,15 +294,60 @@ int RunTests (int flags, bool get_vector) {
   }
 
 #ifdef CLD2_DYNAMIC_MODE
-  fprintf(stdout, "[DYNAMIC] Normal tests complete, attempting to unload data\n");
+  fprintf(stdout, "[DYNAMIC] File-based tests complete, attempting to unload file data\n");
   CLD2::unloadData();
   dataLoaded = CLD2::isDataLoaded();
   if (dataLoaded) {
-    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned true after unloading data!\n");
+    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned true after unloading file data!\n");
     any_fail = true;
   }
   fprintf(stdout, "[DYNAMIC] Attempting translation after unloading data\n");
   any_fail |= !OneTest(flags, get_vector, UNKNOWN_LANGUAGE, kTeststr_en, strlen(kTeststr_en));
+
+  // Now, run the whole thing again, but this time mmap the file's contents
+  // and hit the external-mmap code.
+  fprintf(stdout, "[DYNAMIC] mmaping data for external-mmap test.\n");
+  FILE* inFile = fopen(data_file, "r");
+  fseek(inFile, 0, SEEK_END);
+  const int actualSize = ftell(inFile);
+  fclose(inFile);
+
+  int inFileHandle = open(data_file, O_RDONLY);
+  void* mapped = mmap(NULL, actualSize,
+    PROT_READ, MAP_PRIVATE, inFileHandle, 0);
+  close(inFileHandle);
+
+  fprintf(stdout, "[DYNAMIC] mmap'ed successfully, attempting data load.\n");
+  CLD2::loadDataFromRawAddress(mapped, actualSize);
+  dataLoaded = CLD2::isDataLoaded();
+  if (!dataLoaded) {
+    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned false after loading data from mmap!\n");
+    any_fail = true;
+  }
+
+  // Reset and run the tests again
+  fprintf(stdout, "[DYNAMIC] Data loaded, mmap-based tests commencing\n");
+  i = 0;
+  while (kTestPair[i].text != NULL) {
+    Language lang_expected = kTestPair[i].lang;
+    const char* buffer = kTestPair[i].text;
+    int buffer_length = strlen(buffer);
+    bool ok = OneTest(flags, get_vector, lang_expected, buffer, buffer_length);
+    any_fail |= (!ok);
+    ++i;
+  }
+
+  fprintf(stdout, "[DYNAMIC] Mmap-based tests complete, attempting to unload data\n");
+  CLD2::unloadData();
+  dataLoaded = CLD2::isDataLoaded();
+  if (dataLoaded) {
+    fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataLoaded() returned true after unloading mmap data!\n");
+    any_fail = true;
+  }
+  fprintf(stdout, "[DYNAMIC] Attempting translation after unloading map data\n");
+  any_fail |= !OneTest(flags, get_vector, UNKNOWN_LANGUAGE, kTeststr_en, strlen(kTeststr_en));
+
+  fprintf(stdout, "[DYNAMIC] All dynamic-mode tests complete\n");  
 #endif  
 
   if (any_fail) {

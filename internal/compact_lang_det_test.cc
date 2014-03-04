@@ -245,7 +245,7 @@ int main(int argc, char** argv) {
     return -1;
   }
   fprintf(stdout, "Loading data from: %s\n", data_file);
-  CLD2::loadData(data_file);
+  CLD2::loadDataFromFile(data_file);
   fprintf(stdout, "Data loaded, test commencing\n");
 #endif
 

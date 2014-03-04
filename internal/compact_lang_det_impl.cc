@@ -70,7 +70,9 @@ extern const short kAvgDeltaOctaScore[];
 #ifdef CLD2_DYNAMIC_MODE
   // CLD2_DYNAMIC_MODE is defined:
   // Data will be read from an mmap opened at runtime.
-  static ScoringTables kScoringtables = {
+
+  // Convenience for nulling things out completely at any point.
+  static ScoringTables NULL_TABLES = {
     NULL, //&cld_generated_CjkUni_obj,
     NULL, //&kCjkCompat_obj,
     NULL, //&kCjkDeltaBi_obj,
@@ -81,27 +83,45 @@ extern const short kAvgDeltaOctaScore[];
     NULL, //&kDistinctOcta_obj,
     NULL, //kAvgDeltaOctaScore,
   };
+  static ScoringTables kScoringtables = NULL_TABLES; // copy constructed
   static bool dynamicDataLoaded = false;
+  static bool dataSourceIsFile = false;
   static ScoringTables* dynamicTables = NULL;
   static void* mmapAddress = NULL;
   static int mmapLength = 0;
 
   bool isDataLoaded() { return dynamicDataLoaded; }
 
-  void loadData(const char* fileName) {
+  void loadDataFromFile(const char* fileName) {
     if (isDataLoaded()) {
       unloadData();
     }
     dynamicTables = CLD2DynamicDataLoader::loadDataFile(fileName, &mmapAddress, &mmapLength);
     kScoringtables = *dynamicTables;
+    dataSourceIsFile = true;
     dynamicDataLoaded = true;
   };
 
+  void loadDataFromRawAddress(const void* rawAddress, const int length) {
+    if (isDataLoaded()) {
+      unloadData();
+    }
+    dynamicTables = CLD2DynamicDataLoader::loadDataRaw(rawAddress, length);
+    kScoringtables = *dynamicTables;
+    dataSourceIsFile = false;
+    dynamicDataLoaded = true;
+  }
+
   void unloadData() {
     if (!dynamicDataLoaded) return;
+    if (dataSourceIsFile) {
+      CLD2DynamicDataLoader::unloadDataFile(&dynamicTables, &mmapAddress, &mmapLength);
+    } else {
+      CLD2DynamicDataLoader::unloadDataRaw(&dynamicTables);
+    }
     dynamicDataLoaded = false;
-    // unloading will null all the pointers out.
-    CLD2DynamicDataLoader::unloadData(&dynamicTables, &mmapAddress, &mmapLength);
+    dataSourceIsFile = false; // vacuous
+    kScoringtables = NULL_TABLES; // Housekeeping: null all pointers
   }
 #else
   // This initializes kScoringtables.quadgram_obj etc.

@@ -31,136 +31,183 @@
 namespace CLD2DynamicDataLoader {
 static int DEBUG=0;
 
-CLD2DynamicData::FileHeader* loadHeader(const char* fileName) {
-  // TODO: force null-terminate char* strings for safety
+CLD2DynamicData::FileHeader* loadHeaderFromFile(const char* fileName) {
   FILE* inFile = fopen(fileName, "r");
   if (inFile == NULL) {
     return NULL;
   }
+  return loadInternal(inFile, NULL, -1);
+}
 
+CLD2DynamicData::FileHeader* loadHeaderFromRaw(const void* basePointer,
+                                               const int length) {
+  return loadInternal(NULL, basePointer, length);
+}
+
+
+#define CLD2_READINT(field) \
+  if (sourceIsFile) {\
+    bytesRead += 4 * fread(&(header->field), 4, 1, inFile);\
+  } else {\
+    memcpy(&(header->field), (((char*)(basePointer)) + bytesRead), 4);\
+    bytesRead += 4;\
+  }
+CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer, const int length) {
+  const bool sourceIsFile = (inFile != NULL);
   int bytesRead = 0;
-  CLD2DynamicData::FileHeader* fileHeader = new CLD2DynamicData::FileHeader;
-  bytesRead += fread(fileHeader->sanityString, 1, CLD2DynamicData::DATA_FILE_MARKER_LENGTH, inFile);
-  if (!CLD2DynamicData::mem_compare(fileHeader->sanityString, CLD2DynamicData::DATA_FILE_MARKER, CLD2DynamicData::DATA_FILE_MARKER_LENGTH)) {
+  CLD2DynamicData::FileHeader* header = new CLD2DynamicData::FileHeader;
+
+  // TODO: force null-terminate char* strings for safety
+  if (sourceIsFile) {
+    bytesRead += fread(header->sanityString, 1, CLD2DynamicData::DATA_FILE_MARKER_LENGTH, inFile);
+  } else {
+    memcpy(header->sanityString, basePointer, CLD2DynamicData::DATA_FILE_MARKER_LENGTH);
+    bytesRead += CLD2DynamicData::DATA_FILE_MARKER_LENGTH;
+  }
+
+  if (!CLD2DynamicData::mem_compare(
+                                    header->sanityString,
+                                    CLD2DynamicData::DATA_FILE_MARKER,
+                                    CLD2DynamicData::DATA_FILE_MARKER_LENGTH)) {
     std::cerr << "Malformed header: bad file marker!" << std::endl;
-    delete fileHeader;
+    delete header;
     return NULL;
   }
 
-  bytesRead += 4 * fread(&(fileHeader->totalFileSizeBytes), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->utf8PropObj_state0), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->utf8PropObj_state0_size), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->utf8PropObj_total_size), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->utf8PropObj_max_expand), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->utf8PropObj_entry_shift), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->utf8PropObj_bytes_per_entry), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->utf8PropObj_losub), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->utf8PropObj_hiadd), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->startOf_utf8PropObj_state_table), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->lengthOf_utf8PropObj_state_table), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->startOf_utf8PropObj_remap_base), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->lengthOf_utf8PropObj_remap_base), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->startOf_utf8PropObj_remap_string), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->lengthOf_utf8PropObj_remap_string), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->startOf_utf8PropObj_fast_state), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->lengthOf_utf8PropObj_fast_state), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->startOf_kAvgDeltaOctaScore), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->lengthOf_kAvgDeltaOctaScore), 4, 1, inFile);
-  bytesRead += 4 * fread(&(fileHeader->numTablesEncoded), 4, 1, inFile);
+  CLD2_READINT(totalFileSizeBytes);
+  CLD2_READINT(utf8PropObj_state0);
+  CLD2_READINT(utf8PropObj_state0_size);
+  CLD2_READINT(utf8PropObj_total_size);
+  CLD2_READINT(utf8PropObj_max_expand);
+  CLD2_READINT(utf8PropObj_entry_shift);
+  CLD2_READINT(utf8PropObj_bytes_per_entry);
+  CLD2_READINT(utf8PropObj_losub);
+  CLD2_READINT(utf8PropObj_hiadd);
+  CLD2_READINT(startOf_utf8PropObj_state_table);
+  CLD2_READINT(lengthOf_utf8PropObj_state_table);
+  CLD2_READINT(startOf_utf8PropObj_remap_base);
+  CLD2_READINT(lengthOf_utf8PropObj_remap_base);
+  CLD2_READINT(startOf_utf8PropObj_remap_string);
+  CLD2_READINT(lengthOf_utf8PropObj_remap_string);
+  CLD2_READINT(startOf_utf8PropObj_fast_state);
+  CLD2_READINT(lengthOf_utf8PropObj_fast_state);
+  CLD2_READINT(startOf_kAvgDeltaOctaScore);
+  CLD2_READINT(lengthOf_kAvgDeltaOctaScore);
+  CLD2_READINT(numTablesEncoded);
 
-  CLD2DynamicData::TableHeader* tableHeaders = new CLD2DynamicData::TableHeader[fileHeader->numTablesEncoded];
-  fileHeader->tableHeaders = tableHeaders;
-  for (int x=0; x<fileHeader->numTablesEncoded; x++) {
-    CLD2DynamicData::TableHeader &tHeader = fileHeader->tableHeaders[x];
-    bytesRead += 4 * fread(&(tHeader.kCLDTableSizeOne), 4, 1, inFile);
-    bytesRead += 4 * fread(&(tHeader.kCLDTableSize), 4, 1, inFile);
-    bytesRead += 4 * fread(&(tHeader.kCLDTableKeyMask), 4, 1, inFile);
-    bytesRead += 4 * fread(&(tHeader.kCLDTableBuildDate), 4, 1, inFile);
-    bytesRead += 4 * fread(&(tHeader.startOf_kCLDTable), 4, 1, inFile);
-    bytesRead += 4 * fread(&(tHeader.lengthOf_kCLDTable), 4, 1, inFile);
-    bytesRead += 4 * fread(&(tHeader.startOf_kCLDTableInd), 4, 1, inFile);
-    bytesRead += 4 * fread(&(tHeader.lengthOf_kCLDTableInd), 4, 1, inFile);
-    bytesRead += 4 * fread(&(tHeader.startOf_kRecognizedLangScripts), 4, 1, inFile);
-    bytesRead += 4 * fread(&(tHeader.lengthOf_kRecognizedLangScripts), 4, 1, inFile);
+  CLD2DynamicData::TableHeader* tableHeaders = new CLD2DynamicData::TableHeader[header->numTablesEncoded];
+  header->tableHeaders = tableHeaders;
+  for (int x=0; x<header->numTablesEncoded; x++) {
+    CLD2DynamicData::TableHeader *header = &(tableHeaders[x]);
+    CLD2_READINT(kCLDTableSizeOne);
+    CLD2_READINT(kCLDTableSize);
+    CLD2_READINT(kCLDTableKeyMask);
+    CLD2_READINT(kCLDTableBuildDate);
+    CLD2_READINT(startOf_kCLDTable);
+    CLD2_READINT(lengthOf_kCLDTable);
+    CLD2_READINT(startOf_kCLDTableInd);
+    CLD2_READINT(lengthOf_kCLDTableInd);
+    CLD2_READINT(startOf_kRecognizedLangScripts);
+    CLD2_READINT(lengthOf_kRecognizedLangScripts);
   }
 
   // Confirm header size is correct.
-  int expectedHeaderSize = CLD2DynamicData::calculateHeaderSize(fileHeader->numTablesEncoded);
+  int expectedHeaderSize = CLD2DynamicData::calculateHeaderSize(header->numTablesEncoded);
   if (expectedHeaderSize != bytesRead) {
     std::cerr << "Header size mismatch! Expected " << expectedHeaderSize << ", but read " << bytesRead << std::endl;
-    delete fileHeader;
+    delete header;
     delete tableHeaders;
     return NULL;
   }
 
-  // Confirm file size is correct.
-  fseek(inFile, 0, SEEK_END);
-  int actualSize = ftell(inFile);
-  fclose(inFile);
+  int actualSize = 0;
+  if (sourceIsFile) {
+    // Confirm file size is correct.
+    fseek(inFile, 0, SEEK_END);
+    actualSize = ftell(inFile);
+    fclose(inFile);
+  } else {
+    actualSize = length;
+  }
 
-  if (actualSize != fileHeader->totalFileSizeBytes) {
-    std::cerr << "File size mismatch! Expected " << fileHeader->totalFileSizeBytes << ", but found " << actualSize << std::endl;
-    delete fileHeader;
+  if (actualSize != header->totalFileSizeBytes) {
+    std::cerr << "File size mismatch! Expected " << header->totalFileSizeBytes << ", but found " << actualSize << std::endl;
+    delete header;
     delete tableHeaders;
     return NULL;
   }
-  return fileHeader;
+  return header;
 }
 
-void unloadData(CLD2::ScoringTables** scoringTables, void** mmapAddress, int* mmapLength) {
+void unloadDataFile(CLD2::ScoringTables** scoringTables,
+                    void** mmapAddress, int* mmapLength) {
+  CLD2DynamicDataLoader::unloadDataRaw(scoringTables);
+  munmap(*mmapAddress, *mmapLength);
+  *mmapAddress = NULL;
+  *mmapLength = 0;
+}
+
+void unloadDataRaw(CLD2::ScoringTables** scoringTables) {
   free(const_cast<CLD2::UTF8PropObj*>((*scoringTables)->unigram_obj));
   (*scoringTables)->unigram_obj = NULL;
   delete((*scoringTables)->unigram_compat_obj); // tableSummaries[0] from loadDataFile
   (*scoringTables)->unigram_compat_obj = NULL;
   delete(*scoringTables);
   *scoringTables = NULL;
-  munmap(*mmapAddress, *mmapLength);
-  *mmapAddress = NULL;
-  *mmapLength = 0;
 }
 
-CLD2::ScoringTables* loadDataFile(const char* fileName, void** mmapAddressOut, int* mmapLengthOut) {
-  CLD2DynamicData::FileHeader* fileHeader = loadHeader(fileName);
-  if (fileHeader == NULL) {
+CLD2::ScoringTables* loadDataFile(const char* fileName,
+                                  void** mmapAddressOut, int* mmapLengthOut) {
+  CLD2DynamicData::FileHeader* header = loadHeaderFromFile(fileName);
+  if (header == NULL) {
     return NULL;
   }
 
   // Initialize the memory map
   int inFileHandle = open(fileName, O_RDONLY);
-  void* mapped = mmap(NULL, fileHeader->totalFileSizeBytes,
+  void* mapped = mmap(NULL, header->totalFileSizeBytes,
     PROT_READ, MAP_PRIVATE, inFileHandle, 0);
   // Record the map address. This allows callers to unmap 
   *mmapAddressOut=mapped;
-  *mmapLengthOut=fileHeader->totalFileSizeBytes;
+  *mmapLengthOut=header->totalFileSizeBytes;
   close(inFileHandle);
 
+  return loadDataInternal(header, mapped, header->totalFileSizeBytes);
+}
+
+CLD2::ScoringTables* loadDataRaw(const void* basePointer, const int length) {
+  CLD2DynamicData::FileHeader* header = loadHeaderFromRaw(basePointer, length);
+  return loadDataInternal(header, basePointer, length);
+}
+
+CLD2::ScoringTables* loadDataInternal(CLD2DynamicData::FileHeader* header, const void* basePointer, const int length) {
   // 1. UTF8 Object
-  const CLD2::uint8* state_table = static_cast<const CLD2::uint8*>(mapped) +
-    fileHeader->startOf_utf8PropObj_state_table;
+  const CLD2::uint8* state_table = static_cast<const CLD2::uint8*>(basePointer) +
+    header->startOf_utf8PropObj_state_table;
   // FIXME: Unsafe to rely on this since RemapEntry is not a bit-packed structure
   const CLD2::RemapEntry* remap_base =
     reinterpret_cast<const CLD2::RemapEntry*>(
-      static_cast<const CLD2::uint8*>(mapped) +
-      fileHeader->startOf_utf8PropObj_remap_base);
-  const CLD2::uint8* remap_string = static_cast<const CLD2::uint8*>(mapped) +
-    fileHeader->startOf_utf8PropObj_remap_string;
+      static_cast<const CLD2::uint8*>(basePointer) +
+      header->startOf_utf8PropObj_remap_base);
+  const CLD2::uint8* remap_string = static_cast<const CLD2::uint8*>(basePointer) +
+    header->startOf_utf8PropObj_remap_string;
   const CLD2::uint8* fast_state =
-    fileHeader->startOf_utf8PropObj_fast_state == 0 ? 0 :
-      static_cast<const CLD2::uint8*>(mapped) +
-      fileHeader->startOf_utf8PropObj_fast_state;
+    header->startOf_utf8PropObj_fast_state == 0 ? 0 :
+      static_cast<const CLD2::uint8*>(basePointer) +
+      header->startOf_utf8PropObj_fast_state;
 
   // Populate intermediate object. Horrible casting required because the struct
   // is all read-only integers, and doesn't have a constructor. Yikes.
   // TODO: It might actually be less horrible to memcpy the data in <shudder>
   const CLD2::UTF8PropObj* unigram_obj = reinterpret_cast<CLD2::UTF8PropObj*>(malloc(sizeof(CLD2::UTF8PropObj)));
-  *const_cast<CLD2::uint32*>(&unigram_obj->state0) = fileHeader->utf8PropObj_state0;
-  *const_cast<CLD2::uint32*>(&unigram_obj->state0_size) = fileHeader->utf8PropObj_state0_size;
-  *const_cast<CLD2::uint32*>(&unigram_obj->total_size) = fileHeader->utf8PropObj_total_size;
-  *const_cast<int*>(&unigram_obj->max_expand) = fileHeader->utf8PropObj_max_expand;
-  *const_cast<int*>(&unigram_obj->entry_shift) = fileHeader->utf8PropObj_entry_shift;
-  *const_cast<int*>(&unigram_obj->bytes_per_entry) = fileHeader->utf8PropObj_bytes_per_entry;
-  *const_cast<CLD2::uint32*>(&unigram_obj->losub) = fileHeader->utf8PropObj_losub;
-  *const_cast<CLD2::uint32*>(&unigram_obj->hiadd) = fileHeader->utf8PropObj_hiadd;
+  *const_cast<CLD2::uint32*>(&unigram_obj->state0) = header->utf8PropObj_state0;
+  *const_cast<CLD2::uint32*>(&unigram_obj->state0_size) = header->utf8PropObj_state0_size;
+  *const_cast<CLD2::uint32*>(&unigram_obj->total_size) = header->utf8PropObj_total_size;
+  *const_cast<int*>(&unigram_obj->max_expand) = header->utf8PropObj_max_expand;
+  *const_cast<int*>(&unigram_obj->entry_shift) = header->utf8PropObj_entry_shift;
+  *const_cast<int*>(&unigram_obj->bytes_per_entry) = header->utf8PropObj_bytes_per_entry;
+  *const_cast<CLD2::uint32*>(&unigram_obj->losub) = header->utf8PropObj_losub;
+  *const_cast<CLD2::uint32*>(&unigram_obj->hiadd) = header->utf8PropObj_hiadd;
   *const_cast<const CLD2::uint8**>(&unigram_obj->state_table) = state_table;
   *const_cast<const CLD2::RemapEntry**>(&unigram_obj->remap_base) = remap_base;
   *const_cast<const CLD2::uint8**>(&unigram_obj->remap_string) = remap_string;
@@ -168,22 +215,22 @@ CLD2::ScoringTables* loadDataFile(const char* fileName, void** mmapAddressOut, i
 
   // 2. kAvgDeltaOctaScore array
   const short* read_kAvgDeltaOctaScore = reinterpret_cast<const short*>(
-    static_cast<const CLD2::uint8*>(mapped) +
-    fileHeader->startOf_kAvgDeltaOctaScore);
+    static_cast<const CLD2::uint8*>(basePointer) +
+    header->startOf_kAvgDeltaOctaScore);
 
   // 3. Each table
-  CLD2::CLD2TableSummary* tableSummaries = new CLD2::CLD2TableSummary[fileHeader->numTablesEncoded];
-  for (int x=0; x<fileHeader->numTablesEncoded; x++) {
+  CLD2::CLD2TableSummary* tableSummaries = new CLD2::CLD2TableSummary[header->numTablesEncoded];
+  for (int x=0; x<header->numTablesEncoded; x++) {
     CLD2::CLD2TableSummary &summary = tableSummaries[x];
-    CLD2DynamicData::TableHeader& tHeader = fileHeader->tableHeaders[x];
+    CLD2DynamicData::TableHeader& tHeader = header->tableHeaders[x];
     const CLD2::IndirectProbBucket4* kCLDTable =
       reinterpret_cast<const CLD2::IndirectProbBucket4*>(
-        static_cast<CLD2::uint8*>(mapped) + tHeader.startOf_kCLDTable);
+        static_cast<const CLD2::uint8*>(basePointer) + tHeader.startOf_kCLDTable);
     const CLD2::uint32* kCLDTableInd =
       reinterpret_cast<const CLD2::uint32*>(
-        static_cast<CLD2::uint8*>(mapped) + tHeader.startOf_kCLDTableInd);
+        static_cast<const CLD2::uint8*>(basePointer) + tHeader.startOf_kCLDTableInd);
     const char* kRecognizedLangScripts =
-      static_cast<const char*>(mapped) + tHeader.startOf_kRecognizedLangScripts;
+      static_cast<const char*>(basePointer) + tHeader.startOf_kRecognizedLangScripts;
 
     summary.kCLDTable = kCLDTable;
     summary.kCLDTableInd = kCLDTableInd;
@@ -205,8 +252,9 @@ CLD2::ScoringTables* loadDataFile(const char* fileName, void** mmapAddressOut, i
   result->deltaocta_obj = &tableSummaries[5];
   result->distinctocta_obj = &tableSummaries[6];
   result->kExpectedScore = read_kAvgDeltaOctaScore;
-  delete fileHeader->tableHeaders;
-  delete fileHeader;
+  delete header->tableHeaders;
+  delete header;
   return result;
 }
-}
+
+} // namespace CLD2DynamicDataLoader
