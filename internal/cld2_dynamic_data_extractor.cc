@@ -45,7 +45,9 @@ void writeChunk(FILE *f, const void* data, CLD2::uint32 startAt, CLD2::uint32 le
   fwrite(data, 1, length, f);
 }
 
-void writeDataFile(const CLD2::ScoringTables* data, const char* fileName) {
+void writeDataFile(const CLD2::ScoringTables* data,
+                   const CLD2DynamicData::Supplement* supplement,
+                   const char* fileName) {
   // The order here is hardcoded and MUST NOT BE CHANGED, else you will de-sync
   // with the reading code.
   const char ZERO = 0;
@@ -64,8 +66,8 @@ void writeDataFile(const CLD2::ScoringTables* data, const char* fileName) {
   fileHeader.numTablesEncoded = NUM_TABLES;
   fileHeader.tableHeaders = tableHeaders;
   initUtf8Headers(&fileHeader, data->unigram_obj);
-  initDeltaHeaders(&fileHeader, data->kExpectedScore);
-  initTableHeaders(tableSummaries, NUM_TABLES, tableHeaders);
+  initDeltaHeaders(&fileHeader, supplement->lengthOf_kAvgDeltaOctaScore);
+  initTableHeaders(tableSummaries, NUM_TABLES, supplement, tableHeaders);
   alignAll(&fileHeader, 16); // Align all sections to 128-bit boundaries
 
   // We are ready to rock.
@@ -160,7 +162,12 @@ void writeDataFile(const CLD2::ScoringTables* data, const char* fileName) {
 }
 
 void initTableHeaders(const CLD2::CLD2TableSummary** summaries,
-  int numSummaries, CLD2DynamicData::TableHeader* tableHeaders) {
+                      const int numSummaries,
+                      const CLD2DynamicData::Supplement* supplement,
+                      CLD2DynamicData::TableHeader* tableHeaders) {
+  // Important: As documented in the .h, we assume that the Supplement data
+  // structure contains exactly one entry in indirectTableSizes for each
+  // CLD2TableSummary, in the same order.
   for (int x=0; x<numSummaries; x++) {
     const CLD2::CLD2TableSummary* summary = summaries[x];
     CLD2DynamicData::TableHeader& tableHeader = tableHeaders[x];
@@ -176,19 +183,7 @@ void initTableHeaders(const CLD2::CLD2TableSummary** summaries,
     CLD2::uint32 numBuckets = summary->kCLDTableSize;
     CLD2::uint32 tableSizeBytes = bytesPerBucket * numBuckets;
     CLD2::uint32 indirectTableSizeBytes =
-      summary->kCLDTableSizeOne * sizeof(CLD2::uint32);
-
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-    // cld2_generated_cjk_compatible.cc has a kCLDTableSizeOne of zero!
-    if (x == 0) { // cld2_generated_cjk_compatible.cc
-      indirectTableSizeBytes = 239*2*4;
-    }
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-
+      supplement->indirectTableSizes[x] * sizeof(CLD2::uint32);
     CLD2::uint32 recognizedScriptsSizeBytes =
       strlen(summary->kRecognizedLangScripts) + 1; // note null terminator
 
@@ -203,7 +198,7 @@ void initTableHeaders(const CLD2::CLD2TableSummary** summaries,
 // Assuming that all fields have been set in the specified header, re-align
 // the starting positions of all data chunks to be aligned along 64-bit
 // boundaries for maximum efficiency.
-void alignAll(CLD2DynamicData::FileHeader* header, int alignment) {
+void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
   CLD2::uint32 totalPadding = 0;
   if (DEBUG) { std::cout << "Align for " << (alignment*8) << " bits." << std::endl; }
   CLD2::uint32 headerSize = CLD2DynamicData::calculateHeaderSize(
@@ -264,7 +259,6 @@ void alignAll(CLD2DynamicData::FileHeader* header, int alignment) {
     offset += header->lengthOf_kAvgDeltaOctaScore;
   }
   
-  // TODO: The rest of the fields
   for (int x=0; x<header->numTablesEncoded; x++) {
     CLD2DynamicData::TableHeader& tableHeader = header->tableHeaders[x];
     int tablePad = alignment - (offset % alignment);
@@ -347,10 +341,9 @@ void alignAll(CLD2DynamicData::FileHeader* header, int alignment) {
   }
 }
 
-void initDeltaHeaders(CLD2DynamicData::FileHeader* header, const short* deltaArray) {
-  // TODO: Don't hardcode 614*4. Get constant from generated_language.cc?
+void initDeltaHeaders(CLD2DynamicData::FileHeader* header, const CLD2::uint32 deltaLength) {
   header->startOf_kAvgDeltaOctaScore = 0;
-  header->lengthOf_kAvgDeltaOctaScore = 614 * 4; // from cld_generated_score_quad_octa_1024_256.cc
+  header->lengthOf_kAvgDeltaOctaScore = deltaLength;
 }
 
 void initUtf8Headers(CLD2DynamicData::FileHeader* header, const CLD2::UTF8PropObj* utf8Object) {

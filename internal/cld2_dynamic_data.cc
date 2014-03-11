@@ -110,7 +110,9 @@ void dumpHeader(FileHeader* header) {
   return false;\
 }
 
-bool verify(const CLD2::ScoringTables* realData, const CLD2::ScoringTables* loadedData) {
+bool verify(const CLD2::ScoringTables* realData,
+            const Supplement* realSupplement,
+            const CLD2::ScoringTables* loadedData) {
   const int NUM_TABLES = 7;
   const CLD2::CLD2TableSummary* realTableSummaries[NUM_TABLES];
   realTableSummaries[0] = realData->unigram_compat_obj;
@@ -159,7 +161,7 @@ bool verify(const CLD2::ScoringTables* realData, const CLD2::ScoringTables* load
   if (DEBUG) std::cout << "verified." << std::endl;
 
   if (DEBUG) std::cout << "Verifying kExpectedScore... ";
-  CHECK_MEM_EQUALS(kExpectedScore, 614*4); // TODO: Don't hardcode 614*4.
+  CHECK_MEM_EQUALS(kExpectedScore, realSupplement->lengthOf_kAvgDeltaOctaScore);
   if (DEBUG) std::cout << "verified." << std::endl;
 
   // 3. Each table
@@ -171,20 +173,7 @@ bool verify(const CLD2::ScoringTables* realData, const CLD2::ScoringTables* load
     CLD2::uint32 bytesPerBucket = sizeof(CLD2::IndirectProbBucket4);
     CLD2::uint32 numBuckets = realData->kCLDTableSize;
     CLD2::uint32 tableSizeBytes = bytesPerBucket * numBuckets;
-    CLD2::uint32 indirectTableSizeBytes =
-      realData->kCLDTableSizeOne * sizeof(CLD2::uint32);
-
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-    // cld2_generated_cjk_compatible.cc has a kCLDTableSizeOne of zero!
-    if (x == 0) { // cld2_generated_cjk_compatible.cc
-      indirectTableSizeBytes = 239*2*4;
-    }
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-    // XXX XXX XXX HACK HACK HACK FIXME FIXME FIXME
-
+    CLD2::uint32 indirectTableSizeBytes = realSupplement->indirectTableSizes[x];
     CLD2::uint32 recognizedScriptsSizeBytes =
       strlen(realData->kRecognizedLangScripts) + 1; // null terminator included
 

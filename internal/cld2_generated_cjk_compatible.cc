@@ -37,7 +37,7 @@ static const IndirectProbBucket4 kCompatTable[kCompatTableSize] = {
 // This is all part of using one-byte mappings for CJK but wanting to
 // convert them to normal langprob values to share the scoring code.
 static const uint32 kCompatTableSizeOne = 0;           // One-langprob count
-static const uint32 kCompatTableIndSize = 239 * 2;     // Largest subscript
+extern const uint32 kCompatTableIndSize = 239 * 2;     // Largest subscript
 static const uint32 kCompatTableInd[kCompatTableIndSize] = {
   // [0000]
   0x00000000, 0x00000000, // [0] zh.0 zhT.0 ja.0 ko.0 vi.0 za.0

@@ -8284,8 +8284,10 @@ static const IndirectProbBucket4 kDistinctOcta0122[kDistinctOcta0122Size] = {
   };
   // table_hash = 981b-55ce, unused_entries = 14207 (43.36%)
 
-static const uint32 kDistinctOcta0122SizeOne = 98;    // Bucket count one-lang
-static const uint32 kDistinctOcta0122Ind[98] = {
+static const uint32 kDistinctOcta0122SizeOne = 98; // Bucket count one-lang
+static const uint32 kDistinctOcta0122IndSize = 98; // Largest subscript
+extern const uint32 kDistinctOctaIndSize = kDistinctOcta0122IndSize; // Source-agnostic named constant
+static const uint32 kDistinctOcta0122Ind[kDistinctOcta0122IndSize] = {
   // [0000]
   0x00000000, 0x00000000, 0x00001706, 0x00002a06,   // -- --  sr.un.un_400 bo.un.un_400 
   0x00003406, 0x00003303, 0x00003906, 0x00001e01,   // xh.un.un_400 nn.un.un_300  dz.un.un_400 ms.un.un_200 
@@ -8341,8 +8343,10 @@ static const IndirectProbBucket4 kDistinctOcta0122_2[kDistinctOcta0122_2Size] = 
   };
   // table_hash = ffff-ffff, unused_entries = 0 (0.00%)
 
-static const uint32 kDistinctOcta0122_2SizeOne = 2;    // Bucket count one-lang
-static const uint32 kDistinctOcta0122_2Ind[2] = {
+static const uint32 kDistinctOcta0122_2SizeOne = 2; // Bucket count one-lang
+static const uint32 kDistinctOcta0122_2IndSize = 2; // Largest subscript
+extern const uint32 kDistinctOcta2IndSize = kDistinctOcta0122_2IndSize; // Source-agnostic named constant
+static const uint32 kDistinctOcta0122_2Ind[kDistinctOcta0122_2IndSize] = {
   // [0000] --- double_langprob_start=0002 ---
   0x00000000, 0x00000000,                           // -- --  
                                                     // 

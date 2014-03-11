@@ -1102,7 +1102,7 @@ static const IndirectProbBucket4 kCjkDeltaBi[kCjkDeltaBiSize] = {
   // table_hash = 860b-1885, unused_entries = 1630 (39.79%)
 
 static const uint32 kCjkDeltaBiSizeOne = 34;    // One-langprob count
-static const uint32 kCjkDeltaBiIndSize = 34;    // Largest subscript
+extern const uint32 kCjkDeltaBiIndSize = 34;    // Largest subscript
 static const uint32 kCjkDeltaBiInd[kCjkDeltaBiIndSize] = {
   // [0000]
   0x00000000, 0x00000000, 0x00001d1c, 0x00000242,   // -- --  zh-Hant.un.un_800 ja.un.un_C00

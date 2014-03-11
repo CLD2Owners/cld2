@@ -40,6 +40,14 @@ namespace CLD2 {
   extern const CLD2TableSummary kDeltaOcta_obj;
   extern const CLD2TableSummary kDistinctOcta_obj;
   extern const short kAvgDeltaOctaScore[];
+  extern const uint32 kAvgDeltaOctaScoreSize;
+  extern const uint32 kCompatTableIndSize;
+  extern const uint32 kCjkDeltaBiIndSize;
+  extern const uint32 kDistinctBiTableIndSize;
+  extern const uint32 kQuadChromeIndSize;
+  extern const uint32 kQuadChrome2IndSize;
+  extern const uint32 kDeltaOctaIndSize;
+  extern const uint32 kDistinctOctaIndSize;
 }
 
 int main(int argc, char** argv) {
@@ -123,9 +131,23 @@ Usage:\n\
     &CLD2::kDistinctOcta_obj,
     CLD2::kAvgDeltaOctaScore,
   };
+  const CLD2::uint32 indirectTableSizes[7] = {
+    CLD2::kCompatTableIndSize,
+    CLD2::kCjkDeltaBiIndSize,
+    CLD2::kDistinctBiTableIndSize,
+    CLD2::kQuadChromeIndSize,
+    CLD2::kQuadChrome2IndSize,
+    CLD2::kDeltaOctaIndSize,
+    CLD2::kDistinctOctaIndSize
+  };
+  const CLD2DynamicData::Supplement supplement = {
+    CLD2::kAvgDeltaOctaScoreSize,
+    indirectTableSizes
+  };
   if (mode == 1) { // dump
     CLD2DynamicDataExtractor::writeDataFile(
       static_cast<const CLD2::ScoringTables*>(&realData),
+      &supplement,
       fileName);
   } else if (mode == 3) { // head
     CLD2DynamicData::FileHeader* header = CLD2DynamicDataLoader::loadHeaderFromFile(fileName);
@@ -149,6 +171,7 @@ Usage:\n\
     }
     bool result = CLD2DynamicData::verify(
       static_cast<const CLD2::ScoringTables*>(&realData),
+      &supplement,
       static_cast<const CLD2::ScoringTables*>(loadedData));
     CLD2DynamicDataLoader::unloadDataFile(&loadedData, &mmapAddress, &mmapLength);
     if (loadedData != NULL || mmapAddress != NULL || mmapLength != 0) {

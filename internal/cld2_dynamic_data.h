@@ -194,6 +194,19 @@ typedef struct {
   TableHeader* tableHeaders;
 } FileHeader;
 
+// The CLD2::TableHeader structure doesn't contain everything that is needed
+// to dump table data. Specifically, the size of the indirect table is not
+// part of the data structure. Any such data are captured in this struct.
+typedef struct {
+  const CLD2::uint32 lengthOf_kAvgDeltaOctaScore;
+  // An array of 32-bit unsigned integers representing the indirect table sizes
+  // for each of the table headers in the FileHeader structure. It is assumed
+  // that there is exactly one entry in the array for each table header present
+  // in the tableHeaders field of the FileHeader, and that they are in the
+  // same order as the entries in that structure.
+  const CLD2::uint32* indirectTableSizes;
+} Supplement;
+
 // Calculate the exact size of a header that encodes the specified number of
 // tables. This can be used to reserve space within the data file,
 // calculate offsets, and so on.
@@ -202,9 +215,13 @@ CLD2::uint32 calculateHeaderSize(CLD2::uint32 numTables);
 // Dump a given header to stdout as a human-readable string.
 void dumpHeader(FileHeader* header);
 
-// Verify that a given pair of scoring tables match precisely
-// If there is a problem, returns an error message; otherwise, the empty string.
-bool verify(const CLD2::ScoringTables* realData, const CLD2::ScoringTables* loadedData);
+// Verify that a given pair of scoring tables match precisely.
+// Uses the provided supplement to verify information that cannot be otherwise
+// checked from the CLD2::ScoringTables structure.
+// If there is a problem, returns false.
+bool verify(const CLD2::ScoringTables* realData,
+            const Supplement* realSupplement,
+            const CLD2::ScoringTables* loadedData);
 
 // Return true iff the program is running in little-endian mode.
 bool isLittleEndian();

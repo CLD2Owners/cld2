@@ -4255,6 +4255,7 @@ static const IndirectProbBucket4 kDeltaOctaChrome0122[kDeltaOctaChrome0122Size] 
 
 static const uint32 kDeltaOctaChrome0122SizeOne = 955;  // One-langprob count
 static const uint32 kDeltaOctaChrome0122IndSize = 955;  // Largest subscript
+extern const uint32 kDeltaOctaIndSize = kDeltaOctaChrome0122IndSize; // Source-agnostic named constant
 static const uint32 kDeltaOctaChrome0122Ind[kDeltaOctaChrome0122IndSize] = {
   // [0000]
   0x00000000, 0x00000000, 0x00001324, 0x00000e1c,   // -- --  bh.un.un_900 is.un.un_800
@@ -4580,6 +4581,7 @@ static const IndirectProbBucket4 kDeltaOctaChrome0122_2[kDeltaOctaChrome0122_2Si
 
 static const uint32 kDeltaOctaChrome0122_2SizeOne = 2;  // One-langprob count
 static const uint32 kDeltaOctaChrome0122_2IndSize = 2;  // Largest subscript
+extern const uint32 kDeltaOcta2IndSize = kDeltaOctaChrome0122_2IndSize;  // Source-agnostic named constant
 static const uint32 kDeltaOctaChrome0122_2Ind[kDeltaOctaChrome0122_2IndSize] = {
   // [0000] --- double_langprob_start=0002 ---
   0x00000000, 0x00000000,                           // -- --

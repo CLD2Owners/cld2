@@ -16,7 +16,7 @@
 namespace CLD2 {
 
 // Average score per 1024 bytes
-static const int kAvgDeltaOctaScoreSize = 614 * 4;
+extern const int kAvgDeltaOctaScoreSize = 614 * 4;
 extern const short kAvgDeltaOctaScore[kAvgDeltaOctaScoreSize] = {
 // Latn  Cyrl  Arab  Other script
 // Updated 20140202 for CLD2 Chrome 256K entries
