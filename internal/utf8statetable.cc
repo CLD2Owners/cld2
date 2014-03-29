@@ -30,6 +30,7 @@
 #include <string.h>                     // for NULL, memcpy, memmove
 
 #include "integral_types.h"        // for uint8, uint32, int8
+#include "port.h"
 #include "stringpiece.h"
 #include "offsetmap.h"
 
@@ -514,8 +515,9 @@ DoAgain:
   uint32 losub = st->losub;
   uint32 hiadd = st->hiadd;
   while (src < srclimit8) {
-    uint32 s0123 = (reinterpret_cast<const uint32 *>(src))[0];
-    uint32 s4567 = (reinterpret_cast<const uint32 *>(src))[1];
+    const uint32* src32 = reinterpret_cast<const uint32 *>(src);
+    uint32 s0123 = UNALIGNED_LOAD32(&src32[0]);
+    uint32 s4567 = UNALIGNED_LOAD32(&src32[1]);
     src += 8;
     // This is a fast range check for all bytes in [lowsub..0x80-hiadd)
     uint32 temp = (s0123 - losub) | (s0123 + hiadd) |
@@ -601,8 +603,9 @@ int UTF8GenericScanFastAscii(const UTF8ScanObj* st,
   do {
     // Skip 8 bytes of ASCII at a whack; no endianness issue
     while ((src < srclimit8) &&
-           (((reinterpret_cast<const uint32*>(src)[0] |
-              reinterpret_cast<const uint32*>(src)[1]) & 0x80808080) == 0)) {
+           (((UNALIGNED_LOAD32(&reinterpret_cast<const uint32*>(src)[0]) |
+              UNALIGNED_LOAD32(&reinterpret_cast<const uint32*>(src)[1]))
+             & 0x80808080) == 0)) {
       src += 8;
     }
     // Run state table on the rest
