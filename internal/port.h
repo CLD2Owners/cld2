@@ -52,7 +52,11 @@ namespace CLD2 {
       !defined(__ARM_ARCH_6K__) && \
       !defined(__ARM_ARCH_6Z__) && \
       !defined(__ARM_ARCH_6ZK__) && \
-      !defined(__ARM_ARCH_6T2__)
+      !defined(__ARM_ARCH_6T2__) && \
+      !defined(__ARM_ARCH_7__) && \
+      !defined(__ARM_ARCH_7A__) && \
+      !defined(__ARM_ARCH_7M__) && \
+      !defined(__ARM_ARCH_7R__)
 
 // ARMv7 and newer support native unaligned accesses, but only of 16-bit
 // and 32-bit values (not 64-bit); older versions either raise a fatal signal,
@@ -61,6 +65,12 @@ namespace CLD2 {
 // “ARMv7 or higher”, so we have to filter away all ARMv5 and ARMv6
 // sub-architectures. Newer gcc (>= 4.6) set an __ARM_FEATURE_ALIGNED #define,
 // so in time, maybe we can move on to that.
+//
+// Note that even if a chipset supports unaligned access, it might not be
+// enabled in any given system, e.g.:
+// http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0491c/CIHCGCFD.html
+// Therefore, it's generally just not safe to allow unaligned access on any ARM
+// variant.
 //
 // This is a mess, but there's not much we can do about it.
 
