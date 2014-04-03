@@ -15,6 +15,7 @@
 #ifndef CLD2_INTERNAL_CLD2_DYNAMIC_DATA_LOADER_H_
 #define CLD2_INTERNAL_CLD2_DYNAMIC_DATA_LOADER_H_
 
+#include <stdint.h>
 #include "scoreonescriptspan.h"
 #include "cld2_dynamic_data.h"
 
@@ -29,11 +30,11 @@ CLD2DynamicData::FileHeader* loadHeaderFromFile(const char* fileName);
 // The header returned is dynamically allocated; you must 'delete' the array
 // of TableHeaders as well as the returned FileHeader* when done.
 CLD2DynamicData::FileHeader* loadHeaderFromRaw(
-  const void* basePointer, const int length);
+  const void* basePointer, const uint32_t length);
 
 // Not for public consumption.
 CLD2DynamicData::FileHeader* loadInternal(
-  FILE* inFile, const void* basePointer, const int length);
+  FILE* inFile, const void* basePointer, const uint32_t length);
 
 // Load data directly into a ScoringTables structure using a private, read-only
 // mmap and return the newly-allocated structure.
@@ -44,16 +45,16 @@ CLD2DynamicData::FileHeader* loadInternal(
 // It is up to the caller to delete the data at a later time using
 // unloadData(...).
 CLD2::ScoringTables* loadDataFile(const char* fileName,
-  void** mmapAddressOut, int* mmapLengthOut);
+  void** mmapAddressOut, uint32_t* mmapLengthOut);
 
 // Load data directly into a ScoringTables structure from an arbitrary region
 // of memory, which is assumed to be a pointer to an mmap-ed region of memory
 // backed by a valid data file that could alternatively be read (if access
 // were allowed or desired) using loadDataFile(...). 
-CLD2::ScoringTables* loadDataRaw(const void* basePointer, const int length);
+CLD2::ScoringTables* loadDataRaw(const void* basePointer, const uint32_t length);
 
 // Not for public consumption.
-CLD2::ScoringTables* loadDataInternal(CLD2DynamicData::FileHeader* header, const void* basePointer, const int length);
+CLD2::ScoringTables* loadDataInternal(CLD2DynamicData::FileHeader* header, const void* basePointer, const uint32_t length);
 
 // Given pointers to the data from a previous invocation of loadDataFile,
 // unloads the data safely - freeing and deleting any malloc'd/new'd objects.
@@ -66,7 +67,7 @@ CLD2::ScoringTables* loadDataInternal(CLD2DynamicData::FileHeader* header, const
 // is an unfortunate mixture of new and malloc involved in building the
 // in-memory represtation of the data.
 void unloadDataFile(CLD2::ScoringTables** scoringTables,
-  void** mmapAddress, int* mmapLength);
+  void** mmapAddress, uint32_t* mmapLength);
 
 // Given a pointer to the data from a previous invocation of loadDataRaw,
 // unloads the data safely just like unloadDataFile does. This method doesn't

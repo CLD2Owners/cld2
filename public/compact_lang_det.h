@@ -63,6 +63,7 @@
 #ifndef I18N_ENCODINGS_CLD2_PUBLIC_COMPACT_LANG_DET_H_
 #define I18N_ENCODINGS_CLD2_PUBLIC_COMPACT_LANG_DET_H_
 
+#include <stdint.h>
 #include <vector>
 #include "../internal/lang_script.h"  // For Language
 
@@ -318,7 +319,7 @@ void loadDataFromFile(const char* fileName);
 // in from the specified location again (even if it has not changed).
 // WARNING: Before calling one of the provided "loadData" methods, language
 // detection will always fail and will always return the unknown language.
-void loadDataFromRawAddress(const void* rawAddress, const int length);
+void loadDataFromRawAddress(const void* rawAddress, const uint32_t length);
 
 // If compiled with dynamic mode, unload the data that was previously loaded
 // via loadDataFromFile() or loadDataFromRawAddress().

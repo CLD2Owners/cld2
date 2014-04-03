@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <assert.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -40,7 +41,7 @@ CLD2DynamicData::FileHeader* loadHeaderFromFile(const char* fileName) {
 }
 
 CLD2DynamicData::FileHeader* loadHeaderFromRaw(const void* basePointer,
-                                               const int length) {
+                                               const uint32_t length) {
   return loadInternal(NULL, basePointer, length);
 }
 
@@ -52,7 +53,7 @@ CLD2DynamicData::FileHeader* loadHeaderFromRaw(const void* basePointer,
     memcpy(&(header->field), (((char*)(basePointer)) + bytesRead), 4);\
     bytesRead += 4;\
   }
-CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer, const int length) {
+CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer, const uint32_t length) {
   const bool sourceIsFile = (inFile != NULL);
   int bytesRead = 0;
   CLD2DynamicData::FileHeader* header = new CLD2DynamicData::FileHeader;
@@ -140,7 +141,7 @@ CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer,
 }
 
 void unloadDataFile(CLD2::ScoringTables** scoringTables,
-                    void** mmapAddress, int* mmapLength) {
+                    void** mmapAddress, uint32_t* mmapLength) {
   CLD2DynamicDataLoader::unloadDataRaw(scoringTables);
   munmap(*mmapAddress, *mmapLength);
   *mmapAddress = NULL;
@@ -157,7 +158,7 @@ void unloadDataRaw(CLD2::ScoringTables** scoringTables) {
 }
 
 CLD2::ScoringTables* loadDataFile(const char* fileName,
-                                  void** mmapAddressOut, int* mmapLengthOut) {
+                                  void** mmapAddressOut, uint32_t* mmapLengthOut) {
   CLD2DynamicData::FileHeader* header = loadHeaderFromFile(fileName);
   if (header == NULL) {
     return NULL;
@@ -175,12 +176,12 @@ CLD2::ScoringTables* loadDataFile(const char* fileName,
   return loadDataInternal(header, mapped, header->totalFileSizeBytes);
 }
 
-CLD2::ScoringTables* loadDataRaw(const void* basePointer, const int length) {
+CLD2::ScoringTables* loadDataRaw(const void* basePointer, const uint32_t length) {
   CLD2DynamicData::FileHeader* header = loadHeaderFromRaw(basePointer, length);
   return loadDataInternal(header, basePointer, length);
 }
 
-CLD2::ScoringTables* loadDataInternal(CLD2DynamicData::FileHeader* header, const void* basePointer, const int length) {
+CLD2::ScoringTables* loadDataInternal(CLD2DynamicData::FileHeader* header, const void* basePointer, const uint32_t length) {
   // 1. UTF8 Object
   const CLD2::uint8* state_table = static_cast<const CLD2::uint8*>(basePointer) +
     header->startOf_utf8PropObj_state_table;

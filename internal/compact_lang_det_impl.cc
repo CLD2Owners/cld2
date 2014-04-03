@@ -17,6 +17,7 @@
 // Updated 2014.01 for dual table lookup
 //
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <string>
@@ -88,7 +89,7 @@ extern const short kAvgDeltaOctaScore[];
   static bool dataSourceIsFile = false;
   static ScoringTables* dynamicTables = NULL;
   static void* mmapAddress = NULL;
-  static int mmapLength = 0;
+  static uint32_t mmapLength = 0;
 
   bool isDataLoaded() { return dynamicDataLoaded; }
 
@@ -102,7 +103,7 @@ extern const short kAvgDeltaOctaScore[];
     dynamicDataLoaded = true;
   };
 
-  void loadDataFromRawAddress(const void* rawAddress, const int length) {
+  void loadDataFromRawAddress(const void* rawAddress, const uint32_t length) {
     if (isDataLoaded()) {
       unloadData();
     }

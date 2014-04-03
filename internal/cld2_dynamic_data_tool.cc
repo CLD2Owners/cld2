@@ -162,7 +162,7 @@ Usage:\n\
   
   if (mode == 1 || mode == 2) { // dump || verify (so perform verification)
     void* mmapAddress = NULL;
-    int mmapLength = 0;
+    uint32_t mmapLength = 0;
     CLD2::ScoringTables* loadedData = CLD2DynamicDataLoader::loadDataFile(fileName, &mmapAddress, &mmapLength);
 
     if (loadedData == NULL) {
