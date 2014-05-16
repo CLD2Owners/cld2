@@ -1,4 +1,3 @@
-// Copyright 2014 Google Inc. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -117,7 +116,7 @@ CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer,
   if (expectedHeaderSize != bytesRead) {
     std::cerr << "Header size mismatch! Expected " << expectedHeaderSize << ", but read " << bytesRead << std::endl;
     delete header;
-    delete tableHeaders;
+    delete[] tableHeaders;
     return NULL;
   }
 
@@ -134,7 +133,7 @@ CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer,
   if (actualSize != header->totalFileSizeBytes) {
     std::cerr << "File size mismatch! Expected " << header->totalFileSizeBytes << ", but found " << actualSize << std::endl;
     delete header;
-    delete tableHeaders;
+    delete[] tableHeaders;
     return NULL;
   }
   return header;
@@ -253,7 +252,7 @@ CLD2::ScoringTables* loadDataInternal(CLD2DynamicData::FileHeader* header, const
   result->deltaocta_obj = &tableSummaries[5];
   result->distinctocta_obj = &tableSummaries[6];
   result->kExpectedScore = read_kAvgDeltaOctaScore;
-  delete header->tableHeaders;
+  delete[] header->tableHeaders;
   delete header;
   return result;
 }

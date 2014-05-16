@@ -156,7 +156,7 @@ Usage:\n\
       return -1;
     }
     CLD2DynamicData::dumpHeader(header);
-    delete header->tableHeaders;
+    delete[] header->tableHeaders;
     delete header;
   }
   
