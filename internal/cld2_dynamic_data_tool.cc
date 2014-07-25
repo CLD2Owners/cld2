@@ -14,7 +14,6 @@
 
 #include <assert.h>
 #include <stdio.h>
-#include <iostream>
 #include <fstream>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -52,11 +51,11 @@ namespace CLD2 {
 
 int main(int argc, char** argv) {
   if (!CLD2DynamicData::isLittleEndian()) {
-    std::cerr << "System is big-endian: currently not supported." << std::endl;
+    fprintf(stderr, "System is big-endian: currently not supported.\n");
     return -1;
   }
   if (!CLD2DynamicData::coreAssumptionsOk()) {
-    std::cerr << "Core assumptions violated, unsafe to continue." << std::endl;
+    fprintf(stderr, "Core assumptions violated, unsafe to continue.\n");
     return -2;
   }
 
@@ -101,22 +100,22 @@ Usage:\n\
       if (i < argc - 1) {
         fileName = argv[++i];
       } else {
-        std::cerr << "missing file name argument" << std::endl << std::endl;
-        std::cerr << USAGE;
+        fprintf(stderr, "Missing file name argument\n\n");
+        fprintf(stderr, "%s", USAGE);
         return -1;
       }
     } else if (strcmp(argv[i], "--help") == 0) {
-      std::cout << USAGE;
+      fprintf(stdout, "%s", USAGE);
       return 0;
     } else {
-      std::cerr << "Unsupported option: " << argv[i] << std::endl << std::endl;
-      std::cerr << USAGE;
+      fprintf(stderr, "Unsupported option: %s\n\n", argv[i]);
+      fprintf(stderr, "%s", USAGE);
       return -1;
     }
   }
 
   if (mode == 0) {
-    std::cerr << USAGE;
+    fprintf(stderr, "%s", USAGE);
     return -1;
   }
 
@@ -152,7 +151,7 @@ Usage:\n\
   } else if (mode == 3) { // head
     CLD2DynamicData::FileHeader* header = CLD2DynamicDataLoader::loadHeaderFromFile(fileName);
     if (header == NULL) {
-      std::cerr << "Cannot read header from file: " << fileName << std::endl;
+      fprintf(stderr, "Cannot read header from file: %s\n", fileName);
       return -1;
     }
     CLD2DynamicData::dumpHeader(header);
@@ -166,7 +165,7 @@ Usage:\n\
     CLD2::ScoringTables* loadedData = CLD2DynamicDataLoader::loadDataFile(fileName, &mmapAddress, &mmapLength);
 
     if (loadedData == NULL) {
-      std::cerr << "Failed to read data file: " << fileName << std::endl;
+      fprintf(stderr, "Failed to read data file: %s\n", fileName);
       return -1;
     }
     bool result = CLD2DynamicData::verify(
@@ -175,10 +174,10 @@ Usage:\n\
       static_cast<const CLD2::ScoringTables*>(loadedData));
     CLD2DynamicDataLoader::unloadDataFile(&loadedData, &mmapAddress, &mmapLength);
     if (loadedData != NULL || mmapAddress != NULL || mmapLength != 0) {
-      std::cerr << "Warning: failed to clean up memory for ScoringTables." << std::endl;
+      fprintf(stderr, "Warning: failed to clean up memory for ScoringTables.\n");
     }
     if (!result) {
-      std::cerr << "Verification failed!" << std::endl;
+      fprintf(stderr, "Verification failed!\n");
       return -1;
     }
   }

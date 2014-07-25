@@ -15,7 +15,6 @@
 #include "cld2_dynamic_data.h"
 #include "integral_types.h"
 #include <assert.h>
-#include <iostream>
 #include <stdint.h>
 
 namespace CLD2DynamicData {
@@ -29,12 +28,12 @@ bool mem_compare(const void* data1, const void* data2, const int length) {
   const unsigned char* raw2 = static_cast<const unsigned char*>(data2);
   for (int x=0; x<length; x++) {
     if (raw1[x] != raw2[x]) {
-      std::cerr << "mem difference at data[" << x << "]: decimal " << (unsigned int) raw1[x] << " != decimal " << (unsigned int) raw2[x] << std::endl;
+      fprintf(stderr, "mem difference at data[%d]: decimal %d != decimal %d\n",
+              x, (unsigned int) raw1[x], (unsigned int) raw2[x]);
       for (int y=std::max(0,x-5); y<length && y<=x+5; y++) {
-        std::cerr << "[" << y << "]: " << (unsigned int) raw1[y]
-          << " <-> " << (unsigned int) raw2[y]
-          << ( x == y ? " [FIRST ERROR DETECTED HERE] " : "")
-          << std::endl;
+        fprintf(stderr, "[%d]: %d <-> %d%s\n",
+                y, (unsigned int) raw1[y], (unsigned int) raw2[y],
+                ( x == y ? " [FIRST ERROR DETECTED HERE] " : ""));
       }
       return false;
     }
@@ -52,27 +51,27 @@ void dumpHeader(FileHeader* header) {
   char safeString[DATA_FILE_MARKER_LENGTH + 1];
   memcpy(safeString, header->sanityString, DATA_FILE_MARKER_LENGTH);
   safeString[DATA_FILE_MARKER_LENGTH] = 0;
-  std::cout << "sanityString: " << safeString << std::endl;
-  std::cout << "totalFileSizeBytes: " << header->totalFileSizeBytes << std::endl;
-  std::cout << "utf8PropObj_state0: " << header->utf8PropObj_state0 << std::endl;
-  std::cout << "utf8PropObj_state0_size: " << header->utf8PropObj_state0_size << std::endl;
-  std::cout << "utf8PropObj_total_size: " << header->utf8PropObj_total_size << std::endl;
-  std::cout << "utf8PropObj_max_expand: " << header->utf8PropObj_max_expand << std::endl;
-  std::cout << "utf8PropObj_entry_shift: " << header->utf8PropObj_entry_shift << std::endl;
-  std::cout << "utf8PropObj_bytes_per_entry: " << header->utf8PropObj_bytes_per_entry << std::endl;
-  std::cout << "utf8PropObj_losub: " << header->utf8PropObj_losub << std::endl;
-  std::cout << "utf8PropObj_hiadd: " << header->utf8PropObj_hiadd << std::endl;
-  std::cout << "startOf_utf8PropObj_state_table: " << header->startOf_utf8PropObj_state_table << std::endl;
-  std::cout << "lengthOf_utf8PropObj_state_table: " << header->lengthOf_utf8PropObj_state_table << std::endl;
-  std::cout << "startOf_utf8PropObj_remap_base: " << header->startOf_utf8PropObj_remap_base << std::endl;
-  std::cout << "lengthOf_utf8PropObj_remap_base: " << header->lengthOf_utf8PropObj_remap_base << std::endl;
-  std::cout << "startOf_utf8PropObj_remap_string: " << header->startOf_utf8PropObj_remap_string << std::endl;
-  std::cout << "lengthOf_utf8PropObj_remap_string: " << header->lengthOf_utf8PropObj_remap_string << std::endl;
-  std::cout << "startOf_utf8PropObj_fast_state: " << header->startOf_utf8PropObj_fast_state << std::endl;
-  std::cout << "lengthOf_utf8PropObj_fast_state: " << header->lengthOf_utf8PropObj_fast_state << std::endl;
-  std::cout << "startOf_kAvgDeltaOctaScore: " << header->startOf_kAvgDeltaOctaScore << std::endl;
-  std::cout << "lengthOf_kAvgDeltaOctaScore: " << header->lengthOf_kAvgDeltaOctaScore << std::endl;
-  std::cout << "numTablesEncoded: " << header->numTablesEncoded << std::endl;
+  fprintf(stdout, "sanityString: %s\n", safeString);
+  fprintf(stdout, "totalFileSizeBytes: %d\n", header->totalFileSizeBytes);
+  fprintf(stdout, "utf8PropObj_state0: %d\n", header->utf8PropObj_state0);
+  fprintf(stdout, "utf8PropObj_state0_size: %d\n", header->utf8PropObj_state0_size);
+  fprintf(stdout, "utf8PropObj_total_size: %d\n", header->utf8PropObj_total_size);
+  fprintf(stdout, "utf8PropObj_max_expand: %d\n", header->utf8PropObj_max_expand);
+  fprintf(stdout, "utf8PropObj_entry_shift: %d\n", header->utf8PropObj_entry_shift);
+  fprintf(stdout, "utf8PropObj_bytes_per_entry: %d\n", header->utf8PropObj_bytes_per_entry);
+  fprintf(stdout, "utf8PropObj_losub: %d\n", header->utf8PropObj_losub);
+  fprintf(stdout, "utf8PropObj_hiadd: %d\n", header->utf8PropObj_hiadd);
+  fprintf(stdout, "startOf_utf8PropObj_state_table: %d\n", header->startOf_utf8PropObj_state_table);
+  fprintf(stdout, "lengthOf_utf8PropObj_state_table: %d\n", header->lengthOf_utf8PropObj_state_table);
+  fprintf(stdout, "startOf_utf8PropObj_remap_base: %d\n", header->startOf_utf8PropObj_remap_base);
+  fprintf(stdout, "lengthOf_utf8PropObj_remap_base: %d\n", header->lengthOf_utf8PropObj_remap_base);
+  fprintf(stdout, "startOf_utf8PropObj_remap_string: %d\n", header->startOf_utf8PropObj_remap_string);
+  fprintf(stdout, "lengthOf_utf8PropObj_remap_string: %d\n", header->lengthOf_utf8PropObj_remap_string);
+  fprintf(stdout, "startOf_utf8PropObj_fast_state: %d\n", header->startOf_utf8PropObj_fast_state);
+  fprintf(stdout, "lengthOf_utf8PropObj_fast_state: %d\n", header->lengthOf_utf8PropObj_fast_state);
+  fprintf(stdout, "startOf_kAvgDeltaOctaScore: %d\n", header->startOf_kAvgDeltaOctaScore);
+  fprintf(stdout, "lengthOf_kAvgDeltaOctaScore: %d\n", header->lengthOf_kAvgDeltaOctaScore);
+  fprintf(stdout, "numTablesEncoded: %d\n", header->numTablesEncoded);
 
   const char* tableNames[7];
   tableNames[0]="unigram_compat_obj";
@@ -86,27 +85,27 @@ void dumpHeader(FileHeader* header) {
   for (int x=0; x<header->numTablesEncoded; x++) {
     TableHeader& tHeader = header->tableHeaders[x];
       
-    std::cout << "Table " << (x+1) << ": (" << tableNames[x] << ")" << std::endl;
-    std::cout << "  kCLDTableSizeOne: " << tHeader.kCLDTableSizeOne << std::endl;
-    std::cout << "  kCLDTableSize: " << tHeader.kCLDTableSize << std::endl;
-    std::cout << "  kCLDTableKeyMask: " << tHeader.kCLDTableKeyMask << std::endl;
-    std::cout << "  kCLDTableBuildDate: " << tHeader.kCLDTableBuildDate << std::endl;
-    std::cout << "  startOf_kCLDTable: " << tHeader.startOf_kCLDTable << std::endl;
-    std::cout << "  lengthOf_kCLDTable: " << tHeader.lengthOf_kCLDTable << std::endl;
-    std::cout << "  startOf_kCLDTableInd: " << tHeader.startOf_kCLDTableInd << std::endl;
-    std::cout << "  lengthOf_kCLDTableInd: " << tHeader.lengthOf_kCLDTableInd << std::endl;
-    std::cout << "  startOf_kRecognizedLangScripts: " << tHeader.startOf_kRecognizedLangScripts << std::endl;
-    std::cout << "  lengthOf_kRecognizedLangScripts: " << tHeader.lengthOf_kRecognizedLangScripts << std::endl;
+    fprintf(stdout, "Table %d: (%s)\n", (x+1), tableNames[x]);;
+    fprintf(stdout, "  kCLDTableSizeOne: %d\n", tHeader.kCLDTableSizeOne);
+    fprintf(stdout, "  kCLDTableSize: %d\n", tHeader.kCLDTableSize);
+    fprintf(stdout, "  kCLDTableKeyMask: %d\n", tHeader.kCLDTableKeyMask);
+    fprintf(stdout, "  kCLDTableBuildDate: %d\n", tHeader.kCLDTableBuildDate);
+    fprintf(stdout, "  startOf_kCLDTable: %d\n", tHeader.startOf_kCLDTable);
+    fprintf(stdout, "  lengthOf_kCLDTable: %d\n", tHeader.lengthOf_kCLDTable);
+    fprintf(stdout, "  startOf_kCLDTableInd: %d\n", tHeader.startOf_kCLDTableInd);
+    fprintf(stdout, "  lengthOf_kCLDTableInd: %d\n", tHeader.lengthOf_kCLDTableInd);
+    fprintf(stdout, "  startOf_kRecognizedLangScripts: %d\n", tHeader.startOf_kRecognizedLangScripts);
+    fprintf(stdout, "  lengthOf_kRecognizedLangScripts: %d\n", tHeader.lengthOf_kRecognizedLangScripts);
   }
 }
 
 #define CHECK_EQUALS(name) if (loadedData->name != realData->name) {\
-  std::cerr << #name << ": " << loadedData->name << " != " << realData->name << std::endl;\
+    fprintf(stderr, "%s: %d != %d\n", #name, loadedData->name, realData->name);\
   return false;\
 }
 
 #define CHECK_MEM_EQUALS(name,size) if (!mem_compare(loadedData->name,realData->name,size)) {\
-  std::cerr << #name << ": data mismatch." << std::endl;\
+  fprintf(stderr, "%s: data mismatch.\n", #name);\
   return false;\
 }
 
@@ -147,26 +146,26 @@ bool verify(const CLD2::ScoringTables* realData,
 
   if (loadedData->unigram_obj->fast_state == NULL) {
     if (realData->unigram_obj->fast_state != NULL) {
-      std::cerr << "unigram_obj->fast_state is missing." << std::endl;
+      fprintf(stderr, "unigram_obj->fast_state is missing.\n");
       return false;
     }
   } else {
     if (realData->unigram_obj->fast_state == NULL) {
-      std::cerr << "unigram_obj->fast_state shouldn't be present." << std::endl;
+      fprintf(stderr, "unigram_obj->fast_state shouldn't be present.\n");
       return false;
     }
     CHECK_MEM_EQUALS(unigram_obj->fast_state, strlen(
       reinterpret_cast<const char*>(realData->unigram_obj->fast_state)) + 1); // null terminator included
   }
-  if (DEBUG) std::cout << "verified." << std::endl;
+  if (DEBUG) fprintf(stdout, "verified.\n");
 
-  if (DEBUG) std::cout << "Verifying kExpectedScore... ";
+  if (DEBUG) fprintf(stdout, "Verifying kExpectedScore... ");
   CHECK_MEM_EQUALS(kExpectedScore, realSupplement->lengthOf_kAvgDeltaOctaScore);
-  if (DEBUG) std::cout << "verified." << std::endl;
+  if (DEBUG) fprintf(stdout, "verified.\n");
 
   // 3. Each table
   for (int x=0; x<NUM_TABLES; x++) {
-    if (DEBUG) std::cout << "Verifying table " << (x+1) << "... ";
+    if (DEBUG) fprintf(stdout, "Verifying table %d... ", x+1);
     const CLD2::CLD2TableSummary* realData = realTableSummaries[x];
     const CLD2::CLD2TableSummary* loadedData = loadedTableSummaries[x];
     // We need to calculate the table lengths to do the memcmp
@@ -185,9 +184,9 @@ bool verify(const CLD2::ScoringTables* realData,
     CHECK_MEM_EQUALS(kCLDTable, tableSizeBytes);
     CHECK_MEM_EQUALS(kCLDTableInd, indirectTableSizeBytes);
     CHECK_MEM_EQUALS(kRecognizedLangScripts, recognizedScriptsSizeBytes);
-    if (DEBUG) std::cout << "verified." << std::endl;
+    if (DEBUG) fprintf(stdout, "verified.\n");
   }
-  if (DEBUG) std::cout << "All data verified successfully." << std::endl;
+  if (DEBUG) fprintf(stdout, "All data verified successfully.\n");
   return true;
 }
 
@@ -205,18 +204,15 @@ bool isLittleEndian() {
 
 bool coreAssumptionsOk() {
   if (sizeof(CLD2::uint8) != 1) {
-    std::cerr << "uint8 is " << (sizeof(CLD2::uint8) * 8)
-      << " bits instead of 8!" << std::endl;
+    fprintf(stderr, "uint8 is %d bits instead of 8!\n", (int) (sizeof(CLD2::uint8) * 8));
     return false;
   }
   if (sizeof(CLD2::uint16) != 2) {
-    std::cerr << "uint16 is " << (sizeof(CLD2::uint16) * 8)
-      << " bits instead of 16!" << std::endl;
+    fprintf(stderr, "uint16 is %d bits instead of 16!\n", (int) (sizeof(CLD2::uint16) * 8));
     return false;
   }
   if (sizeof(CLD2::uint32) != 4) {
-    std::cerr << "uint32 is " << (sizeof(CLD2::uint32) * 8)
-      << " bits instead of 32!" << std::endl;
+    fprintf(stderr, "uint32 is %d bits instead of 32!\n", (int) (sizeof(CLD2::uint32) * 8));
     return false;
   }
   return true;

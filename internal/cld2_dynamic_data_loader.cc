@@ -14,7 +14,6 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <iostream>
 #include <fstream>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -69,7 +68,7 @@ CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer,
                                     header->sanityString,
                                     CLD2DynamicData::DATA_FILE_MARKER,
                                     CLD2DynamicData::DATA_FILE_MARKER_LENGTH)) {
-    std::cerr << "Malformed header: bad file marker!" << std::endl;
+    fprintf(stderr, "Malformed header: bad file marker!\n");
     delete header;
     return NULL;
   }
@@ -114,7 +113,7 @@ CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer,
   // Confirm header size is correct.
   int expectedHeaderSize = CLD2DynamicData::calculateHeaderSize(header->numTablesEncoded);
   if (expectedHeaderSize != bytesRead) {
-    std::cerr << "Header size mismatch! Expected " << expectedHeaderSize << ", but read " << bytesRead << std::endl;
+    fprintf(stderr, "Header size mismatch! Expected %d, but read %d\n", expectedHeaderSize, bytesRead);
     delete header;
     delete[] tableHeaders;
     return NULL;
@@ -131,7 +130,7 @@ CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer,
   }
 
   if (actualSize != header->totalFileSizeBytes) {
-    std::cerr << "File size mismatch! Expected " << header->totalFileSizeBytes << ", but found " << actualSize << std::endl;
+    fprintf(stderr, "File size mismatch! Expected %d, but found %d\n", header->totalFileSizeBytes, actualSize);
     delete header;
     delete[] tableHeaders;
     return NULL;

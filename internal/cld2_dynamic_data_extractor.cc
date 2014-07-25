@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <iostream>
-
 #include "cld2_dynamic_data.h"
 #include "cld2_dynamic_data_extractor.h"
 #include "cld2_dynamic_data_loader.h" // for verifying the written data
@@ -31,7 +29,7 @@ void setDebug(int debug) {
 int advance(FILE* f, CLD2::uint32 position) {
   const char ZERO = 0;
   int pad = position - ftell(f);
-  if (DEBUG) cout << "  Adding " << pad << " bytes of padding" << endl;
+  if (DEBUG) fprintf(stdout, "  Adding %d bytes of padding\n", pad);
   while (pad-- > 0) {
     fwrite(&ZERO,1,1,f);
   }
@@ -39,9 +37,9 @@ int advance(FILE* f, CLD2::uint32 position) {
 }
 
 void writeChunk(FILE *f, const void* data, CLD2::uint32 startAt, CLD2::uint32 length) {
-  if (DEBUG) cout << "Write chunk @" << startAt << ", len=" << length << endl;
+  if (DEBUG) fprintf(stdout, "  Write chunk @%d, len=%d\n", startAt, length);
   advance(f, startAt);
-  if (DEBUG) cout << "  Writing " << length << " bytes of data" << endl;
+  if (DEBUG) fprintf(stdout, "  Writing %d bytes of data", length);;
   fwrite(data, 1, length, f);
 }
 
@@ -200,7 +198,7 @@ void initTableHeaders(const CLD2::CLD2TableSummary** summaries,
 // boundaries for maximum efficiency.
 void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
   CLD2::uint32 totalPadding = 0;
-  if (DEBUG) { std::cout << "Align for " << (alignment*8) << " bits." << std::endl; }
+  if (DEBUG) { fprintf(stdout, "Align for %d bits.\n", (alignment*8)); }
   CLD2::uint32 headerSize = CLD2DynamicData::calculateHeaderSize(
     header->numTablesEncoded);
   CLD2::uint32 offset = headerSize;
@@ -209,7 +207,7 @@ void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
     int stateTablePad = alignment - (offset % alignment);
     if (stateTablePad == alignment) stateTablePad = 0;
     totalPadding += stateTablePad;
-    if (DEBUG) { std::cout << "Alignment for stateTable adjusted by " << stateTablePad << std::endl; }
+    if (DEBUG) { fprintf(stdout, "Alignment for stateTable adjusted by %d\n", stateTablePad); }
     offset += stateTablePad;
     header->startOf_utf8PropObj_state_table = offset;
     offset += header->lengthOf_utf8PropObj_state_table;
@@ -219,7 +217,7 @@ void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
     int remapPad = alignment - (offset % alignment);
     if (remapPad == alignment) remapPad = 0;
     totalPadding += remapPad;
-    if (DEBUG) { std::cout << "Alignment for remap adjusted by " << remapPad << std::endl; }
+    if (DEBUG) { fprintf(stdout, "Alignment for remap adjusted by %d\n", remapPad); }
     offset += remapPad;
     header->startOf_utf8PropObj_remap_base = offset;
     offset += header->lengthOf_utf8PropObj_remap_base;
@@ -229,7 +227,7 @@ void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
     int remapStringPad = alignment - (offset % alignment);
     if (remapStringPad == alignment) remapStringPad = 0;
     totalPadding += remapStringPad;
-    if (DEBUG) { std::cout << "Alignment for remapString adjusted by " << remapStringPad << std::endl; }
+    if (DEBUG) { fprintf(stdout, "Alignment for remapString adjusted by %d\n", remapStringPad); }
     offset += remapStringPad;
     header->startOf_utf8PropObj_remap_string = offset;
     offset += header->lengthOf_utf8PropObj_remap_string; // null terminator already counted in initUtf8Headers
@@ -239,7 +237,7 @@ void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
     int fastStatePad = alignment - (offset % alignment);
     if (fastStatePad == alignment) fastStatePad = 0;
     totalPadding += fastStatePad;
-    if (DEBUG) { std::cout << "Alignment for fastState adjusted by " << fastStatePad << std::endl; }
+    if (DEBUG) { fprintf(stdout, "Alignment for fastState adjusted by %d\n", fastStatePad); }
     offset += fastStatePad;
     if (header->lengthOf_utf8PropObj_fast_state > 0) {
       header->startOf_utf8PropObj_fast_state = offset;
@@ -253,7 +251,7 @@ void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
     int deltaOctaPad = alignment - (offset % alignment);
     if (deltaOctaPad == alignment) deltaOctaPad = 0;
     totalPadding += deltaOctaPad;
-    if (DEBUG) { std::cout << "Alignment for deltaOctaScore adjusted by " << deltaOctaPad << std::endl; }
+    if (DEBUG) { fprintf(stdout, "Alignment for deltaOctaScore adjusted by %d\n", deltaOctaPad); }
     offset += deltaOctaPad;
     header->startOf_kAvgDeltaOctaScore = offset;
     offset += header->lengthOf_kAvgDeltaOctaScore;
@@ -264,7 +262,7 @@ void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
     int tablePad = alignment - (offset % alignment);
     if (tablePad == alignment) tablePad = 0;
     totalPadding += tablePad;
-    if (DEBUG) { std::cout << "Alignment for table " << x << " adjusted by " << tablePad << std::endl; }
+    if (DEBUG) { fprintf(stdout, "Alignment for table %d adjusted by %d\n", x, tablePad); }
     offset += tablePad;
     tableHeader.startOf_kCLDTable = offset;
     offset += tableHeader.lengthOf_kCLDTable;
@@ -272,7 +270,7 @@ void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
     int indirectPad = alignment - (offset % alignment);
     if (indirectPad == alignment) indirectPad = 0;
     totalPadding += indirectPad;
-    if (DEBUG) { std::cout << "Alignment for tableInd " << x << " adjusted by " << indirectPad << std::endl; }
+    if (DEBUG) { fprintf(stdout, "Alignment for tableInd %d adjusted by %d\n", x, indirectPad); }
     offset += indirectPad;
     tableHeader.startOf_kCLDTableInd = offset;
     offset += tableHeader.lengthOf_kCLDTableInd;
@@ -280,7 +278,7 @@ void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
     int scriptsPad = alignment - (offset % alignment);
     if (scriptsPad == alignment) scriptsPad = 0;
     totalPadding += scriptsPad;
-    if (DEBUG) { std::cout << "Alignment for scriptsPad " << x << " adjusted by " << scriptsPad << std::endl; }
+    if (DEBUG) { fprintf(stdout, "Alignment for scriptsPad %d adjusted by %d", x, scriptsPad); }
     offset += scriptsPad;
     tableHeader.startOf_kRecognizedLangScripts = offset;
     offset += tableHeader.lengthOf_kRecognizedLangScripts; // null terminator already counted in initTableHeaders
@@ -291,53 +289,44 @@ void alignAll(CLD2DynamicData::FileHeader* header, const int alignment) {
   header->totalFileSizeBytes = offset;
 
   if (DEBUG) {
-    std::cout << "Data aligned." << std::endl;
-    std::cout << "Header size:  " << headerSize << " bytes " << std::endl;
-    std::cout << "Data size:    " << (offset - totalPadding) << " bytes" << std::endl;
-    std::cout << "Padding size: " << totalPadding << " bytes" << std::endl;
-    
-    std::cout << "  cld_generated_CjkUni_obj: " << (
+    fprintf(stdout, "Data aligned.\n");
+    fprintf(stdout, "Header size:  %d bytes\n", headerSize);
+    fprintf(stdout, "Data size:    %d bytes\n", (offset - totalPadding));
+    fprintf(stdout, "Padding size: %d bytes\n", totalPadding);
+    fprintf(stdout, "  cld_generated_CjkUni_obj: %d bytes\n", (
         header->lengthOf_utf8PropObj_state_table +
         header->lengthOf_utf8PropObj_remap_string +
-        header->lengthOf_utf8PropObj_fast_state)
-      << " bytes " << std::endl;
-    std::cout << "  kAvgDeltaOctaScore:       "
-      << header->lengthOf_kAvgDeltaOctaScore << " bytes " << std::endl;
-    std::cout << "  kCjkCompat_obj:           " << (
+        header->lengthOf_utf8PropObj_fast_state));
+    fprintf(stdout, "  kAvgDeltaOctaScore:       %d bytes\n",
+        header->lengthOf_kAvgDeltaOctaScore);
+    fprintf(stdout, "  kCjkCompat_obj:           %d bytes\n", (
         header->tableHeaders[0].lengthOf_kCLDTable +
         header->tableHeaders[0].lengthOf_kCLDTableInd +
-        header->tableHeaders[0].lengthOf_kRecognizedLangScripts + 1)
-      << " bytes " << std::endl;
-    std::cout << "  kCjkDeltaBi_obj:          " << (
+        header->tableHeaders[0].lengthOf_kRecognizedLangScripts + 1));
+    fprintf(stdout, "  kCjkDeltaBi_obj:          %d bytes\n", (
         header->tableHeaders[1].lengthOf_kCLDTable +
         header->tableHeaders[1].lengthOf_kCLDTableInd +
-        header->tableHeaders[1].lengthOf_kRecognizedLangScripts + 1)
-      << " bytes " << std::endl;
-    std::cout << "  kDistinctBiTable_obj:     " << (
+        header->tableHeaders[1].lengthOf_kRecognizedLangScripts + 1));
+    fprintf(stdout, "  kDistinctBiTable_obj:     %d bytes\n", (
         header->tableHeaders[2].lengthOf_kCLDTable +
         header->tableHeaders[2].lengthOf_kCLDTableInd +
-        header->tableHeaders[2].lengthOf_kRecognizedLangScripts + 1)
-      << " bytes " << std::endl;
-    std::cout << "  kQuad_obj:                " << (
+        header->tableHeaders[2].lengthOf_kRecognizedLangScripts + 1));
+    fprintf(stdout, "  kQuad_obj:                %d bytes\n", (
         header->tableHeaders[3].lengthOf_kCLDTable +
         header->tableHeaders[3].lengthOf_kCLDTableInd +
-        header->tableHeaders[3].lengthOf_kRecognizedLangScripts + 1)
-      << " bytes " << std::endl;
-    std::cout << "  kQuad_obj2:                " << (
+        header->tableHeaders[3].lengthOf_kRecognizedLangScripts + 1));
+    fprintf(stdout, "  kQuad_obj2:               %d bytes\n", (
         header->tableHeaders[4].lengthOf_kCLDTable +
         header->tableHeaders[4].lengthOf_kCLDTableInd +
-        header->tableHeaders[4].lengthOf_kRecognizedLangScripts + 1)
-      << " bytes " << std::endl;
-    std::cout << "  kDeltaOcta_obj:           " << (
+        header->tableHeaders[4].lengthOf_kRecognizedLangScripts + 1));
+    fprintf(stdout, "  kDeltaOcta_obj:           %d bytes\n", (
         header->tableHeaders[5].lengthOf_kCLDTable +
         header->tableHeaders[5].lengthOf_kCLDTableInd +
-        header->tableHeaders[5].lengthOf_kRecognizedLangScripts + 1)
-      << " bytes " << std::endl;
-    std::cout << "  kDistinctOcta_obj:        " << (
+        header->tableHeaders[5].lengthOf_kRecognizedLangScripts + 1));
+    fprintf(stdout, "  kDistinctOcta_obj:        %d bytes\n", (
         header->tableHeaders[6].lengthOf_kCLDTable +
         header->tableHeaders[6].lengthOf_kCLDTableInd +
-        header->tableHeaders[6].lengthOf_kRecognizedLangScripts + 1)
-      << " bytes " << std::endl;
+        header->tableHeaders[6].lengthOf_kRecognizedLangScripts + 1));
   }
 }
 
