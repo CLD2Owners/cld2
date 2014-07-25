@@ -92,6 +92,7 @@ extern const short kAvgDeltaOctaScore[];
   static uint32_t mmapLength = 0;
 
   bool isDataLoaded() { return dynamicDataLoaded; }
+  bool isDataDynamic() { return true; } // Because CLD2_DYNAMIC_MODE is defined
 
   void loadDataFromFile(const char* fileName) {
     if (isDataLoaded()) {
@@ -124,7 +125,7 @@ extern const short kAvgDeltaOctaScore[];
     dataSourceIsFile = false; // vacuous
     kScoringtables = NULL_TABLES; // Housekeeping: null all pointers
   }
-#else
+#else // !CLD2_DYNAMIC_MODE
   // This initializes kScoringtables.quadgram_obj etc.
   static const ScoringTables kScoringtables = {
     &cld_generated_CjkUni_obj,
@@ -139,6 +140,27 @@ extern const short kAvgDeltaOctaScore[];
 
     kAvgDeltaOctaScore,
   };
+
+  // Method implementations below are provided so that callers aren't *forced*
+  // to depend upon the CLD2_DYNAMIC_MODE flag, but can use runtime checks
+  // instead. For more information, refer to CLD2 issue 16:
+  // https://code.google.com/p/cld2/issues/detail?id=16
+  bool isDataLoaded() { return true; } // Data is statically linked
+  bool isDataDynamic() { return false; } // Because CLD2_DYNAMIC_MODE is not defined
+
+  void loadDataFromFile(const char* fileName) {
+    // This is a bug in the calling code.
+    fprintf(stderr, "WARNING: Dynamic mode not active, loadDataFromFile has no effect!");
+  }
+  void loadDataFromRawAddress(const void* rawAddress, const uint32_t length) {
+    // This is a bug in the calling code.
+    fprintf(stderr, "WARNING: Dynamic mode not active, loadDataFromRawAddress has no effect!");
+  }
+  void unloadData() {
+    // This is a bug in the calling code.
+    fprintf(stderr, "WARNING: Dynamic mode not active, unloadData has no effect!");
+  }
+
 #endif // #ifdef CLD2_DYNAMIC_MODE
 
 

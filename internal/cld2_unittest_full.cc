@@ -392,7 +392,7 @@ int RunTests (int flags, bool get_vector) {
   }
 
   FinishHtmlOut(flags);
-  return 0;
+  return any_fail ? 1 : 0;
 }
 
 }       // End namespace CLD2
