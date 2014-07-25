@@ -22,9 +22,9 @@ echo "--> [1 of 7] Invoking: compile.sh..."
 echo "--> [2 of 7] Testing results of compile.sh..."
 echo "--> compact_lang_det_test_chrome... "
 echo "this is some english text" | ./compact_lang_det_test_chrome
-echo -n "--> cld2_unittest... "
+echo "--> cld2_unittest... "
 ./cld2_unittest > /dev/null
-echo -n "--> cld2_unittest_avoid... "
+echo "--> cld2_unittest_avoid... "
 ./cld2_unittest_avoid > /dev/null
 
 # ----------------------------------------------------------------------------
@@ -37,9 +37,9 @@ echo "--> [4 of 7] Invoking: compile_full.sh..."
 echo "--> [5 of 7] Testing results of compile_full.sh..."
 echo "--> compact_lang_det_test_full... "
 echo "this is some english text" | ./compact_lang_det_test_full
-echo -n "--> cld2_unittest_full... "
+echo "--> cld2_unittest_full... "
 ./cld2_unittest_full > /dev/null
-echo -n "--> cld2_unittest_full_avoid... "
+echo "--> cld2_unittest_full_avoid... "
 ./cld2_unittest_full_avoid > /dev/null
 
 # ----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ echo "--> [6 of 7] Verifying dynamic data in cld2_data.bin..."
 echo "--> [7 of 7] Testing results of compile_dynamic.sh..."
 echo "--> compact_lang_det_dynamic_test_chrome... "
 echo "this is some english text" | ./compact_lang_det_dynamic_test_chrome --data-file cld2_data.bin
-echo -n "--> cld2_dynamic_unittest... "
+echo "--> cld2_dynamic_unittest... "
 ./cld2_dynamic_unittest --data-file cld2_data.bin > /dev/null
 
 trap - INT TERM EXIT

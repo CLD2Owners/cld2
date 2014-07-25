@@ -150,15 +150,15 @@ extern const short kAvgDeltaOctaScore[];
 
   void loadDataFromFile(const char* fileName) {
     // This is a bug in the calling code.
-    fprintf(stderr, "WARNING: Dynamic mode not active, loadDataFromFile has no effect!");
+    fprintf(stderr, "WARNING: Dynamic mode not active, loadDataFromFile has no effect!\n");
   }
   void loadDataFromRawAddress(const void* rawAddress, const uint32_t length) {
     // This is a bug in the calling code.
-    fprintf(stderr, "WARNING: Dynamic mode not active, loadDataFromRawAddress has no effect!");
+    fprintf(stderr, "WARNING: Dynamic mode not active, loadDataFromRawAddress has no effect!\n");
   }
   void unloadData() {
     // This is a bug in the calling code.
-    fprintf(stderr, "WARNING: Dynamic mode not active, unloadData has no effect!");
+    fprintf(stderr, "WARNING: Dynamic mode not active, unloadData has no effect!\n");
   }
 
 #endif // #ifdef CLD2_DYNAMIC_MODE
