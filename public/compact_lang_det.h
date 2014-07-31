@@ -296,8 +296,6 @@ Flag meanings:
 void DumpResultChunkVector(FILE* f, const char* src,
                            ResultChunkVector* resultchunkvector);
 
-#ifdef CLD2_DYNAMIC_MODE
-
 // If compiled with dynamic mode, load data from the specified file location.
 // If other data has already been loaded, it is discarded and the data is read
 // in from the specified file location again (even if the file has not changed).
@@ -307,6 +305,7 @@ void DumpResultChunkVector(FILE* f, const char* src,
 // mmap-ed file).
 // WARNING: Before calling one of the provided "loadData" methods, language
 // detection will always fail and will always return the unknown language.
+// If not compiled with dynamic mode, this method does nothing.
 void loadDataFromFile(const char* fileName);
 
 // If compiled with dynamic mode, load data from the specified location in
@@ -319,20 +318,28 @@ void loadDataFromFile(const char* fileName);
 // in from the specified location again (even if it has not changed).
 // WARNING: Before calling one of the provided "loadData" methods, language
 // detection will always fail and will always return the unknown language.
+// If not compiled with dynamic mode, this method does nothing.
 void loadDataFromRawAddress(const void* rawAddress, const uint32_t length);
 
 // If compiled with dynamic mode, unload the data that was previously loaded
 // via loadDataFromFile() or loadDataFromRawAddress().
 // WARNING: After calling this method, language detection will no longer work
 // and will always return the unknown language.
+// If not compiled with dynamic mode, this method does nothing.
 void unloadData();
 
 // Returns true if and only if data has been loaded via a call to
 // loadDataFromFile(...) or loadDataFromRawAddress(...) and has not been
 // subsequently unladed via a call to unloadData().
+// If not compiled with dynamic mode, this method always returns true (because
+// data has been statically linked).
 bool isDataLoaded();
 
-#endif // #ifdef CLD2_DYNAMIC_MODE
+// Returns true if and only if compiled with dynamic mode, otherwise returns
+// false. Callers can use this to make runtime checks for whether or not CLD2
+// data needs to be dynamically initialized or not, instead of relying on the
+// CLD2_DYNAMIC_MODE define.
+bool isDataDynamic();
 
 };      // End namespace CLD2
 
