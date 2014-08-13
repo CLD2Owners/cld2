@@ -98,7 +98,12 @@ extern const short kAvgDeltaOctaScore[];
     if (isDataLoaded()) {
       unloadData();
     }
-    dynamicTables = CLD2DynamicDataLoader::loadDataFile(fileName, &mmapAddress, &mmapLength);
+    ScoringTables* result = CLD2DynamicDataLoader::loadDataFile(fileName, &mmapAddress, &mmapLength);
+    if (result == NULL) {
+      fprintf(stderr, "WARNING: Dynamic data loading failed.\n");
+      return;
+    }
+    dynamicTables = result;
     kScoringtables = *dynamicTables;
     dataSourceIsFile = true;
     dynamicDataLoaded = true;
@@ -108,7 +113,12 @@ extern const short kAvgDeltaOctaScore[];
     if (isDataLoaded()) {
       unloadData();
     }
-    dynamicTables = CLD2DynamicDataLoader::loadDataRaw(rawAddress, length);
+    ScoringTables* result = CLD2DynamicDataLoader::loadDataRaw(rawAddress, length);
+    if (result == NULL) {
+      fprintf(stderr, "WARNING: Dynamic data loading failed.\n");
+      return;
+    }
+    dynamicTables = result;
     kScoringtables = *dynamicTables;
     dataSourceIsFile = false;
     dynamicDataLoaded = true;

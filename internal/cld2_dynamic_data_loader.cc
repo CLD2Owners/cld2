@@ -18,8 +18,8 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/mman.h>
 
+#include "cld2_dynamic_compat.h" // for win32/posix compatibility
 #include "cld2_dynamic_data.h"
 #include "cld2_dynamic_data_loader.h"
 #include "integral_types.h"
@@ -140,10 +140,16 @@ CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer,
 
 void unloadDataFile(CLD2::ScoringTables** scoringTables,
                     void** mmapAddress, uint32_t* mmapLength) {
+#ifdef _WIN32
+  // See https://code.google.com/p/cld2/issues/detail?id=20
+  fprintf(stderr, "dynamic data unloading from file is not currently supported on win32, use raw mode instead.");
+  return;
+#else // i.e., is POSIX (no support for Mac prior to OSX)
   CLD2DynamicDataLoader::unloadDataRaw(scoringTables);
   munmap(*mmapAddress, *mmapLength);
   *mmapAddress = NULL;
   *mmapLength = 0;
+#endif // ifdef _WIN32
 }
 
 void unloadDataRaw(CLD2::ScoringTables** scoringTables) {
@@ -157,21 +163,28 @@ void unloadDataRaw(CLD2::ScoringTables** scoringTables) {
 
 CLD2::ScoringTables* loadDataFile(const char* fileName,
                                   void** mmapAddressOut, uint32_t* mmapLengthOut) {
+
+#ifdef _WIN32
+  // See https://code.google.com/p/cld2/issues/detail?id=20
+  fprintf(stderr, "dynamic data loading from file is not currently supported on win32, use raw mode instead.");
+  return NULL;
+#else // i.e., is POSIX (no support for Mac prior to OSX)
   CLD2DynamicData::FileHeader* header = loadHeaderFromFile(fileName);
   if (header == NULL) {
     return NULL;
   }
 
   // Initialize the memory map
-  int inFileHandle = open(fileName, O_RDONLY);
+  int inFileHandle = OPEN(fileName, O_RDONLY);
   void* mapped = mmap(NULL, header->totalFileSizeBytes,
     PROT_READ, MAP_PRIVATE, inFileHandle, 0);
   // Record the map address. This allows callers to unmap 
   *mmapAddressOut=mapped;
   *mmapLengthOut=header->totalFileSizeBytes;
-  close(inFileHandle);
+  CLOSE(inFileHandle);
 
   return loadDataInternal(header, mapped, header->totalFileSizeBytes);
+#endif // ifdef _WIN32
 }
 
 CLD2::ScoringTables* loadDataRaw(const void* basePointer, const uint32_t length) {

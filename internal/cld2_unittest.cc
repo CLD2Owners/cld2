@@ -26,6 +26,7 @@
 #include <fstream>
 #include <sys/mman.h>
 
+#include "cld2_dynamic_compat.h"
 #include "../public/compact_lang_det.h"
 #include "../public/encodings.h"
 #include "unittest_data.h"
@@ -265,6 +266,7 @@ int RunTests (int flags, bool get_vector) {
   bool any_fail = false;
 
 #ifdef CLD2_DYNAMIC_MODE
+#ifndef _WIN32
   fprintf(stdout, "[DYNAMIC] Test running in dynamic data mode!\n");
   if (!CLD2::isDataDynamic()) {
     fprintf(stderr, "[DYNAMIC] *** Error: CLD2::isDataDynamic() returned false in a dynamic build!\n");
@@ -285,6 +287,7 @@ int RunTests (int flags, bool get_vector) {
     any_fail = true;
   }
   fprintf(stdout, "[DYNAMIC] Data loaded, file-based tests commencing\n");
+#endif // ifndef _WIN32
 #else // CLD2_DYNAMIC_MODE is not defined
   if (CLD2::isDataDynamic()) {
     fprintf(stderr, "*** Error: CLD2::isDataDynamic() returned true in a non-dynamic build!\n");
@@ -307,6 +310,7 @@ int RunTests (int flags, bool get_vector) {
   }
 
 #ifdef CLD2_DYNAMIC_MODE
+#ifndef _WIN32
   fprintf(stdout, "[DYNAMIC] File-based tests complete, attempting to unload file data\n");
   CLD2::unloadData();
   dataLoaded = CLD2::isDataLoaded();
@@ -325,10 +329,10 @@ int RunTests (int flags, bool get_vector) {
   const int actualSize = ftell(inFile);
   fclose(inFile);
 
-  int inFileHandle = open(data_file, O_RDONLY);
+  int inFileHandle = OPEN(data_file, O_RDONLY);
   void* mapped = mmap(NULL, actualSize,
     PROT_READ, MAP_PRIVATE, inFileHandle, 0);
-  close(inFileHandle);
+  CLOSE(inFileHandle);
 
   fprintf(stdout, "[DYNAMIC] mmap'ed successfully, attempting data load.\n");
   CLD2::loadDataFromRawAddress(mapped, actualSize);
@@ -360,7 +364,8 @@ int RunTests (int flags, bool get_vector) {
   fprintf(stdout, "[DYNAMIC] Attempting translation after unloading map data\n");
   any_fail |= !OneTest(flags, get_vector, UNKNOWN_LANGUAGE, kTeststr_en, strlen(kTeststr_en));
 
-  fprintf(stdout, "[DYNAMIC] All dynamic-mode tests complete\n");  
+  fprintf(stdout, "[DYNAMIC] All dynamic-mode tests complete\n");
+#endif // ifndef _WIN32
 #else // CLD2_DYNAMIC_MODE is not defined
   // These functions should do nothing, and shouldn't cause a crash. A warning is output to STDERR.
   fprintf(stderr, "Checking that non-dynamic implementations of dynamic data methods are no-ops (ignore the warnings).\n");
