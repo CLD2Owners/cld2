@@ -79,7 +79,7 @@ void OffsetMap::Printmap(const char* filename) {
   }
 
   Flush();    // Make sure any pending entry gets printed
-  fprintf(fout, "Offsetmap: %ld bytes\n", diffs_.size());
+  fprintf(fout, "Offsetmap: %d bytes\n", static_cast<int>(diffs_.size()));
   for (int i = 0; i < static_cast<int>(diffs_.size()); ++i) {
     fprintf(fout, "%c%02d ", "&=+-"[OpPart(diffs_[i])], LenPart(diffs_[i]));
     if ((i % 20) == 19) {fprintf(fout, "\n");}
