@@ -392,7 +392,7 @@ inline void OctaFPJustHash(uint64 longwordhash,
                                   uint32* subscr, uint32* hashkey) {
   uint32 temp = (longwordhash + (longwordhash >> 12)) & (bucketcount - 1);
   *subscr = temp;
-  temp = longwordhash >> 4;
+  temp = static_cast<uint32>(longwordhash >> 4);
   *hashkey = temp & keymask;
 }
 

@@ -253,13 +253,13 @@ int runetochar(char *str, const char32 *rune) {
   // 1 char 00-7F
   c = *rune;
   if(c <= 0x7F) {
-    str[0] = c;
+    str[0] = static_cast<char>(c);
     return 1;
   }
 
   // 2 char 0080-07FF
   if(c <= 0x07FF) {
-    str[0] = 0xC0 | (c >> 1*6);
+    str[0] = 0xC0 | static_cast<char>(c >> 1*6);
     str[1] = 0x80 | (c & 0x3F);
     return 2;
   }
@@ -271,14 +271,14 @@ int runetochar(char *str, const char32 *rune) {
 
   // 3 char 0800-FFFF
   if (c <= 0xFFFF) {
-    str[0] = 0xE0 |  (c >> 2*6);
+    str[0] = 0xE0 | static_cast<char>(c >> 2*6);
     str[1] = 0x80 | ((c >> 1*6) & 0x3F);
-    str[2] = 0x80 |  (c & 0x3F);
+    str[2] = 0x80 | (c & 0x3F);
     return 3;
   }
 
   // 4 char 10000-1FFFFF
-  str[0] = 0xF0 | (c >> 3*6);
+  str[0] = 0xF0 | static_cast<char>(c >> 3*6);
   str[1] = 0x80 | ((c >> 2*6) & 0x3F);
   str[2] = 0x80 | ((c >> 1*6) & 0x3F);
   str[3] = 0x80 | (c & 0x3F);

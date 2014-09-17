@@ -599,7 +599,8 @@ int ReliabilityExpected(int actual_score_1kb, int expected_score_1kb) {
   if (ratio <= kRatio100) {return 100;}
   if (ratio > kRatio0) {return 0;}
 
-  int percent_good = 100.0 * (kRatio0 - ratio) / (kRatio0 - kRatio100);
+  int percent_good =
+      static_cast<int>(100.0 * (kRatio0 - ratio) / (kRatio0 - kRatio100));
   return percent_good;
 }
 

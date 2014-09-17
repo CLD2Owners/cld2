@@ -236,7 +236,7 @@ void DocTote::Sort(int n) {
         value_[sub] = value_[sub2];
         value_[sub2] = tmpv;
 
-        double tmps = score_[sub];
+        int tmps = score_[sub];
         score_[sub] = score_[sub2];
         score_[sub2] = tmps;
 
