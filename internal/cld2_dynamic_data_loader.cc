@@ -96,7 +96,7 @@ CLD2DynamicData::FileHeader* loadInternal(FILE* inFile, const void* basePointer,
 
   CLD2DynamicData::TableHeader* tableHeaders = new CLD2DynamicData::TableHeader[header->numTablesEncoded];
   header->tableHeaders = tableHeaders;
-  for (int x=0; x<header->numTablesEncoded; x++) {
+  for (int x=0; x < (int) header->numTablesEncoded; x++) {
     CLD2DynamicData::TableHeader *header = &(tableHeaders[x]);
     CLD2_READINT(kCLDTableSizeOne);
     CLD2_READINT(kCLDTableSize);
@@ -232,7 +232,7 @@ CLD2::ScoringTables* loadDataInternal(CLD2DynamicData::FileHeader* header, const
 
   // 3. Each table
   CLD2::CLD2TableSummary* tableSummaries = new CLD2::CLD2TableSummary[header->numTablesEncoded];
-  for (int x=0; x<header->numTablesEncoded; x++) {
+  for (int x=0; x < (int) header->numTablesEncoded; x++) {
     CLD2::CLD2TableSummary &summary = tableSummaries[x];
     CLD2DynamicData::TableHeader& tHeader = header->tableHeaders[x];
     const CLD2::IndirectProbBucket4* kCLDTable =

@@ -30,7 +30,8 @@ bool mem_compare(const void* data1, const void* data2, const int length) {
     if (raw1[x] != raw2[x]) {
       fprintf(stderr, "mem difference at data[%d]: decimal %d != decimal %d\n",
               x, (unsigned int) raw1[x], (unsigned int) raw2[x]);
-      for (int y=std::max(0,x-5); y<length && y<=x+5; y++) {
+      int y = (x - 5 > 0) ? (x - 5) : 0; // https://code.google.com/p/cld2/issues/detail?id=24
+      for (; y<length && y<=x+5; y++) {
         fprintf(stderr, "[%d]: %d <-> %d%s\n",
                 y, (unsigned int) raw1[y], (unsigned int) raw2[y],
                 ( x == y ? " [FIRST ERROR DETECTED HERE] " : ""));
@@ -82,7 +83,7 @@ void dumpHeader(FileHeader* header) {
   tableNames[5]="deltaocta_obj";
   tableNames[6]="distinctocta_obj";
 
-  for (int x=0; x<header->numTablesEncoded; x++) {
+  for (int x=0; x < (int) header->numTablesEncoded; x++) {
     TableHeader& tHeader = header->tableHeaders[x];
       
     fprintf(stdout, "Table %d: (%s)\n", (x+1), tableNames[x]);;
