@@ -1054,7 +1054,9 @@ void ScriptScanner::LowerScriptSpan(LangSpan* span) {
 // Buffer ALWAYS has leading space and trailing space space space NUL
 bool ScriptScanner::GetOneScriptSpanLower(LangSpan* span) {
   bool ok = GetOneScriptSpan(span);
-  LowerScriptSpan(span);
+  if (ok) {
+    LowerScriptSpan(span);
+  }
   return ok;
 }
 
