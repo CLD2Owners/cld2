@@ -626,7 +626,9 @@ int ScriptScanner::SkipToFrontOfSpan(const char* src, int len, int* script) {
         char temp[4];
         EntityToBuffer(src + skip, len - skip,
                        temp, &tlen, &plen);
-        sc = GetUTF8LetterScriptNum(temp);
+        if (plen > 0) {
+          sc = GetUTF8LetterScriptNum(temp);
+        }
       }
     } else {
       // Update 1..4 bytes
@@ -877,7 +879,9 @@ bool ScriptScanner::GetOneScriptSpan(LangSpan* span) {
           // Copy entity, no advance
           EntityToBuffer(next_byte_ + take, byte_length_ - take,
                          script_buffer_ + put, &tlen, &plen);
-          sc = GetUTF8LetterScriptNum(script_buffer_ + put);
+          if (plen > 0) {
+            sc = GetUTF8LetterScriptNum(script_buffer_ + put);
+          }
         }
       } else {
         // Real letter, safely copy up to 4 bytes, increment by 1..4
@@ -973,7 +977,9 @@ bool ScriptScanner::GetOneScriptSpan(LangSpan* span) {
           // Expand entity, no advance
           EntityToBuffer(next_byte_ + take, byte_length_ - take,
                          script_buffer_ + put, &tlen, &plen);
-          sc = GetUTF8LetterScriptNum(script_buffer_ + put);
+          if (plen > 0) {
+            sc = GetUTF8LetterScriptNum(script_buffer_ + put);
+          }
         }
       } else {
         // Update 1..4
