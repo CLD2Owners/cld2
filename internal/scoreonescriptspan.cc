@@ -22,6 +22,7 @@
 #include "cldutil.h"
 #include "debug.h"
 #include "lang_script.h"
+#include <stdint.h>
 
 #include <stdio.h>
 
@@ -378,7 +379,7 @@ uint16 NextChunkLang(const SummaryBuffer* summarybuffer, int i) {
 //
 // We go out of our way to minimize the variation in the ResultChunkVector,
 // so that the caller has fewer but more meaningful spans in different
-// lanaguges, for the likely purpose of translation or spell-check.
+// languages, for the likely purpose of translation or spell-check.
 //
 // The language of each chunk is lang1, but it might be unreliable for
 // either of two reasons: its score is relatively too close to the score of
@@ -436,6 +437,7 @@ void SummaryBufferToVector(ScriptScanner* scanner, const char* text,
       if (n >= n_limit) {n = 0;} // New boundary not found within range
 
       // Also back up exactly one leading punctuation character if '"#@
+      // 'random', "quotes", #hashtags, @handles
       if (n < n_limit) {
         unsigned char c = us[-n - 1];
         if ((c == '\'') || (c == '"') || (c == '#') || (c == '@')) {++n;}
