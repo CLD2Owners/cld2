@@ -126,6 +126,10 @@ At the end of the first pass --
     const uint32* kQuadValueTable;
   } LangDetObj;
 
+  // Returns the length in bytes of the prefix of src that is all
+  //  interchange valid UTF-8
+  int SpanInterchangeValid(const char* src, int byte_length);
+
   // For HTML documents, tags are skipped, along with <script> ... </script>
   // and <style> ... </style> sequences, and entities are expanded.
   //

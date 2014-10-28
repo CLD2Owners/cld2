@@ -28,11 +28,32 @@
 namespace CLD2 {
 
 // String is "code_version - data_scrape_date"
-//static const char* kDetectLanguageVersion = "V2.0 - 20130715";
-
+// static const char* kDetectLanguageVersion = "V2.0 - 20141015";
 
 // Large-table version for all ~160 languages
-// Small-table version for all ~60 languages
+// Small-table version for all ~80 languages
+
+
+// Scan interchange-valid UTF-8 bytes and detect most likely language
+// If the input is in fact not valid UTF-8, this returns immediately with
+// the result value UNKNOWN_LANGUAGE and is_reliable set false.
+//
+// In all cases, valid_prefix_bytes will be set to the number of leading
+// bytes that are valid UTF-8. If this is < buffer_length, there is invalid
+// input starting at the following byte.
+Language DetectLanguageCheckUTF8(
+                        const char* buffer,
+                        int buffer_length,
+                        bool is_plain_text,
+                        bool* is_reliable,
+                        int* valid_prefix_bytes) {
+  *valid_prefix_bytes = SpanInterchangeValid(buffer, buffer_length);
+  if (*valid_prefix_bytes < buffer_length) {
+    *is_reliable = false;
+    return UNKNOWN_LANGUAGE;
+  }
+  return DetectLanguage(buffer, buffer_length, is_plain_text, is_reliable);
+}
 
 // Scan interchange-valid UTF-8 bytes and detect most likely language
 Language DetectLanguage(
@@ -272,7 +293,70 @@ Language ExtDetectLanguageSummary(
   return lang;
 }
 
+
 // Use this one.
+//
+// Hints are collected into a struct.
+// Flags are passed in (normally zero).
+//
+// Also returns 3 internal language scores as a ratio to
+// normal score for real text in that language. Scores close to 1.0 indicate
+// normal text, while scores far away from 1.0 indicate badly-skewed text or
+// gibberish
+//
+// Returns a vector of chunks in different languages, so that caller may
+// spell-check, translate, or otherwise process different parts of the input
+// buffer in language-dependant ways.
+//
+// If the input is in fact not valid UTF-8, this returns immediately with
+// the result value UNKNOWN_LANGUAGE and is_reliable set false.
+//
+// In all cases, valid_prefix_bytes will be set to the number of leading
+// bytes that are valid UTF-8. If this is < buffer_length, there is invalid
+// input starting at the following byte.
+Language ExtDetectLanguageSummaryCheckUTF8(
+                        const char* buffer,
+                        int buffer_length,
+                        bool is_plain_text,
+                        const CLDHints* cld_hints,
+                        int flags,
+                        Language* language3,
+                        int* percent3,
+                        double* normalized_score3,
+                        ResultChunkVector* resultchunkvector,
+                        int* text_bytes,
+                        bool* is_reliable,
+                        int* valid_prefix_bytes) {
+  *valid_prefix_bytes = SpanInterchangeValid(buffer, buffer_length);
+  if (*valid_prefix_bytes < buffer_length) {
+    *is_reliable = false;
+    return UNKNOWN_LANGUAGE;
+  }
+
+  bool allow_extended_lang = true;
+  Language plus_one = UNKNOWN_LANGUAGE;
+
+  Language lang = DetectLanguageSummaryV2(
+                          buffer,
+                          buffer_length,
+                          is_plain_text,
+                          cld_hints,
+                          allow_extended_lang,
+                          flags,
+                          plus_one,
+                          language3,
+                          percent3,
+                          normalized_score3,
+                          resultchunkvector,
+                          text_bytes,
+                          is_reliable);
+  // Do not default to English
+  return lang;
+}
+
+// Use this one ONLY if you can prove the the input text is valid UTF-8 by
+// design because it went thorough a known-good conversion program.
+//
 // Hints are collected into a struct.
 // Flags are passed in (normally zero).
 //
@@ -317,6 +401,8 @@ Language ExtDetectLanguageSummary(
   // Do not default to English
   return lang;
 }
+
+
 
 }       // End namespace CLD2
 

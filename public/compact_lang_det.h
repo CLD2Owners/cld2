@@ -42,7 +42,7 @@
 //  HAUSA (Latin, Arabic)
 //  KASHMIRI (Arabic, Devanagari)
 //  KAZAKH (Latin, Cyrillic, Arabic)
-//  KURDISH (Latin*, Arabic)
+//  KURDISH (Latin, Arabic)
 //  KYRGYZ (Cyrillic, Arabic)
 //  LIMBU (Devanagari, Limbu)
 //  MONGOLIAN (Cyrillic, Mongolian)
@@ -56,8 +56,7 @@
 //  UZBEK (Latin, Cyrillic, Arabic)
 //
 // * Due to a shortage of training text, AZERBAIJANI is not currently detected
-//   in Arabic or Cyrillic scripts, nor KURDISH in Latin script, nor TAJIK in
-//   Arabic script.
+//   in Arabic or Cyrillic scripts, nor TAJIK in Arabic script.
 //
 
 #ifndef I18N_ENCODINGS_CLD2_PUBLIC_COMPACT_LANG_DET_H_
@@ -65,9 +64,18 @@
 
 #include <stdint.h>
 #include <vector>
-#include "../internal/lang_script.h"  // For Language
+#include "../internal/integral_types.h"   // For uint8 etc.
+#include "../internal/lang_script.h"      // For Language
 
 namespace CLD2 {
+
+// NOTE: If you cannot prove the the input text is valid UTF-8 by design because
+// it went thorough a known-good conversion program, call one of the *CheckUTF8
+// routines. For example, never trust raw user-supplied bytes. It is especially
+// important to do a UTF8-to-UTF8 conversion on raw bytes that claim to be
+// UTF-8, using a converter that guarantees to produce valid UTF-8, turning
+// other byte sequences into the Unicode replacement character U+FFFD (deleting
+// or turning into space or question-mark can create security holes).
 
   // Scan interchange-valid UTF-8 bytes and detect most likely language,
   // or set of languages.
@@ -129,19 +137,42 @@ namespace CLD2 {
     Language language_hint;                 // ITALIAN boosts it
   } CLDHints;
 
-  static const int kMaxResultChunkBytes = 65535;
+  static const int32 kMaxResultChunkBytes = 0x7fffffff;
 
+  // Note: this was initially over-optimized to fit into 8 bytes,
+  //  causing too much work to deal with with greater than 16-bit byte lengths.
   // For returning a vector of per-language pieces of the input buffer
   // Unreliable and too-short are mapped to UNKNOWN_LANGUAGE
   typedef struct {
     int offset;                 // Starting byte offset in original buffer
-    uint16 bytes;               // Number of bytes in chunk
+    int32 bytes;                // Number of bytes in chunk
     uint16 lang1;               // Top lang, as full Language. Apply
-                                // static_cast<Language>() to this short value.
+                                //  static_cast<Language>() to this short value.
+    uint16 pad;                 // Make multiple of 4 bytes
   } ResultChunk;
   typedef std::vector<ResultChunk> ResultChunkVector;
 
 
+  // These initial simple versions all cascade through the full-blown last
+  // version which it would be better for you to use directly because you will
+  // get better results passing in any available hints.
+
+  // Scan interchange-valid UTF-8 bytes and detect most likely language
+  // If the input is in fact not valid UTF-8, this returns immediately with
+  // the result value UNKNOWN_LANGUAGE and is_reliable set false.
+  //
+  // In all cases, valid_prefix_bytes will be set to the number of leading
+  // bytes that are valid UTF-8. If this is < buffer_length, there is invalid
+  // input starting at the following byte.
+  Language DetectLanguageCheckUTF8(
+                          const char* buffer,
+                          int buffer_length,
+                          bool is_plain_text,
+                          bool* is_reliable,
+                          int* valid_prefix_bytes);
+
+  // Use this one ONLY if you can prove the the input text is valid UTF-8 by
+  // design because it went thorough a known-good conversion program.
   // Scan interchange-valid UTF-8 bytes and detect most likely language
   Language DetectLanguage(
                           const char* buffer,
@@ -149,6 +180,8 @@ namespace CLD2 {
                           bool is_plain_text,
                           bool* is_reliable);
 
+  // Use this one ONLY if you can prove the the input text is valid UTF-8 by
+  // design because it went thorough a known-good conversion program.
   // Scan interchange-valid UTF-8 bytes and detect list of top 3 languages.
   // language3[0] is usually also the return value
   Language DetectLanguageSummary(
@@ -160,6 +193,8 @@ namespace CLD2 {
                           int* text_bytes,
                           bool* is_reliable);
 
+  // Use this one ONLY if you can prove the the input text is valid UTF-8 by
+  // design because it went thorough a known-good conversion program.
   // Same as above, with hints supplied
   // Scan interchange-valid UTF-8 bytes and detect list of top 3 languages.
   // language3[0] is usually also the return value
@@ -175,6 +210,8 @@ namespace CLD2 {
                           int* text_bytes,
                           bool* is_reliable);
 
+  // Use this one ONLY if you can prove the the input text is valid UTF-8 by
+  // design because it went thorough a known-good conversion program.
   // Scan interchange-valid UTF-8 bytes and detect list of top 3 extended
   // languages.
   //
@@ -191,6 +228,8 @@ namespace CLD2 {
                           int* text_bytes,
                           bool* is_reliable);
 
+  // Use this one ONLY if you can prove the the input text is valid UTF-8 by
+  // design because it went thorough a known-good conversion program.
   // Same as above, with hints supplied
   // Scan interchange-valid UTF-8 bytes and detect list of top 3 extended
   // languages.
@@ -211,6 +250,8 @@ namespace CLD2 {
                           int* text_bytes,
                           bool* is_reliable);
 
+  // Use this one ONLY if you can prove the the input text is valid UTF-8 by
+  // design because it went thorough a known-good conversion program.
   // Same as above, and also returns 3 internal language scores as a ratio to
   // normal score for real text in that language. Scores close to 1.0 indicate
   // normal text, while scores far away from 1.0 indicate badly-skewed text or
@@ -231,6 +272,42 @@ namespace CLD2 {
 
 
   // Use this one.
+  //
+  // Hints are collected into a struct.
+  // Flags are passed in (normally zero).
+  //
+  // Also returns 3 internal language scores as a ratio to
+  // normal score for real text in that language. Scores close to 1.0 indicate
+  // normal text, while scores far away from 1.0 indicate badly-skewed text or
+  // gibberish
+  //
+  // Returns a vector of chunks in different languages, so that caller may
+  // spell-check, translate, or otherwise process different parts of the input
+  // buffer in language-dependant ways.
+  //
+  // If the input is in fact not valid UTF-8, this returns immediately with
+  // the result value UNKNOWN_LANGUAGE and is_reliable set false.
+  //
+  // In all cases, valid_prefix_bytes will be set to the number of leading
+  // bytes that are valid UTF-8. If this is < buffer_length, there is invalid
+  // input starting at the following byte.
+  Language ExtDetectLanguageSummaryCheckUTF8(
+                          const char* buffer,
+                          int buffer_length,
+                          bool is_plain_text,
+                          const CLDHints* cld_hints,
+                          int flags,
+                          Language* language3,
+                          int* percent3,
+                          double* normalized_score3,
+                          ResultChunkVector* resultchunkvector,
+                          int* text_bytes,
+                          bool* is_reliable,
+                          int* valid_prefix_bytes);
+
+  // Use this one ONLY if you can prove the the input text is valid UTF-8 by
+  // design because it went thorough a known-good conversion program.
+  //
   // Hints are collected into a struct.
   // Flags are passed in (normally zero).
   //
@@ -268,6 +345,8 @@ namespace CLD2 {
   static const int kCLDFlagVerbose =      0x0800;  // More debug HTML => stderr
   static const int kCLDFlagQuiet =        0x1000;  // Less debug HTML => stderr
   static const int kCLDFlagEcho =         0x2000;  // Echo input => stderr
+  static const int kCLDFlagBestEffort =   0x4000;  // Give best-effort answer,
+                                                   // even on short text
 
 
 /***
@@ -290,6 +369,10 @@ Flag meanings:
    In that HTML file, suppress most of the output detail.
  kCLDFlagEcho
   Echo every input buffer to stderr.
+ kCLDFlagBestEffort
+  Give best-effort answer, instead of UNKNOWN_LANGUAGE. May be useful for
+  short text if the caller prefers an approximate answer over none.
+
 ***/
 
 // Debug output: Print the resultchunkvector to file f
