@@ -230,6 +230,7 @@ int main(int argc, char** argv) {
     if (strcmp(argv[i], "--cr") == 0) {flags |= kCLDFlagCr;}
     if (strcmp(argv[i], "--verbose") == 0) {flags |= kCLDFlagVerbose;}
     if (strcmp(argv[i], "--echo") == 0) {flags |= kCLDFlagEcho;}
+    if (strcmp(argv[i], "--besteffort") == 0) {flags |= kCLDFlagBestEffort;}
     if (strcmp(argv[i], "--vector") == 0) {get_vector = true;}
     if (strcmp(argv[i], "--line") == 0) {do_line = true;}
   }
@@ -324,7 +325,7 @@ int main(int argc, char** argv) {
   // Read entire file
   int n = fread(buffer, 1, 10000000, fin);
 
-  
+
   // Detect languages in entire file
   Language summary_lang = UNKNOWN_LANGUAGE;
 
