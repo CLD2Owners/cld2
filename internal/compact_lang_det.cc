@@ -36,7 +36,7 @@ namespace CLD2 {
 
 // Scan interchange-valid UTF-8 bytes and detect most likely language
 // If the input is in fact not valid UTF-8, this returns immediately with
-// the result value UNKNOWN_LANGUAGE and is_reliable set false.
+// the result value UNKNOWN_LANGUAGE and is_reliable set to false.
 //
 // In all cases, valid_prefix_bytes will be set to the number of leading
 // bytes that are valid UTF-8. If this is < buffer_length, there is invalid
@@ -309,7 +309,7 @@ Language ExtDetectLanguageSummary(
 // buffer in language-dependant ways.
 //
 // If the input is in fact not valid UTF-8, this returns immediately with
-// the result value UNKNOWN_LANGUAGE and is_reliable set false.
+// the result value UNKNOWN_LANGUAGE and is_reliable set to false.
 //
 // In all cases, valid_prefix_bytes will be set to the number of leading
 // bytes that are valid UTF-8. If this is < buffer_length, there is invalid
@@ -355,7 +355,7 @@ Language ExtDetectLanguageSummaryCheckUTF8(
 }
 
 // Use this one ONLY if you can prove the the input text is valid UTF-8 by
-// design because it went thorough a known-good conversion program.
+// design because it went through a known-good conversion program.
 //
 // Hints are collected into a struct.
 // Flags are passed in (normally zero).

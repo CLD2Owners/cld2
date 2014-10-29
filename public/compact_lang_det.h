@@ -70,7 +70,7 @@
 namespace CLD2 {
 
 // NOTE: If you cannot prove the the input text is valid UTF-8 by design because
-// it went thorough a known-good conversion program, call one of the *CheckUTF8
+// it went through a known-good conversion program, call one of the *CheckUTF8
 // routines. For example, never trust raw user-supplied bytes. It is especially
 // important to do a UTF8-to-UTF8 conversion on raw bytes that claim to be
 // UTF-8, using a converter that guarantees to produce valid UTF-8, turning
@@ -140,7 +140,7 @@ namespace CLD2 {
   static const int32 kMaxResultChunkBytes = 0x7fffffff;
 
   // Note: this was initially over-optimized to fit into 8 bytes,
-  //  causing too much work to deal with with greater than 16-bit byte lengths.
+  // causing too much work to deal with with greater than 16-bit byte lengths.
   // For returning a vector of per-language pieces of the input buffer
   // Unreliable and too-short are mapped to UNKNOWN_LANGUAGE
   typedef struct {
@@ -159,7 +159,7 @@ namespace CLD2 {
 
   // Scan interchange-valid UTF-8 bytes and detect most likely language
   // If the input is in fact not valid UTF-8, this returns immediately with
-  // the result value UNKNOWN_LANGUAGE and is_reliable set false.
+  // the result value UNKNOWN_LANGUAGE and is_reliable set to false.
   //
   // In all cases, valid_prefix_bytes will be set to the number of leading
   // bytes that are valid UTF-8. If this is < buffer_length, there is invalid
@@ -172,7 +172,7 @@ namespace CLD2 {
                           int* valid_prefix_bytes);
 
   // Use this one ONLY if you can prove the the input text is valid UTF-8 by
-  // design because it went thorough a known-good conversion program.
+  // design because it went through a known-good conversion program.
   // Scan interchange-valid UTF-8 bytes and detect most likely language
   Language DetectLanguage(
                           const char* buffer,
@@ -181,7 +181,7 @@ namespace CLD2 {
                           bool* is_reliable);
 
   // Use this one ONLY if you can prove the the input text is valid UTF-8 by
-  // design because it went thorough a known-good conversion program.
+  // design because it went through a known-good conversion program.
   // Scan interchange-valid UTF-8 bytes and detect list of top 3 languages.
   // language3[0] is usually also the return value
   Language DetectLanguageSummary(
@@ -194,7 +194,7 @@ namespace CLD2 {
                           bool* is_reliable);
 
   // Use this one ONLY if you can prove the the input text is valid UTF-8 by
-  // design because it went thorough a known-good conversion program.
+  // design because it went through a known-good conversion program.
   // Same as above, with hints supplied
   // Scan interchange-valid UTF-8 bytes and detect list of top 3 languages.
   // language3[0] is usually also the return value
@@ -211,7 +211,7 @@ namespace CLD2 {
                           bool* is_reliable);
 
   // Use this one ONLY if you can prove the the input text is valid UTF-8 by
-  // design because it went thorough a known-good conversion program.
+  // design because it went through a known-good conversion program.
   // Scan interchange-valid UTF-8 bytes and detect list of top 3 extended
   // languages.
   //
@@ -229,7 +229,7 @@ namespace CLD2 {
                           bool* is_reliable);
 
   // Use this one ONLY if you can prove the the input text is valid UTF-8 by
-  // design because it went thorough a known-good conversion program.
+  // design because it went through a known-good conversion program.
   // Same as above, with hints supplied
   // Scan interchange-valid UTF-8 bytes and detect list of top 3 extended
   // languages.
@@ -251,7 +251,7 @@ namespace CLD2 {
                           bool* is_reliable);
 
   // Use this one ONLY if you can prove the the input text is valid UTF-8 by
-  // design because it went thorough a known-good conversion program.
+  // design because it went through a known-good conversion program.
   // Same as above, and also returns 3 internal language scores as a ratio to
   // normal score for real text in that language. Scores close to 1.0 indicate
   // normal text, while scores far away from 1.0 indicate badly-skewed text or
@@ -286,7 +286,7 @@ namespace CLD2 {
   // buffer in language-dependant ways.
   //
   // If the input is in fact not valid UTF-8, this returns immediately with
-  // the result value UNKNOWN_LANGUAGE and is_reliable set false.
+  // the result value UNKNOWN_LANGUAGE and is_reliable set to false.
   //
   // In all cases, valid_prefix_bytes will be set to the number of leading
   // bytes that are valid UTF-8. If this is < buffer_length, there is invalid
@@ -306,7 +306,7 @@ namespace CLD2 {
                           int* valid_prefix_bytes);
 
   // Use this one ONLY if you can prove the the input text is valid UTF-8 by
-  // design because it went thorough a known-good conversion program.
+  // design because it went through a known-good conversion program.
   //
   // Hints are collected into a struct.
   // Flags are passed in (normally zero).
