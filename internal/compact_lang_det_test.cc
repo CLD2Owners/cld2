@@ -42,6 +42,7 @@ typedef int32 Encoding;
 static const Encoding UNKNOWN_ENCODING = 0;
 
 
+#ifndef CLD2_DYNAMIC_MODE
 // Linker supplies the right tables; see ScoringTables compact_lang_det_impl.cc
 // These are here JUST for printing versions
 extern const UTF8PropObj cld_generated_CjkUni_obj;
@@ -52,6 +53,7 @@ extern const CLD2TableSummary kDeltaOcta_obj;
 extern const CLD2TableSummary kDistinctOcta_obj;
 extern const CLD2TableSummary kOcta2_obj;
 extern const short kAvgDeltaOctaScore[];
+#endif
 
 bool FLAGS_cld_version = false;
 bool FLAGS_cld_html = true;
@@ -201,6 +203,7 @@ void DumpLanguages(Language summary_lang,
 
 int main(int argc, char** argv) {
   if (FLAGS_cld_version) {
+#ifndef CLD2_DYNAMIC_MODE
     printf("%s %4dKB uni build date, bytes\n",
            "........",
            cld_generated_CjkUni_obj.total_size >> 10);
@@ -216,11 +219,15 @@ int main(int argc, char** argv) {
            kDeltaOcta_obj.kCLDTableBuildDate,
            (kDeltaOcta_obj.kCLDTableSize *
             sizeof(IndirectProbBucket4)) >> 10);
+#else
+    printf("FLAGS_cld_version doesn't work with dynamic data mode\n");
+#endif
     exit(0);
   }     // End FLAGS_cld_version
 
   int flags = 0;
   bool get_vector = false;
+  const char* data_file = NULL;
   bool do_line = false;
   const char* fname = NULL;
   for (int i = 1; i < argc; ++i) {
@@ -233,7 +240,18 @@ int main(int argc, char** argv) {
     if (strcmp(argv[i], "--besteffort") == 0) {flags |= kCLDFlagBestEffort;}
     if (strcmp(argv[i], "--vector") == 0) {get_vector = true;}
     if (strcmp(argv[i], "--line") == 0) {do_line = true;}
+    if (strcmp(argv[i], "--data-file") == 0) { data_file = argv[++i];}
   }
+
+#ifdef CLD2_DYNAMIC_MODE        
+  if (data_file == NULL) {      
+    fprintf(stderr, "When running in dynamic mode, you must specify --data-file [FILE]\n");     
+    return -1;      
+  }     
+  fprintf(stdout, "Loading data from: %s\n", data_file);        
+  CLD2::loadDataFromFile(data_file);        
+  fprintf(stdout, "Data loaded, test commencing\n");        
+#endif
 
   FILE* fin;
   if (fname == NULL) {
