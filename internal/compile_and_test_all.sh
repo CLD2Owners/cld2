@@ -18,14 +18,16 @@ trap 'echo "FAILED!" && exit 1' INT TERM EXIT
 
 # ----------------------------------------------------------------------------
 echo "--> [1 of 7] Invoking: compile.sh..."
-./compile.sh
+./compile20141015.sh
 echo "--> [2 of 7] Testing results of compile.sh..."
-echo "--> compact_lang_det_test_chrome... "
-echo "this is some english text" | ./compact_lang_det_test_chrome
-echo "--> cld2_unittest... "
-./cld2_unittest > /dev/null
-echo "--> cld2_unittest_avoid... "
-./cld2_unittest_avoid > /dev/null
+echo "--> compact_lang_det_test_chrome_2... "
+echo "this is some english text" | ./compact_lang_det_test_chrome_2
+echo "--> compact_lang_det_test_chrome_16... "
+echo "this is some english text" | ./compact_lang_det_test_chrome_16
+echo "--> cld2_unittest_chrome_2... "
+./cld2_unittest_chrome_2 > /dev/null
+echo "--> cld2_unittest_avoid_chrome_2... "
+./cld2_unittest_avoid_chrome_2 > /dev/null
 
 # ----------------------------------------------------------------------------
 echo "--> [3 of 7] Invoking: compile_libs.sh..."

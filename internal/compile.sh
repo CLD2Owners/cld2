@@ -22,8 +22,8 @@ g++ -O2 -m64  compact_lang_det_test.cc \
   tote.cc utf8statetable.cc  \
   cld_generated_cjk_uni_prop_80.cc cld2_generated_cjk_compatible.cc  \
   cld_generated_cjk_delta_bi_4.cc generated_distinct_bi_0.cc  \
-  cld2_generated_quadchrome0122_2.cc cld2_generated_deltaoctachrome0122.cc \
-  cld2_generated_distinctoctachrome0122.cc  cld_generated_score_quad_octa_0122_2.cc  \
+  cld2_generated_quadchrome_2.cc cld2_generated_deltaoctachrome.cc \
+  cld2_generated_distinctoctachrome.cc  cld_generated_score_quad_octa_2.cc  \
   -o compact_lang_det_test_chrome
 echo "  compact_lang_det_test_chrome compiled"
 
@@ -35,8 +35,8 @@ g++ -O2 -m64  cld2_unittest.cc \
   tote.cc utf8statetable.cc  \
   cld_generated_cjk_uni_prop_80.cc cld2_generated_cjk_compatible.cc  \
   cld_generated_cjk_delta_bi_4.cc generated_distinct_bi_0.cc  \
-  cld2_generated_quadchrome0122_2.cc cld2_generated_deltaoctachrome0122.cc \
-  cld2_generated_distinctoctachrome0122.cc  cld_generated_score_quad_octa_0122_2.cc  \
+  cld2_generated_quadchrome_2.cc cld2_generated_deltaoctachrome.cc \
+  cld2_generated_distinctoctachrome.cc  cld_generated_score_quad_octa_2.cc  \
   -o cld2_unittest
 echo "  cld2_unittest compiled"
 
@@ -48,8 +48,8 @@ g++ -O2 -m64  -Davoid_utf8_string_constants cld2_unittest.cc \
   tote.cc utf8statetable.cc  \
   cld_generated_cjk_uni_prop_80.cc cld2_generated_cjk_compatible.cc  \
   cld_generated_cjk_delta_bi_4.cc generated_distinct_bi_0.cc  \
-  cld2_generated_quadchrome0122_2.cc cld2_generated_deltaoctachrome0122.cc \
-  cld2_generated_distinctoctachrome0122.cc  cld_generated_score_quad_octa_0122_2.cc  \
+  cld2_generated_quadchrome_2.cc cld2_generated_deltaoctachrome.cc \
+  cld2_generated_distinctoctachrome.cc  cld_generated_score_quad_octa_2.cc  \
   -o cld2_unittest_avoid
 echo "  cld2_unittest_avoid compiled"
 

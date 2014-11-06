@@ -27,3 +27,7 @@ rm -f cld2_data.bin
 rm -f compact_lang_det_dynamic_test_chrome
 rm -f cld2_dynamic_unittest
 rm -f libcld2_dynamic.so
+rm -f compact_lang_det_test_chrome_16
+rm -f compact_lang_det_test_chrome_2
+rm -f cld2_unittest_avoid_chrome_2
+rm -f cld2_unittest_chrome_2
