@@ -2136,6 +2136,7 @@ static const IndirectProbBucket4 kDistinctOctaChrome1015[kDistinctOctaChrome1015
   // table_hash = eb69-5560, unused_entries = 3978 (48.56%)
 
 static const uint32 kDistinctOctaChrome1015SizeOne = 75;    // Bucket count one-lang
+extern const uint32 kDistinctOctaIndSize = kDistinctOctaChrome1015SizeOne; // Source-agnostic named constant
 static const uint32 kDistinctOctaChrome1015Ind[75] = {
   // [0000]
   0x00000000, 0x00000000, 0x00000b03, 0x00001c03,   // -- --  es.un.un_300 id.un.un_300 
@@ -2185,6 +2186,7 @@ static const IndirectProbBucket4 kDistinctOctaChrome1015_2[kDistinctOctaChrome10
   // table_hash = ffff-ffff, unused_entries = 0 (0.00%)
 
 static const uint32 kDistinctOctaChrome1015_2SizeOne = 2;    // Bucket count one-lang
+extern const uint32 kDistinctOcta2IndSize = kDistinctOctaChrome1015_2SizeOne; // Source-agnostic named constant
 static const uint32 kDistinctOctaChrome1015_2Ind[2] = {
   // [0000] --- double_langprob_start=0002 ---
   0x00000000, 0x00000000,                           // -- --  

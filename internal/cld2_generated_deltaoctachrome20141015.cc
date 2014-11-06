@@ -4260,6 +4260,7 @@ static const IndirectProbBucket4 kDeltaOctaChrome1015[kDeltaOctaChrome1015Size] 
   // table_hash = 3eb2-6696, unused_entries = 1062 (6.48%)
 
 static const uint32 kDeltaOctaChrome1015SizeOne = 988;    // Bucket count one-lang
+extern const uint32 kDeltaOctaIndSize = kDeltaOctaChrome1015SizeOne; // Source-agnostic named constant
 static const uint32 kDeltaOctaChrome1015Ind[988] = {
   // [0000]
   0x00000000, 0x00000000, 0x00001324, 0x00000e1c,   // -- --  bh.un.un_900 is.un.un_800 
@@ -4594,6 +4595,7 @@ static const IndirectProbBucket4 kDeltaOctaChrome1015_2[kDeltaOctaChrome1015_2Si
   // table_hash = ffff-ffff, unused_entries = 0 (0.00%)
 
 static const uint32 kDeltaOctaChrome1015_2SizeOne = 2;    // Bucket count one-lang
+extern const uint32 kDeltaOcta2IndSize = kDeltaOctaChrome1015_2SizeOne; // Source-agnostic named constant
 static const uint32 kDeltaOctaChrome1015_2Ind[2] = {
   // [0000] --- double_langprob_start=0002 ---
   0x00000000, 0x00000000,                           // -- --  
