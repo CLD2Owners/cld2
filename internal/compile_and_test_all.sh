@@ -18,7 +18,7 @@ trap 'echo "FAILED!" && exit 1' INT TERM EXIT
 
 # ----------------------------------------------------------------------------
 echo "--> [1 of 7] Invoking: compile.sh..."
-./compile20141015.sh
+./compile.sh
 echo "--> [2 of 7] Testing results of compile.sh..."
 echo "--> compact_lang_det_test_chrome_2... "
 echo "this is some english text" | ./compact_lang_det_test_chrome_2
