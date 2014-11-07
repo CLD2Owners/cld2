@@ -2180,8 +2180,13 @@ extern const CLD2TableSummary kDistinctOcta_obj = {
 static const uint32 kDistinctOctaChrome1015_2Size = 0;    // Bucket count
 static const uint32 kDistinctOctaChrome1015_2KeyMask = 0xffffffff;    // Mask hash key
 
-static const IndirectProbBucket4 kDistinctOctaChrome1015_2[kDistinctOctaChrome1015_2Size] = {
+// NOTE: Some compilers will not allow an array of structs to have a constant
+//       size of zero. Thus, we tell the code that the size is zero, but
+//       actually allocate a single element array that will never be read.
+//       More info: https://code.google.com/p/cld2/issues/detail?id=9
+static const IndirectProbBucket4 kDistinctOctaChrome1015_2[1] = {
   // hash_indirect[4], tokens[4] in UTF-8
+  {0x00000000,0x00000000,0x00000000,0x00000000} // UNUSED, see above!
   };
   // table_hash = ffff-ffff, unused_entries = 0 (0.00%)
 
