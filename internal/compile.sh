@@ -14,7 +14,20 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-g++ -O2 -m64  compact_lang_det_test.cc \
+if [ -z "${CFLAGS}" -a -z "${CXXFLAGS}" -a -z "${CPPFLAGS}" ]; then
+  echo "Warning: None of CFLAGS, CXXFLAGS or CPPFLAGS is set; you probably should enable some options." 1>&2
+fi
+if [ -n "${CFLAGS}" ]; then
+  echo "CFLAGS=${CFLAGS}"
+fi
+if [ -n "${CXXFLAGS}" ]; then
+  echo "CXXFLAGS=${CXXFLAGS}"
+fi
+if [ -n "${CPPFLAGS}" ]; then
+  echo "CPPFLAGS=${CPPFLAGS}"
+fi
+
+g++ $CFLAGS $CPPFLAGS $CXXFLAGS compact_lang_det_test.cc \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc  compact_lang_det_hint_code.cc \
   compact_lang_det_impl.cc  debug.cc fixunicodevalue.cc \
   generated_entities.cc  generated_language.cc generated_ulscript.cc  \
@@ -24,10 +37,10 @@ g++ -O2 -m64  compact_lang_det_test.cc \
   cld_generated_cjk_delta_bi_4.cc generated_distinct_bi_0.cc  \
   cld2_generated_quadchrome_2.cc cld2_generated_deltaoctachrome.cc \
   cld2_generated_distinctoctachrome.cc  cld_generated_score_quad_octa_2.cc  \
-  -o compact_lang_det_test_chrome_2
+  -o compact_lang_det_test_chrome_2 $LDFLAGS
 echo "  compact_lang_det_test_chrome_2 compiled"
 
-g++ -O2 -m64  compact_lang_det_test.cc \
+g++ $CFLAGS $CPPFLAGS $CXXFLAGS compact_lang_det_test.cc \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc  compact_lang_det_hint_code.cc \
   compact_lang_det_impl.cc  debug.cc fixunicodevalue.cc \
   generated_entities.cc  generated_language.cc generated_ulscript.cc  \
@@ -37,11 +50,11 @@ g++ -O2 -m64  compact_lang_det_test.cc \
   cld_generated_cjk_delta_bi_4.cc generated_distinct_bi_0.cc  \
   cld2_generated_quadchrome_16.cc cld2_generated_deltaoctachrome.cc \
   cld2_generated_distinctoctachrome.cc  cld_generated_score_quad_octa_2.cc  \
-  -o compact_lang_det_test_chrome_16
+  -o compact_lang_det_test_chrome_16 $LDFLAGS
 echo "  compact_lang_det_test_chrome_16 compiled"
 
 
-g++ -O2 -m64  cld2_unittest.cc \
+g++ $CFLAGS $CPPFLAGS $CXXFLAGS cld2_unittest.cc \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc  compact_lang_det_hint_code.cc \
   compact_lang_det_impl.cc  debug.cc fixunicodevalue.cc \
   generated_entities.cc  generated_language.cc generated_ulscript.cc  \
@@ -51,10 +64,10 @@ g++ -O2 -m64  cld2_unittest.cc \
   cld_generated_cjk_delta_bi_4.cc generated_distinct_bi_0.cc  \
   cld2_generated_quadchrome_2.cc cld2_generated_deltaoctachrome.cc \
   cld2_generated_distinctoctachrome.cc  cld_generated_score_quad_octa_2.cc  \
-  -o cld2_unittest_chrome_2
+  -o cld2_unittest_chrome_2 $LDFLAGS
 echo "  cld2_unittest_chrome_2 compiled"
 
-g++ -O2 -m64  -Davoid_utf8_string_constants cld2_unittest.cc \
+g++ $CFLAGS $CPPFLAGS $CXXFLAGS -Davoid_utf8_string_constants cld2_unittest.cc \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc  compact_lang_det_hint_code.cc \
   compact_lang_det_impl.cc  debug.cc fixunicodevalue.cc \
   generated_entities.cc  generated_language.cc generated_ulscript.cc  \
@@ -64,7 +77,7 @@ g++ -O2 -m64  -Davoid_utf8_string_constants cld2_unittest.cc \
   cld_generated_cjk_delta_bi_4.cc generated_distinct_bi_0.cc  \
   cld2_generated_quadchrome_2.cc cld2_generated_deltaoctachrome.cc \
   cld2_generated_distinctoctachrome.cc  cld_generated_score_quad_octa_2.cc  \
-  -o cld2_unittest_avoid_chrome_2
+  -o cld2_unittest_avoid_chrome_2 $LDFLAGS
 echo "  cld2_unittest_avoid_chrome_2 compiled"
 
 
