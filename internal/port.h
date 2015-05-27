@@ -56,7 +56,9 @@ namespace CLD2 {
       !defined(__ARM_ARCH_7__) && \
       !defined(__ARM_ARCH_7A__) && \
       !defined(__ARM_ARCH_7M__) && \
-      !defined(__ARM_ARCH_7R__)
+      !defined(__ARM_ARCH_7R__) && \
+      !defined(__ARM_ARCH_8__) && \
+      !defined(__ARM_ARCH_8A__)
 
 // ARMv7 and newer support native unaligned accesses, but only of 16-bit
 // and 32-bit values (not 64-bit); older versions either raise a fatal signal,
