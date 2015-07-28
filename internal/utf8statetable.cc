@@ -173,34 +173,6 @@ static inline bool InStateZero_2(const UTF8ReplaceObj_2* st,
   return (static_cast<uint32>(Tbl - Tbl0) < st->state0_size);
 }
 
-// UTF8PropObj, UTF8ScanObj, UTF8ReplaceObj are all typedefs of
-// UTF8MachineObj.
-
-static bool IsPropObj(const UTF8StateMachineObj& obj) {
-  return obj.fast_state == NULL
-      && obj.max_expand == 0;
-}
-
-static bool IsPropObj_2(const UTF8StateMachineObj_2& obj) {
-  return obj.fast_state == NULL
-      && obj.max_expand == 0;
-}
-
-static bool IsScanObj(const UTF8StateMachineObj& obj) {
-  return obj.fast_state != NULL
-      && obj.max_expand == 0;
-}
-
-static bool IsReplaceObj(const UTF8StateMachineObj& obj) {
-  // Normally, obj.fast_state != NULL, but the handwritten tables
-  // in utf8statetable_unittest don't handle fast_states.
-  return obj.max_expand > 0;
-}
-
-static bool IsReplaceObj_2(const UTF8StateMachineObj_2& obj) {
-  return obj.max_expand > 0;
-}
-
 // Look up property of one UTF-8 character and advance over it
 // Return 0 if input length is zero
 // Return 0 and advance one byte if input is ill-formed
