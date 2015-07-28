@@ -86,8 +86,7 @@ class ScriptScanner {
 
   const char* start_byte_;        // Starting byte of buffer to scan
   const char* next_byte_;         // First unscanned byte
-  const char* next_byte_limit_;   // Last byte + 1
-  int byte_length_;               // Bytes left: next_byte_limit_ - next_byte_
+  int byte_length_;               // Bytes left
 
   bool is_plain_text_;            // true fo text, false for HTML
   char* script_buffer_;           // Holds text with expanded entities
