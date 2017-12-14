@@ -27,11 +27,16 @@ if [ -n "${CPPFLAGS}" ]; then
   echo "CPPFLAGS=${CPPFLAGS}"
 fi
 
+ldflag="-soname"
+if [[ `uname` == "Darwin" ]]; then
+  ldflag="-install_name"
+fi
+
 # The data tool, which can be used to read and write CLD2 dynamic data files
 g++ $CFLAGS $CPPFLAGS $CXXFLAGS cld2_dynamic_data_tool.cc \
-  cld2_dynamic_data.h cld2_dynamic_data.cc \
-  cld2_dynamic_data_extractor.h cld2_dynamic_data_extractor.cc \
-  cld2_dynamic_data_loader.h  cld2_dynamic_data_loader.cc \
+  cld2_dynamic_data.cc \
+  cld2_dynamic_data_extractor.cc \
+  cld2_dynamic_data_loader.cc \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc  compact_lang_det_hint_code.cc \
   compact_lang_det_impl.cc  debug.cc fixunicodevalue.cc \
   generated_entities.cc  generated_language.cc generated_ulscript.cc  \
@@ -46,9 +51,9 @@ echo "  cld2_dynamic_data_tool compiled"
 
 # Tests for Chromium flavored dynamic CLD2
 g++ $CFLAGS $CPPFLAGS $CXXFLAGS -D CLD2_DYNAMIC_MODE compact_lang_det_test.cc \
-  cld2_dynamic_data.h cld2_dynamic_data.cc \
-  cld2_dynamic_data_extractor.h cld2_dynamic_data_extractor.cc \
-  cld2_dynamic_data_loader.h  cld2_dynamic_data_loader.cc \
+  cld2_dynamic_data.cc \
+  cld2_dynamic_data_extractor.cc \
+  cld2_dynamic_data_loader.cc \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc  compact_lang_det_hint_code.cc \
   compact_lang_det_impl.cc  debug.cc fixunicodevalue.cc \
   generated_entities.cc  generated_language.cc generated_ulscript.cc  \
@@ -60,8 +65,8 @@ echo "  compact_lang_det_dynamic_test_chrome compiled"
 
 # Unit tests, in dynamic mode
 g++ $CFLAGS $CPPFLAGS $CXXFLAGS -g3 -D CLD2_DYNAMIC_MODE cld2_unittest.cc \
-  cld2_dynamic_data.h cld2_dynamic_data.cc \
-  cld2_dynamic_data_loader.h  cld2_dynamic_data_loader.cc \
+  cld2_dynamic_data.cc \
+  cld2_dynamic_data_loader.cc \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc  compact_lang_det_hint_code.cc \
   compact_lang_det_impl.cc  debug.cc fixunicodevalue.cc \
   generated_entities.cc  generated_language.cc generated_ulscript.cc  \
@@ -72,13 +77,13 @@ echo "  cld2_dynamic_unittest compiled"
 
 # Shared library, in dynamic mode
 g++ $CFLAGS $CPPFLAGS $CXXFLAGS -shared -fPIC -D CLD2_DYNAMIC_MODE \
-  cld2_dynamic_data.h cld2_dynamic_data.cc \
-  cld2_dynamic_data_loader.h  cld2_dynamic_data_loader.cc \
+  cld2_dynamic_data.cc \
+  cld2_dynamic_data_loader.cc \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc compact_lang_det_hint_code.cc \
   compact_lang_det_impl.cc  debug.cc fixunicodevalue.cc \
   generated_entities.cc  generated_language.cc generated_ulscript.cc  \
   getonescriptspan.cc lang_script.cc offsetmap.cc  scoreonescriptspan.cc \
   tote.cc utf8statetable.cc  \
-  -o libcld2_dynamic.so -Wl,-soname=libcld2_dynamic.so $LDFLAGS
+  -o libcld2_dynamic.so -Wl,${ldflag},libcld2_dynamic.so $LDFLAGS
 echo "  libcld2_dynamic.so compiled"
 

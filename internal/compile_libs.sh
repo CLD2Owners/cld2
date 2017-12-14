@@ -27,6 +27,11 @@ if [ -n "${CPPFLAGS}" ]; then
   echo "CPPFLAGS=${CPPFLAGS}"
 fi
 
+ldflag="-soname"
+if [[ `uname` == "Darwin" ]]; then
+  ldflag="-install_name"
+fi
+
 g++ $CFLAGS $CPPFLAGS $CXXFLAGS -shared -fPIC \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc compact_lang_det_hint_code.cc \
   compact_lang_det_impl.cc  debug.cc fixunicodevalue.cc \
@@ -37,7 +42,7 @@ g++ $CFLAGS $CPPFLAGS $CXXFLAGS -shared -fPIC \
   cld_generated_cjk_delta_bi_4.cc generated_distinct_bi_0.cc  \
   cld2_generated_quadchrome_2.cc cld2_generated_deltaoctachrome.cc \
   cld2_generated_distinctoctachrome.cc  cld_generated_score_quad_octa_2.cc  \
-  -o libcld2.so $LDFLAGS -Wl,-soname=libcld2.so
+  -o libcld2.so $LDFLAGS -Wl,${ldflag},libcld2.so
 
 g++ $CFLAGS $CPPFLAGS $CXXFLAGS -shared -fPIC \
   cldutil.cc cldutil_shared.cc compact_lang_det.cc compact_lang_det_hint_code.cc \
@@ -49,5 +54,5 @@ g++ $CFLAGS $CPPFLAGS $CXXFLAGS -shared -fPIC \
   cld_generated_cjk_delta_bi_32.cc generated_distinct_bi_0.cc  \
   cld2_generated_quad0122.cc cld2_generated_deltaocta0122.cc \
   cld2_generated_distinctocta0122.cc  cld_generated_score_quad_octa_0122.cc  \
-  -o libcld2_full.so $LDFLAGS -Wl,-soname=libcld2_full.so
+  -o libcld2_full.so $LDFLAGS -Wl,${ldflag},libcld2_full.so
 
