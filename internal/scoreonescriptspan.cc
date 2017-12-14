@@ -1136,7 +1136,7 @@ void ScoreEntireScriptSpan(const LangSpan& scriptspan,
   int bytes = scriptspan.text_bytes;
   // Artificially set score to 1024 per 1KB, or 1 per byte
   int score = bytes;
-  int reliability = 100;
+  uint8 reliability = 100;
   // doc_tote uses full languages
   Language one_one_lang = DefaultLanguage(scriptspan.ulscript);
   doc_tote->Add(one_one_lang, bytes, score, reliability);
@@ -1144,8 +1144,8 @@ void ScoreEntireScriptSpan(const LangSpan& scriptspan,
   if (scoringcontext->flags_cld2_html) {
     ChunkSummary chunksummary = {
       1, 0,
-      static_cast<uint8>(one_one_lang), UNKNOWN_LANGUAGE, static_cast<uint8>(score), 1,
-      static_cast<uint8>(bytes), 0, static_cast<uint8>(scriptspan.ulscript), static_cast<uint8>(reliability), static_cast<uint8>(reliability)
+      static_cast<uint16>(one_one_lang), UNKNOWN_LANGUAGE, static_cast<uint8>(score), 1,
+      static_cast<uint16>(bytes), 0, static_cast<uint16>(scriptspan.ulscript), reliability, reliability
     };
     CLD2_Debug(scriptspan.text, 1, scriptspan.text_bytes,
                false, false, NULL,
