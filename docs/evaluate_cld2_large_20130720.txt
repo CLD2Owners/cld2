@@ -7,25 +7,7 @@ AFRIKAANS	af	Latn		af_100.00 	10965	100.00		af_99.65 af*_0.34 un*_0.01 	11003	99
 AKAN	ak	Latn		ak_100.00 	188	100.00		ak_99.47 ak*_0.53 	189	99.47		0.9973	ak
 ALBANIAN	sq	Latn		sq_100.00 	10315	100.00		sq_100.00 	10315	100.00		1.0000	sq
 AMHARIC	am	Ethi		am_100.00 	617	100.00		am_100.00 	617	100.00		1.0000	am
-ARABIC	ar	Arab		ar_100.00 	7125	100.00		ar_99.99 ar*_0.01 	7126	99.99		0.9999	ar
-ARMENIAN	hy	Armn		hy_100.00 	11183	100.00		hy_100.00 	11183	100.00		1.0000	hy
-ASSAMESE	as	Beng		as_100.00 	258	100.00		as_91.17 as*_8.48 un*_0.35 	283	91.17		0.9538	as
-AYMARA	ay	Latn		ay_100.00 	128	100.00		ay_99.22 ay*_0.78 	129	99.22		0.9961	ay
-AZERBAIJANI	az	Latn		az_100.00 	7295	100.00		az_99.88 az*_0.12 	7304	99.88		0.9994	az
-BASHKIR	ba	Cyrl		ba_100.00 	284	100.00		ba_99.30 ba*_0.70 	286	99.30		0.9965	ba
-BASQUE	eu	Latn		eu_100.00 	2560	100.00		eu_100.00 	2560	100.00		1.0000	eu
-BELARUSIAN	be	Cyrl		be_100.00 	783	100.00		be_100.00 	783	100.00		1.0000	be
-BENGALI	bn	Beng		bn_100.00 	11956	100.00		bn_100.00 	11956	100.00		1.0000	bn
-BIHARI	bh	Deva		bh_97.66 hi_1.56 mr_0.78 	128	97.66		bh_79.62 hi_20.38 	157	79.62		0.8772	bh
-BISLAMA	bi	Latn		bi_100.00 	402	100.00		bi_99.75 bi*_0.25 	403	99.75		0.9988	bi
-BOSNIAN	bs	Latn			0	 0.00		sr_62.61 hr_36.69 un*_0.63 sl_0.07 	8901	 0.00		0.0000	bs
-BRETON	br	Latn		br_100.00 	478	100.00		br_100.00 	478	100.00		1.0000	br
-BULGARIAN	bg	Cyrl		bg_100.00 	11191	100.00		bg_99.74 bg*_0.24 un*_0.01 sr_0.01 	11220	99.74		0.9987	bg
-BURMESE	my	Mymr		my_100.00 	2069	100.00		my_100.00 	2069	100.00		1.0000	my
-CATALAN	ca	Latn		ca_100.00 	10815	100.00		ca_98.94 ca*_1.03 es_0.03 	10931	98.94		0.9947	ca
-CEBUANO	ceb	Latn		ceb_100.00 	123	100.00		ceb_100.00 	123	100.00		1.0000	ceb
-CHEROKEE	chr	Cher		chr_100.00 	235	100.00		chr_100.00 	235	100.00		1.0000	chr
-CORSICAN	co	Latn		co_100.00 	437	100.00		co_95.62 co*_2.41 it_0.88 fr_0.66 un*_0.22 	457	95.62		0.9776	co
+
 CROATIAN	hr	Latn		hr_61.09 bs_28.66 sr_10.24 sl_0.01 	11396	61.09		hr_66.08 sr_33.49 hr*_0.29 un*_0.13 	10535	66.08		0.6349	hr
 CZECH	cs	Latn		cs_99.95 sk_0.05 	11107	99.95		cs_99.64 sk_0.35 cs*_0.01 	11141	99.64		0.9979	cs
 Chinese	zh	Hani		zh_97.55 zh-Hant_2.45 	12669	97.55		zh_99.79 zh-Hant_0.10 zh*_0.09 un*_0.02 	12384	99.79		0.9865	zh
