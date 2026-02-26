@@ -1,0 +1,83 @@
+name: Build CLD2 Native Libraries
+
+on:
+  push:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            os_name: linux
+            arch: x86-64
+            artifact_suffix: linux-x86-64
+          - os: ubuntu-24.04-arm
+            os_name: linux
+            arch: aarch64
+            artifact_suffix: linux-aarch64
+          - os: macos-15-intel
+            os_name: mac
+            arch: x86-64
+            artifact_suffix: darwin-x86-64
+          - os: macos-latest
+            os_name: mac
+            arch: aarch64
+            artifact_suffix: darwin-aarch64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout this project
+        uses: actions/checkout@v4
+
+      - name: Build libcld2
+        working-directory: internal
+        run: |
+          chmod +x compile_libs.sh
+          ./compile_libs.sh
+
+      - name: Create output directory
+        run: |
+          mkdir -p output/${{ matrix.artifact_suffix }}
+
+      - name: Copy library to output
+        run: |
+          cp internal/libcld2.${{ matrix.os_name == 'mac' && 'dylib' || 'so' }} output/${{ matrix.artifact_suffix }}/ 
+          cp internal/libcld2_full.${{ matrix.os_name == 'mac' && 'dylib' || 'so' }} output/${{ matrix.artifact_suffix }}/
+
+      - name: Save artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cld2-bin-${{ matrix.artifact_suffix }}
+          path: output
+
+  assemble:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: output
+          pattern: cld2-bin-*
+          merge-multiple: true
+
+      - name: Display structure
+        run: ls -R
+
+      - name: Get short commit ID
+        id: extract_rev_id
+        run: |
+          SHORT_COMMIT_ID=$(echo "${{ github.sha }}" | cut -c1-7)
+          echo "short_commit_id=${SHORT_COMMIT_ID}" >> $GITHUB_OUTPUT
+
+      - name: Save consolidated artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cld2-bin-all-${{ steps.extract_rev_id.outputs.short_commit_id }}
+          path: output

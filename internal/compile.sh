@@ -16,6 +16,7 @@
 
 if [ -z "${CFLAGS}" -a -z "${CXXFLAGS}" -a -z "${CPPFLAGS}" ]; then
   echo "Warning: None of CFLAGS, CXXFLAGS or CPPFLAGS is set; you probably should enable some options." 1>&2
+  CXXFLAGS="-w -Wno-c++11-narrowing"
 fi
 if [ -n "${CFLAGS}" ]; then
   echo "CFLAGS=${CFLAGS}"
